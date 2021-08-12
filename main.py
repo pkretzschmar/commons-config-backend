@@ -6,6 +6,7 @@ from models.token_lockup import TokenLockupModel
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
 
 class status(Resource):
@@ -31,11 +32,11 @@ class TokenLockup(Resource):
                                               token_freeze_period=token_freeze_period,
                                               token_thaw_period=token_thaw_period)
 
-        return token_lockup_model.get_data()
+        return jsonify(token_lockup_model.get_data())
 
 
 api.add_resource(status, '/')
-api.add_resource(TokenLockup, '/token-lockup')
+api.add_resource(TokenLockup, '/token-lockup/')
 
 if __name__ == '__main__':
     app.run(debug=True)
