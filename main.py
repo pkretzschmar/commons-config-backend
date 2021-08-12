@@ -18,7 +18,7 @@ class status(Resource):
 
 
 class TokenLockup(Resource):
-    def get(self):
+    def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('opening-price', type=float)
         parser.add_argument('token-freeze', type=float)
