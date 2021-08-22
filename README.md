@@ -25,6 +25,34 @@ To do an API call with the model input and receive the model outputs, it uses a 
 }
 ```
 
+## 2. Augmented Bonding Curve
+The model inputs are:
+- `commons_percentage` (Percentage of funds that get substracted from the total funding to go to the commons pool. Between 0 and 95)
+- `ragequit_percentage` (Percentage of supply burned before the bonding curve gets initialized. Between 0 and 20)
+- `initial_price` (Initial token prive. No real limit but, expected to be between 1 and 4)
+- `entry_tribute` (Percentage of funds substracted on buy (mint) operations before interacting with the bonding curve. Between 0 and 99)
+- `exit_tribute` (Percentage of funds substracted on sell (burn) operations after interacting with the boding curve.  Between 0 and 99)
+- `steplist` Set of buy/sell operations applied to the bonding curve. AMOUNT IN THOUSANDS. List with format `[[AMOUNT, "TOKEN"],[AMOUNT, "TOKEN"]]`
+- `zoom_graph` optional, value 0 or 1. Used to specify if the draw function should show the whole curve(0) or "zoom in" into the area where operations are happening (1)
+
+    
+
+The model output is a linechart data of the price plotted over the wxDai balance and a table showing how price evolves when the steps are applied and the resulting tribute/slippage.
+
+To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/augmented-bonding-curve/` with the following body:
+```json
+{ 
+  "commons-percentage": 25,
+  "ragequit-percentage": 5,
+  "initial-price": 1.5,
+  "entry-tribute": 5, 
+  "exit-tribute": 5, 
+  "hatch-scenario-funding": 1571.22357, 
+  "steplist": [[5, "TEC"], [1000, "wxDai"], [10, "TEC"]], 
+  "zoom-graph": 0
+}
+```
+
 ## Install
 
 For setting up the Python3 virtual environment
