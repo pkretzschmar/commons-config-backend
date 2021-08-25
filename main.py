@@ -38,7 +38,6 @@ class TokenLockup(Resource):
 
 class AugmentedBondingCurve(Resource):
     def post(self):
-
         parser = reqparse.RequestParser()
         parser.add_argument('commons-percentage', type=float)
         parser.add_argument('ragequit-percentage', type=float)
