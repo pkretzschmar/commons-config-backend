@@ -35,8 +35,6 @@ The model inputs are:
 - `steplist` Set of buy/sell operations applied to the bonding curve. AMOUNT IN THOUSANDS. List with format `[[AMOUNT, "TOKEN"],[AMOUNT, "TOKEN"]]`
 - `zoom_graph` optional, value 0 or 1. Used to specify if the draw function should show the whole curve(0) or "zoom in" into the area where operations are happening (1)
 
-    
-
 The model output is a linechart data of the price plotted over the wxDai balance and a table showing how price evolves when the steps are applied and the resulting tribute/slippage.
 
 To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/augmented-bonding-curve/` with the following body:
