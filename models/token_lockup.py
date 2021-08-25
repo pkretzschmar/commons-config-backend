@@ -18,7 +18,15 @@ class TokenLockupModel:
 
     def get_data(self):
         weekly_token_thaw = self.opening_price / self.token_thaw_period
-        df = pd.DataFrame({'week': range(1, 61)})
+        df = pd.DataFrame(
+            {
+                'week': [
+                    1,
+                    self.token_freeze_period,
+                    self.token_freeze_period + self.token_thaw_period,
+                    52 if self.token_freeze_period + self.token_thaw_period <= 52 else 260
+                ]
+            })
         df['price'] = 0
         df.loc[df['week'] <= self.token_freeze_period, 'price'] = self.opening_price
         df.loc[df['week'] > self.token_freeze_period, 'price'] = (self.opening_price - (df['week'] - self.token_freeze_period) * weekly_token_thaw)
