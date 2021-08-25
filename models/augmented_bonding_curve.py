@@ -247,8 +247,6 @@ class BondingCurveHandler():
             # update current supply and balance 
             bondingCurve.set_new_supply(new_supply)
 
-        #print("==================OUTPUT=====================")
-        #print(outputTable.head())
 
         return outputTable
 
