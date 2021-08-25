@@ -75,8 +75,6 @@ class AugmentedBondingCurve(Resource):
                 zoom_graph= zoom_graph )
 
         
-        #print(augmented_bonding_curve_model.get_data())
-        
         return jsonify(augmented_bonding_curve_model.get_data())
 
 
