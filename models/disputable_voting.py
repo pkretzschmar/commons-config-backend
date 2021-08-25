@@ -18,15 +18,15 @@ class DisputableVotingModel:
         self.quiet_ending_extension = quiet_ending_extension if quiet_ending_extension is not None else 1
         self.execution_delay = execution_delay if execution_delay is not None else 1
         self.non_quiet_voting_period = max(self.vote_duration - self.quiet_ending_period, 0)
-        self.oin_dict = {}
+        self.output_dict = {}
         self.output_dict['input'] = {
-            'support_required': self.support_required,
-            'minimum_quorum': self.minimum_quorum,
-            'vote_duration': self.vote_duration,
-            'delegated_voting_period': self.delegated_voting_period,
-            'quiet_ending_period': self.quiet_ending_period,
-            'quiet_ending_extension': self.quiet_ending_extension,
-            'execution_delay': self.execution_delay
+            'support-required': self.support_required,
+            'minimum-quorum': self.minimum_quorum,
+            'vote-duration': self.vote_duration,
+            'delegated-voting-period': self.delegated_voting_period,
+            'quiet-ending-period': self.quiet_ending_period,
+            'quiet-ending-extension': self.quiet_ending_extension,
+            'execution-delay': self.execution_delay
         }
 
     def get_data(self):
@@ -35,17 +35,17 @@ class DisputableVotingModel:
             'total-proposal-process': {
                 'non-quiet-voting-period': self.non_quiet_voting_period,
                 'quiet-ending-period': self.quiet_ending_period,
-                'execution_delay': self.execution_delay
+                'execution-delay': self.execution_delay
             },
             'delegated-voting': {
                 'delegated-voting-period': self.delegated_voting_period
             },
             'proposal-process-with-extension': {
-                'vote_duration': self.vote_duration,
-                'quiet_ending_extension': self.quiet_ending_extension,
-                'execution_delay': self.execution_delay
+                'voteduration': self.vote_duration,
+                'quiet-ending_extension': self.quiet_ending_extension,
+                'execution-delay': self.execution_delay
             },
-            'vote_duration': self.vote_duration,
+            'vote-duration': self.vote_duration,
         }
         self.output_dict['output'] = {'bar-chart': bar_chart_items}
 

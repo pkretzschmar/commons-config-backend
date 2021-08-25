@@ -3,6 +3,7 @@ from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
 import json
 
+from models.disputable_voting import DisputableVotingModel
 from models.token_lockup import TokenLockupModel
 from models.augmented_bonding_curve import BondingCurveHandler
 
@@ -35,6 +36,35 @@ class TokenLockup(Resource):
                                               token_thaw_period=token_thaw_period)
 
         return jsonify(token_lockup_model.get_data())
+
+class DisputableVoting(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('support-required', type=float)
+        parser.add_argument('minimum-quorum', type=float)
+        parser.add_argument('vote-duration', type=float)
+        parser.add_argument('delegated-voting-period', type=float)
+        parser.add_argument('quiet-ending-period', type=float)
+        parser.add_argument('quiet-ending-extension', type=float)
+        parser.add_argument('execution-delay', type=float)
+        parameters = parser.parse_args()
+        support_required = parameters['support-required']
+        minimum_quorum = parameters['minimum-quorum']
+        vote_duration = parameters['vote-duration']
+        delegated_voting_period = parameters['delegated-voting-period']
+        quiet_ending_period = parameters['quiet-ending-period']
+        quiet_ending_extension = parameters['quiet-ending-extension']
+        execution_delay = parameters['execution-delay']
+
+        disputable_voting_model = DisputableVotingModel(support_required=support_required,
+                                                        minimum_quorum=minimum_quorum,
+                                                        vote_duration=vote_duration,
+                                                        delegated_voting_period=delegated_voting_period,
+                                                        quiet_ending_period=quiet_ending_period,
+                                                        quiet_ending_extension=quiet_ending_extension,
+                                                        execution_delay=execution_delay)
+
+        return jsonify(disputable_voting_model.get_data())
 
 class AugmentedBondingCurve(Resource):
     def post(self):
@@ -80,6 +110,7 @@ class AugmentedBondingCurve(Resource):
 
 api.add_resource(status, '/')
 api.add_resource(TokenLockup, '/token-lockup/')
+api.add_resource(DisputableVoting, '/disputable-voting/')
 api.add_resource(AugmentedBondingCurve, '/augmented-bonding-curve/')
 
 if __name__ == '__main__':
