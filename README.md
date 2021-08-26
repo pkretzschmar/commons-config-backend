@@ -14,7 +14,7 @@ The model inputs are:
 - `token-freeze` (number of weeks that the opening price will be kept the same)
 - `token-thaw` (number of weeks in which the price floor will go from the opening price to zero)
 
-The model output is a linechart data of the price floor over time.
+The model output is a linechart data of the price floor over time and a table with the price floor and % of tokens unlocked in specific weeks.
 
 To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/token-lockup/` with the following body:
 ```json
@@ -25,7 +25,7 @@ To do an API call with the model input and receive the model outputs, it uses a 
 }
 ```
 
-## 2. Augmented Bonding Curve
+### 2. Augmented Bonding Curve
 The model inputs are:
 - `commons_percentage` (Percentage of funds that get substracted from the total funding to go to the commons pool. Between 0 and 95)
 - `ragequit_percentage` (Percentage of supply burned before the bonding curve gets initialized. Between 0 and 20)
@@ -48,6 +48,31 @@ To do an API call with the model input and receive the model outputs, it uses a 
   "hatch-scenario-funding": 1571.22357, 
   "steplist": [[5, "TEC"], [1000, "wxDai"], [10, "TEC"]], 
   "zoom-graph": 0
+}
+```
+
+### 3. Disputable Voting
+The model inputs are:
+- `support-required` (Minimum percentage of "yes" votes in relation to the total votes needed to a proposal pass)
+- `minimum-quorum` (Minimum percentage of quorum needed to a proposal pass)
+- `vote-duration` (Vote duration in days)
+- `delegated-voting-period` (Delegated voting period in days)
+- `quiet-ending-period` (Quiet ending period in days)
+- `quiet-ending-extension` (Quiet ending extension in days)
+- `execution-delay` (Execution delay in days)
+
+The model output is a bar chart plot of the voting timeline and a pie chart of the division of periods within the disputable voting.
+
+To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/disputable-voting/` with the following body:
+```json
+{
+  "support-required": 0.4,
+	"minimum-quorum": 0.1,
+	"vote-duration": 7,
+	"delegated-voting-period": 3,
+	"quiet-ending-period": 2,
+	"quiet-ending-extension": 1,
+	"execution-delay": 1
 }
 ```
 
