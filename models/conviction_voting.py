@@ -49,5 +49,14 @@ class ConvictionVotingModel:
         
         df = pd.concat([df_growth, df_decay])
         self.output_dict['output'] = {'convictionGrowthChart' : df.to_dict(orient='list')}
+        self.output_dict['output']['maxConvictionGrowthXY'] = {
+            'x': df_growth.iloc[df_growth['convictionPercentage'].idxmax()]['timeDays'],
+            'y': df_growth.iloc[df_growth['convictionPercentage'].idxmax()]['convictionPercentage'],
+        }
+
+        self.output_dict['output']['convictionGrowth80PercentageXY'] = {
+            'x': df_growth.iloc[df_growth[df_growth.convictionPercentage >= 80].first_valid_index()]['timeDays'],
+            'y': df_growth.iloc[df_growth[df_growth.convictionPercentage >= 80].first_valid_index()]['convictionPercentage'],
+        }
 
         return self.output_dict
