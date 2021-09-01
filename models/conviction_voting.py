@@ -41,11 +41,11 @@ class ConvictionVotingModel:
         # Conviction Growth Chart Data
         x = np.linspace(0, 5 * self.conviction_growth,100)
         y = 100 * self.get_conviction(0, self.staked_on_proposal, time=x) / self.get_max_conviction(self.get_staked())
-        df_growth = pd.DataFrame(zip(x, y), columns=['time (days)','conviction (%)'])
+        df_growth = pd.DataFrame(zip(x, y), columns=['timeDays','convictionPercentage'])
         
         x2 = np.linspace(5 * self.conviction_growth,10 * self.conviction_growth,1000)
         y2 = y[-1] * self.get_decay()**x
-        df_decay = pd.DataFrame(zip(x2, y2), columns=['time (days)','conviction (%)'])
+        df_decay = pd.DataFrame(zip(x2, y2), columns=['timeDays','convictionPercentage'])
         
         df = pd.concat([df_growth, df_decay])
         self.output_dict['output'] = {'convictionGrowthChart' : df.to_dict(orient='list')}
