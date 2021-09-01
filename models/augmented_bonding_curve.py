@@ -40,7 +40,7 @@ class BondingCurveInitializer:
         df_rounded = df.round(3)
         
         index= int(df.index.where(df_rounded['Balance (in thousands)'] >= balance).dropna()[0])
-        price = df.at[index, "Price"]
+        price = df.at[index, "price"]
 
         supply = balance/(price* self.reserve_ratio())
         
@@ -52,14 +52,14 @@ class BondingCurveInitializer:
         x = np.linspace(range_begin, range_end, steps)
         y = self.get_price(x)
 
-        return pd.DataFrame(zip(x, y), columns=["Supply (in thousands)", "Price"])
+        return pd.DataFrame(zip(x, y), columns=["Supply (in thousands)", "price"])
     
     def curve_over_balance(self, range_begin=0, range_end=1000, steps=1000):
         supply_list = np.linspace(range_begin, range_end, steps)
         x = self.get_balance(supply_list)
         y = self.get_price(supply_list)
 
-        return pd.DataFrame(zip(x, y), columns=["Balance (in thousands)", "Price"])
+        return pd.DataFrame(zip(x, y), columns=["Balance (in thousands)", "price"])
 
 
 
@@ -147,7 +147,7 @@ class BondingCurveHandler():
     def get_data(self):
 
         figure_bonding_curve = self.get_data_augmented_bonding_curve(bondingCurve= self.bonding_curve, steps_table= self.steps_table, zoom_graph=self.zoom_graph, plot_mode=self.plot_mode).to_json()
-        figure_buy_sell_table = self.steps_table.loc[:,["Step", "CurrentPrice", "AmountIn", "TributeCollected", "AmountOut", "NewPrice", "Slippage"]].to_dict(orient='list')
+        figure_buy_sell_table = self.steps_table.loc[:,["step", "currentPrice", "amountIn", "tributeCollected", "amountOut", "newPrice", "slippage"]].to_dict(orient='list')
 
         return figure_bonding_curve, figure_buy_sell_table
 
@@ -165,17 +165,17 @@ class BondingCurveHandler():
     def generate_outputs_table(self, bondingCurve, steplist):
 
         column_names = [
-            "Step",
-            "CurrentPrice",
-            "CurrentSupply",
-            "CurrentBalance",
-            "AmountIn",
-            "TributeCollected",
-            "AmountOut",
-            "NewPrice",
-            "NewSupply",
-            "NewBalance",
-            "Slippage",
+            "step",
+            "currentPrice",
+            "currentSupply",
+            "currentBalance",
+            "amountIn",
+            "tributeCollected",
+            "amountOut",
+            "newPrice",
+            "newSupply",
+            "newBalance",
+            "slippage",
         ]
         outputTable = pd.DataFrame(columns=column_names)
 
@@ -252,8 +252,8 @@ class BondingCurveHandler():
 
     def get_data_augmented_bonding_curve(self, bondingCurve, steps_table, zoom_graph=0, plot_mode=0):
         
-        min_range = 0 if  zoom_graph == "0" else ( min(steps_table['CurrentSupply'].min(), steps_table['NewSupply'].min()) - 50)
-        max_range = steps_table['NewSupply'].max() + (200 if zoom_graph == "0" else 50)
+        min_range = 0 if  zoom_graph == "0" else ( min(steps_table['currentSupply'].min(), steps_table['newSupply'].min()) - 50)
+        max_range = steps_table['newSupply'].max() + (200 if zoom_graph == "0" else 50)
 
         if plot_mode == 0:
             curve_draw = bondingCurve.curve_over_balance(min_range, max_range)
