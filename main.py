@@ -23,13 +23,13 @@ class status(Resource):
 class TokenLockup(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('opening-price', type=float)
-        parser.add_argument('token-freeze', type=float)
-        parser.add_argument('token-thaw', type=float)
+        parser.add_argument('openingPrice', type=float)
+        parser.add_argument('tokenFreeze', type=float)
+        parser.add_argument('tokenThaw', type=float)
         parameters = parser.parse_args()
-        opening_price = parameters['opening-price']
-        token_freeze_period = parameters['token-freeze']
-        token_thaw_period = parameters['token-thaw']
+        opening_price = parameters['openingPrice']
+        token_freeze_period = parameters['tokenFreeze']
+        token_thaw_period = parameters['tokenThaw']
 
         token_lockup_model = TokenLockupModel(opening_price=opening_price,
                                               token_freeze_period=token_freeze_period,
@@ -40,21 +40,21 @@ class TokenLockup(Resource):
 class DisputableVoting(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('support-required', type=float)
-        parser.add_argument('minimum-quorum', type=float)
-        parser.add_argument('vote-duration', type=float)
-        parser.add_argument('delegated-voting-period', type=float)
-        parser.add_argument('quiet-ending-period', type=float)
-        parser.add_argument('quiet-ending-extension', type=float)
-        parser.add_argument('execution-delay', type=float)
+        parser.add_argument('supportRequired', type=float)
+        parser.add_argument('minimumQuorum', type=float)
+        parser.add_argument('voteDuration', type=float)
+        parser.add_argument('delegatedVotingPeriod', type=float)
+        parser.add_argument('quietEndingPeriod', type=float)
+        parser.add_argument('quietEndingExtension', type=float)
+        parser.add_argument('executionDelay', type=float)
         parameters = parser.parse_args()
-        support_required = parameters['support-required']
-        minimum_quorum = parameters['minimum-quorum']
-        vote_duration = parameters['vote-duration']
-        delegated_voting_period = parameters['delegated-voting-period']
-        quiet_ending_period = parameters['quiet-ending-period']
-        quiet_ending_extension = parameters['quiet-ending-extension']
-        execution_delay = parameters['execution-delay']
+        support_required = parameters['supportRequired']
+        minimum_quorum = parameters['minimumQuorum']
+        vote_duration = parameters['voteDuration']
+        delegated_voting_period = parameters['delegatedVotingPeriod']
+        quiet_ending_period = parameters['quietEndingPeriod']
+        quiet_ending_extension = parameters['quietEndingExtension']
+        execution_delay = parameters['executionDelay']
 
         disputable_voting_model = DisputableVotingModel(support_required=support_required,
                                                         minimum_quorum=minimum_quorum,
@@ -69,30 +69,30 @@ class DisputableVoting(Resource):
 class AugmentedBondingCurve(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('commons-percentage', type=float)
-        parser.add_argument('ragequit-percentage', type=float)
-        parser.add_argument('initial-price', type=float)
-        parser.add_argument('entry-tribute', type=float)
-        parser.add_argument('exit-tribute', type=float)
-        parser.add_argument('hatch-scenario-funding', type=float)
-        parser.add_argument('steplist', action='append')
-        parser.add_argument('zoom-graph', type=int)
+        parser.add_argument('commonsPercentage', type=float)
+        parser.add_argument('ragequitPercentage', type=float)
+        parser.add_argument('initialPrice', type=float)
+        parser.add_argument('entryTribute', type=float)
+        parser.add_argument('exitTribute', type=float)
+        parser.add_argument('hatchScenarioFunding', type=float)
+        parser.add_argument('stepList', action='append')
+        parser.add_argument('zoomGraph', type=int)
         parameters = parser.parse_args()
-        commons_percentage = parameters['commons-percentage']
-        ragequit_percentage = parameters['ragequit-percentage']
-        initial_price = parameters['initial-price']
-        entry_tribute = parameters['entry-tribute']
-        exit_tribute = parameters['exit-tribute']
-        hatch_scenario_funding = parameters['hatch-scenario-funding']
+        commons_percentage = parameters['commonsPercentage']
+        ragequit_percentage = parameters['ragequitPercentage']
+        initial_price = parameters['initialPrice']
+        entry_tribute = parameters['entryTribute']
+        exit_tribute = parameters['exitTribute']
+        hatch_scenario_funding = parameters['hatchScenarioFunding']
         #parse the steplist (which gets read as string) into the right format
         steplist = []
-        for step in parameters['steplist']:
+        for step in parameters['stepList']:
             buf = step.strip('][').split(', ')
             buf[0] = float(buf[0])
             buf[1] = buf[1].strip("'")
             steplist.append(buf)
 
-        zoom_graph = parameters['zoom-graph']
+        zoom_graph = parameters['zoomGraph']
 
         augmented_bonding_curve_model = BondingCurveHandler(
                 commons_percentage= commons_percentage,

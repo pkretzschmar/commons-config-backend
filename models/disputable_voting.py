@@ -20,42 +20,42 @@ class DisputableVotingModel:
         self.non_quiet_voting_period = max(self.vote_duration - self.quiet_ending_period, 0)
         self.output_dict = {}
         self.output_dict['input'] = {
-            'support-required': self.support_required,
-            'minimum-quorum': self.minimum_quorum,
-            'vote-duration': self.vote_duration,
-            'delegated-voting-period': self.delegated_voting_period,
-            'quiet-ending-period': self.quiet_ending_period,
-            'quiet-ending-extension': self.quiet_ending_extension,
-            'execution-delay': self.execution_delay
+            'supportRequired': self.support_required,
+            'minimumQuorum': self.minimum_quorum,
+            'voteDuration': self.vote_duration,
+            'delegatedVotingPeriod': self.delegated_voting_period,
+            'quietEndingPeriod': self.quiet_ending_period,
+            'quietEndingExtension': self.quiet_ending_extension,
+            'executionDelay': self.execution_delay
         }
 
     def get_data(self):
         # Bar Chart Data
         bar_chart_items = {
-            'total-proposal-process': {
-                'non-quiet-voting-period': self.non_quiet_voting_period,
-                'quiet-ending-period': self.quiet_ending_period,
-                'execution-delay': self.execution_delay
+            'totalProposalProcess': {
+                'nonQuietVotingPeriod': self.non_quiet_voting_period,
+                'quietEndingPeriod': self.quiet_ending_period,
+                'executionDelay': self.execution_delay
             },
-            'delegated-voting': {
-                'delegated-voting-period': self.delegated_voting_period
+            'delegatedVoting': {
+                'delegatedVotingPeriod': self.delegated_voting_period
             },
-            'proposal-process-with-extension': {
-                'voteduration': self.vote_duration,
-                'quiet-ending_extension': self.quiet_ending_extension,
-                'execution-delay': self.execution_delay
+            'proposalProcessWithExtension': {
+                'voteDuration': self.vote_duration,
+                'quietEndingExtension': self.quiet_ending_extension,
+                'executionDelay': self.execution_delay
             },
-            'vote-duration': self.vote_duration,
+            'voteDuration': self.vote_duration,
         }
-        self.output_dict['output'] = {'bar-chart': bar_chart_items}
+        self.output_dict['output'] = {'barChart': bar_chart_items}
 
         # Pie Chart Data
         pie_chart_items = {
-            'non-quiet-voting-period': self.non_quiet_voting_period,
-            'quiet-ending-period': self.quiet_ending_period,
-            'quiet-ending-extension': self.quiet_ending_extension,
-            'execution-delay': self.execution_delay
+            'nonQuietVotingPeriod': self.non_quiet_voting_period,
+            'quietEndingPeriod': self.quiet_ending_period,
+            'quietEndingExtension': self.quiet_ending_extension,
+            'executionDelay': self.execution_delay
         }
-        self.output_dict['output']['pie-chart'] = pie_chart_items
+        self.output_dict['output']['pieChart'] = pie_chart_items
 
         return self.output_dict
