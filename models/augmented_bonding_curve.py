@@ -147,7 +147,7 @@ class BondingCurveHandler():
     def get_data(self):
 
         figure_bonding_curve = self.get_data_augmented_bonding_curve(bondingCurve= self.bonding_curve, steps_table= self.steps_table, zoom_graph=self.zoom_graph, plot_mode=self.plot_mode).to_json()
-        figure_buy_sell_table = self.steps_table.loc[:,["Step", "Current Price", "Amount in", "Tribute collected", "Amount out", "New Price", "Slippage"]].to_dict(orient='list')
+        figure_buy_sell_table = self.steps_table.loc[:,["Step", "CurrentPrice", "AmountIn", "TributeCollected", "AmountOut", "NewPrice", "Slippage"]].to_dict(orient='list')
 
         return figure_bonding_curve, figure_buy_sell_table
 
@@ -166,15 +166,15 @@ class BondingCurveHandler():
 
         column_names = [
             "Step",
-            "Current Price",
-            "Current Supply",
-            "Current Balance",
-            "Amount in",
-            "Tribute collected",
-            "Amount out",
-            "New Price",
-            "New Supply",
-            "New Balance",
+            "CurrentPrice",
+            "CurrentSupply",
+            "CurrentBalance",
+            "AmountIn",
+            "TributeCollected",
+            "AmountOut",
+            "NewPrice",
+            "NewSupply",
+            "NewBalance",
             "Slippage",
         ]
         outputTable = pd.DataFrame(columns=column_names)
@@ -252,8 +252,8 @@ class BondingCurveHandler():
 
     def get_data_augmented_bonding_curve(self, bondingCurve, steps_table, zoom_graph=0, plot_mode=0):
         
-        min_range = 0 if  zoom_graph == "0" else ( min(steps_table['Current Supply'].min(), steps_table['New Supply'].min()) - 50)
-        max_range = steps_table['New Supply'].max() + (200 if zoom_graph == "0" else 50)
+        min_range = 0 if  zoom_graph == "0" else ( min(steps_table['CurrentSupply'].min(), steps_table['NewSupply'].min()) - 50)
+        max_range = steps_table['NewSupply'].max() + (200 if zoom_graph == "0" else 50)
 
         if plot_mode == 0:
             curve_draw = bondingCurve.curve_over_balance(min_range, max_range)
