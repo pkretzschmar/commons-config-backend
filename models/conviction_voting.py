@@ -5,10 +5,12 @@ class ConvictionVotingModel:
     def __init__(self,
                  spending_limit=None,
                  minimum_conviction=None,
-                 conviction_growth=None):
+                 conviction_growth=None,
+                 voting_period_days=None):
         self.spending_limit = spending_limit if spending_limit is not None else 0.2
         self.minimum_conviction = minimum_conviction if minimum_conviction is not None else 0.05
         self.conviction_growth = conviction_growth if conviction_growth is not None else 2
+        self.voting_period_days = voting_period_days if voting_period_days is not None else 7 
         self.staked_on_proposal = 1
         self.staked_on_other_proposals = 0
         self.min_active_stake_pct = 0.05
@@ -17,6 +19,7 @@ class ConvictionVotingModel:
             'spendingLimit': self.spending_limit,
             'minimumConviction': self.minimum_conviction,
             'convictionGrowth': self.conviction_growth,
+            'convictionVotingPeriodDays': self.voting_period_days,
         }
     
     def get_decay(self):
@@ -42,10 +45,16 @@ class ConvictionVotingModel:
     def get_threshold(self, requested_pct):
         return self.get_weight() / (self.spending_limit - requested_pct) ** 2 if np.any(requested_pct <= self.minimum_conviction) else float('inf')
 
+    def current_conviction_pergentage_of_max(self, time):
+        current_conviction = self.get_conviction(0, self.staked_on_proposal, time=time)
+        max_conviction =    self.get_max_conviction(self.get_staked())
+        current_conviction_percentage = current_conviction / max_conviction
+        return current_conviction_percentage
+
     def get_data(self):
         # Conviction Growth Chart Data
         x = np.linspace(0, 5 * self.conviction_growth,100)
-        y = 100 * self.get_conviction(0, self.staked_on_proposal, time=x) / self.get_max_conviction(self.get_staked())
+        y = 100 * self.current_conviction_pergentage_of_max(time=x)
         df_growth = pd.DataFrame(zip(x, y), columns=['timeDays','convictionPercentage'])
         
         x2 = np.linspace(5 * self.conviction_growth,10 * self.conviction_growth,1000)
@@ -65,8 +74,8 @@ class ConvictionVotingModel:
         }
 
         # Conviction Threshold Chart Data
-        x = np.linspace(0, 100 * (self.spending_limit - np.sqrt(self.get_weight())), 100)
-        y = 100 * self.get_threshold(x / 100)
+        x = np.linspace(1, 100 * (self.spending_limit - np.sqrt(self.get_weight())), 100)
+        y = 100 * (self.get_threshold(x / 100) / self.current_conviction_pergentage_of_max(time=self.voting_period_days))
         df = pd.DataFrame(zip(x,y), columns=['requestedPercentage', 'thresholdPercentage'])
         self.output_dict['output']['convictionThresholdChart'] = df.to_dict(orient='list')
 
