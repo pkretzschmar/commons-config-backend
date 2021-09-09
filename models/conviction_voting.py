@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import math
+
 
 class ConvictionVotingModel:
     def __init__(self,
@@ -14,6 +16,44 @@ class ConvictionVotingModel:
         self.staked_on_proposal = 1
         self.staked_on_other_proposals = 0
         self.min_active_stake_pct = 0.05
+        self.table_scenarios = [
+            {
+                'label': 'scenario1',
+                'totalEffectiveSupply': 100_000,
+                'requestedAmount': 1_000,
+                'amountInCommonPool': 10_000,
+            },
+            {
+                'label': 'scenario2',
+                'totalEffectiveSupply': 100_000,
+                'requestedAmount': 1_000,
+                'amountInCommonPool': 750_000,
+            },
+            {
+                'label': 'scenario3',
+                'totalEffectiveSupply': 100_000,
+                'requestedAmount': 5_000,
+                'amountInCommonPool': 100_000,
+            },
+            {
+                'label': 'scenario4',
+                'totalEffectiveSupply': 100_000,
+                'requestedAmount': 5_000,
+                'amountInCommonPool': 750_000,
+            },
+            {
+                'label': 'scenario5',
+                'totalEffectiveSupply': 100_000,
+                'requestedAmount': 25_000,
+                'amountInCommonPool': 100_000,
+            },
+            {
+                'label': 'scenario6',
+                'totalEffectiveSupply': 100_000,
+                'requestedAmount': 25_000,
+                'amountInCommonPool': 750_000,
+            },
+        ]
         self.output_dict = {}
         self.output_dict['input'] = {
             'spendingLimit': self.spending_limit,
@@ -49,7 +89,7 @@ class ConvictionVotingModel:
         current_conviction = self.get_conviction(0, self.staked_on_proposal, time=time)
         max_conviction =    self.get_max_conviction(self.get_staked())
         current_conviction_percentage = current_conviction / max_conviction
-        return current_conviction_percentage
+        return current_conviction_percentage        
 
     def get_data(self):
         # Conviction Growth Chart Data
@@ -78,5 +118,25 @@ class ConvictionVotingModel:
         y = 100 * (self.get_threshold(x / 100) / self.current_conviction_pergentage_of_max(time=self.voting_period_days))
         df = pd.DataFrame(zip(x,y), columns=['requestedPercentage', 'thresholdPercentage'])
         self.output_dict['output']['convictionThresholdChart'] = df.to_dict(orient='list')
+
+        # Conviction Threshold Scenarios Data
+        table_scenarios = []
+        for scenario in self.table_scenarios:
+            percentage_requested = scenario['requestedAmount'] / scenario['amountInCommonPool']
+            percentage_requested_threshold = self.get_threshold(percentage_requested)
+            if math.isinf(percentage_requested_threshold):
+                scenario['minTokensToPass'] = float('inf')
+                scenario['tokensToPassIn2Weeks'] = float('inf')
+            else:
+                scenario['minTokensToPass'] = int(
+                    scenario['totalEffectiveSupply'] *
+                    self.get_threshold(percentage_requested)
+                )
+                scenario['tokensToPassIn2Weeks'] = int(
+                    scenario['minTokensToPass'] / 
+                    self.current_conviction_pergentage_of_max(time=4)
+                )
+            table_scenarios.append(scenario)
+        self.output_dict['output']['table'] = table_scenarios
 
         return self.output_dict
