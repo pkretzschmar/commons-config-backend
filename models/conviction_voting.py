@@ -125,8 +125,8 @@ class ConvictionVotingModel:
             percentage_requested = scenario['requestedAmount'] / scenario['amountInCommonPool']
             percentage_requested_threshold = self.get_threshold(percentage_requested)
             if math.isinf(percentage_requested_threshold):
-                scenario['minTokensToPass'] = float('inf')
-                scenario['tokensToPassIn2Weeks'] = float('inf')
+                scenario['minTokensToPass'] = 'Not possible'
+                scenario['tokensToPassIn2Weeks'] = 'Not possible'
             else:
                 scenario['minTokensToPass'] = int(
                     scenario['totalEffectiveSupply'] *
