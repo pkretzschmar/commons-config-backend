@@ -146,10 +146,16 @@ class BondingCurveHandler():
 
     def get_data(self):
 
-        figure_bonding_curve = self.get_data_augmented_bonding_curve(bondingCurve= self.bonding_curve, steps_table= self.steps_table, zoom_graph=self.zoom_graph, plot_mode=self.plot_mode).to_json()
-        figure_buy_sell_table = self.steps_table.loc[:,["step", "currentPrice", "amountIn", "tributeCollected", "amountOut", "newPrice", "slippage"]].to_dict(orient='list')
+        [min_range, max_range] = self.get_scenario_range(steps_table= self.steps_table, zoom_graph=self.zoom_graph)
 
-        return figure_bonding_curve, figure_buy_sell_table
+        figure_bonding_curve = self.get_data_augmented_bonding_curve(bondingCurve= self.bonding_curve, min_range=min_range, max_range=max_range, plot_mode=self.plot_mode).to_json()
+        
+        if self.steps_table.empty:
+            return figure_bonding_curve
+        else: 
+            figure_buy_sell_table = self.steps_table.loc[:,["step", "currentPrice", "amountIn", "tributeCollected", "amountOut", "newPrice", "slippage"]].to_dict(orient='list')
+
+            return figure_bonding_curve, figure_buy_sell_table
 
     def create_bonding_curve(self, commons_percentage=50, ragequit_percentage=5,  initial_price=3, entry_tribute=0.05, exit_tribute=0.05):
         
@@ -250,17 +256,27 @@ class BondingCurveHandler():
 
         return outputTable
 
-    def get_data_augmented_bonding_curve(self, bondingCurve, steps_table, zoom_graph=0, plot_mode=0):
+    def get_data_augmented_bonding_curve(self, bondingCurve, min_range, max_range, plot_mode=0):
         
-        min_range = 0 if  zoom_graph == "0" else ( min(steps_table['currentSupply'].min(), steps_table['newSupply'].min()) - 50)
-        max_range = steps_table['newSupply'].max() + (200 if zoom_graph == "0" else 50)
-
         if plot_mode == 0:
             curve_draw = bondingCurve.curve_over_balance(min_range, max_range)
         elif plot_mode == 1:
             curve_draw = bondingCurve.curve_over_supply(min_range, max_range)
         
         return curve_draw
+
+    
+    def get_scenario_range(self, steps_table, zoom_graph=0):
+
+        if steps_table.empty :
+            min_range = 0
+            max_range = 1000
+        else:
+            min_range = 0 if  zoom_graph == 0 else ( min(steps_table['currentSupply'].min(), steps_table['newSupply'].min()) - 50)
+            max_range = steps_table['newSupply'].max() + (200 if zoom_graph == 0 else 50)
+
+
+        return [min_range, max_range]
 
     def check_param_validity(self, commons_percentage, ragequit_percentage, initial_price, entry_tribute, exit_tribute,  hatch_scenario_funding,  steplist, zoom_graph, plot_mode):
         if commons_percentage < 0 or commons_percentage > 95:

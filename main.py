@@ -86,11 +86,12 @@ class AugmentedBondingCurve(Resource):
         hatch_scenario_funding = parameters['hatchScenarioFunding']
         #parse the steplist (which gets read as string) into the right format
         steplist = []
-        for step in parameters['stepList']:
-            buf = step.strip('][').split(', ')
-            buf[0] = float(buf[0])
-            buf[1] = buf[1].strip("'")
-            steplist.append(buf)
+        if parameters['stepList']:
+            for step in parameters['stepList']:
+                buf = step.strip('][').split(', ')
+                buf[0] = float(buf[0])
+                buf[1] = buf[1].strip("'")
+                steplist.append(buf)
 
         zoom_graph = parameters['zoomGraph']
 
