@@ -16,44 +16,32 @@ class ConvictionVotingModel:
         self.staked_on_proposal = 1
         self.staked_on_other_proposals = 0
         self.min_active_stake_pct = 0.05
-        self.table_scenarios = [
-            {
-                'label': 'scenario1',
-                'totalEffectiveSupply': 100_000,
-                'requestedAmount': 1_000,
-                'amountInCommonPool': 10_000,
-            },
-            {
-                'label': 'scenario2',
-                'totalEffectiveSupply': 100_000,
-                'requestedAmount': 1_000,
-                'amountInCommonPool': 750_000,
-            },
-            {
-                'label': 'scenario3',
-                'totalEffectiveSupply': 100_000,
-                'requestedAmount': 5_000,
-                'amountInCommonPool': 100_000,
-            },
-            {
-                'label': 'scenario4',
-                'totalEffectiveSupply': 100_000,
-                'requestedAmount': 5_000,
-                'amountInCommonPool': 750_000,
-            },
-            {
-                'label': 'scenario5',
-                'totalEffectiveSupply': 100_000,
-                'requestedAmount': 25_000,
-                'amountInCommonPool': 100_000,
-            },
-            {
-                'label': 'scenario6',
-                'totalEffectiveSupply': 100_000,
-                'requestedAmount': 25_000,
-                'amountInCommonPool': 750_000,
-            },
-        ]
+        self.table_scenarios = {
+                'totalEffectiveSupply': [
+                    100_000,
+                    100_000,
+                    100_000,
+                    100_000,
+                    100_000,
+                    100_000,
+                ],
+                'requestedAmount': [
+                    1_000,
+                    1_000,
+                    5_000,
+                    5_000,
+                    25_000,
+                    25_000,
+                ],
+                'amountInCommonPool': [
+                    10_000,
+                    750_000,
+                    100_000,
+                    750_000,
+                    100_000,
+                    750_000,
+                ],
+        }
         self.output_dict = {}
         self.output_dict['input'] = {
             'spendingLimit': self.spending_limit,
@@ -120,23 +108,29 @@ class ConvictionVotingModel:
         self.output_dict['output']['convictionThresholdChart'] = df.to_dict(orient='list')
 
         # Conviction Threshold Scenarios Data
-        table_scenarios = []
-        for scenario in self.table_scenarios:
-            percentage_requested = scenario['requestedAmount'] / scenario['amountInCommonPool']
+        len_scenarios = len(self.table_scenarios['totalEffectiveSupply'])
+        scenarios = self.table_scenarios
+        scenarios['minTokensToPass'] = []
+        scenarios['tokensToPassIn2Weeks'] = []
+        for idx in range(len_scenarios):
+            percentage_requested = scenarios['requestedAmount'][idx] / scenarios['amountInCommonPool'][idx]
             percentage_requested_threshold = self.get_threshold(percentage_requested)
             if math.isinf(percentage_requested_threshold):
-                scenario['minTokensToPass'] = 'Not possible'
-                scenario['tokensToPassIn2Weeks'] = 'Not possible'
+                scenarios['minTokensToPass'].append('Not possible')
+                scenarios['tokensToPassIn2Weeks'].append('Not possible')
             else:
-                scenario['minTokensToPass'] = int(
-                    scenario['totalEffectiveSupply'] *
-                    self.get_threshold(percentage_requested)
+                scenarios['minTokensToPass'].append(
+                    int(
+                        scenarios['totalEffectiveSupply'][idx] *
+                        self.get_threshold(percentage_requested)
+                    )
                 )
-                scenario['tokensToPassIn2Weeks'] = int(
-                    scenario['minTokensToPass'] / 
-                    self.current_conviction_pergentage_of_max(time=4)
+                scenarios['tokensToPassIn2Weeks'].append(
+                    int(
+                        scenarios['minTokensToPass'][idx] / 
+                        self.current_conviction_pergentage_of_max(time=4)
+                    )
                 )
-            table_scenarios.append(scenario)
-        self.output_dict['output']['table'] = table_scenarios
+            self.output_dict['output']['table'] = scenarios
 
         return self.output_dict
