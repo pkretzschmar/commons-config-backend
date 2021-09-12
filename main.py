@@ -6,6 +6,7 @@ import json
 from models.disputable_voting import DisputableVotingModel
 from models.token_lockup import TokenLockupModel
 from models.augmented_bonding_curve import BondingCurveHandler
+from models.issue_generator import IssueGeneratorModel
 
 app = Flask(__name__)
 api = Api(app)
@@ -107,11 +108,24 @@ class AugmentedBondingCurve(Resource):
         
         return jsonify(augmented_bonding_curve_model.get_data())
 
+class IssueGenerator(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('title', type=str)
+        parameters = parser.parse_args()
+        title = parameters['title']
+
+        issue_generator = IssueGeneratorModel(
+            title=title
+        )
+
+        return jsonify(issue_generator.generate_output())
 
 api.add_resource(status, '/')
 api.add_resource(TokenLockup, '/token-lockup/')
 api.add_resource(DisputableVoting, '/disputable-voting/')
 api.add_resource(AugmentedBondingCurve, '/augmented-bonding-curve/')
+api.add_resource(IssueGenerator, '/issue-generator/')
 
 if __name__ == '__main__':
     app.run(debug=True)
