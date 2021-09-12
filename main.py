@@ -69,21 +69,21 @@ class DisputableVoting(Resource):
 class AugmentedBondingCurve(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('commonsPercentage', type=float)
+        parser.add_argument('commonsTribute', type=float)
         parser.add_argument('ragequitPercentage', type=float)
-        parser.add_argument('initialPrice', type=float)
+        parser.add_argument('openingPrice', type=float)
         parser.add_argument('entryTribute', type=float)
         parser.add_argument('exitTribute', type=float)
-        parser.add_argument('hatchScenarioFunding', type=float)
+        parser.add_argument('reserveBalance', type=float)
         parser.add_argument('stepList', action='append')
         parser.add_argument('zoomGraph', type=int)
         parameters = parser.parse_args()
-        commons_percentage = parameters['commonsPercentage']
+        commons_percentage = parameters['commonsTribute']
         ragequit_percentage = parameters['ragequitPercentage']
-        initial_price = parameters['initialPrice']
+        opening_price = parameters['openingPrice']
         entry_tribute = parameters['entryTribute']
         exit_tribute = parameters['exitTribute']
-        hatch_scenario_funding = parameters['hatchScenarioFunding']
+        scenario_reserve_balance = parameters['reserveBalance']
         #parse the steplist (which gets read as string) into the right format
         steplist = []
         if parameters['stepList']:
@@ -98,10 +98,10 @@ class AugmentedBondingCurve(Resource):
         augmented_bonding_curve_model = BondingCurveHandler(
                 commons_percentage= commons_percentage,
                 ragequit_percentage= ragequit_percentage,
-                initial_price=initial_price,
+                opening_price=opening_price,
                 entry_tribute=entry_tribute,
                 exit_tribute=exit_tribute,
-                hatch_scenario_funding=hatch_scenario_funding,
+                scenario_reserve_balance=scenario_reserve_balance,
                 steplist=steplist,
                 zoom_graph= zoom_graph )
 

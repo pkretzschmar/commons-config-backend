@@ -10,17 +10,17 @@ TOTAL_INITIAL_TECH_SUPPLY= 2035.918945
 
 class BondingCurveInitializer:
 
-    def __init__(self, reserve_balance=100, initial_price=5, initial_supply=100):
-        self.initial_price = initial_price
+    def __init__(self, reserve_balance=100, opening_price=5, initial_supply=100):
+        self.opening_price = opening_price
         self.initial_supply = initial_supply
         self.initial_balance = reserve_balance
 
     def reserve_ratio(self):
-        return self.initial_balance / (self.initial_price * self.initial_supply)
+        return self.initial_balance / (self.opening_price * self.initial_supply)
     
     #Returns the token price given a specific supply
     def get_price(self, supply):
-        return (supply ** ((1 / self.reserve_ratio()) - 1) * self.initial_price) / (
+        return (supply ** ((1 / self.reserve_ratio()) - 1) * self.opening_price) / (
             self.initial_supply ** ((1 / self.reserve_ratio()) - 1)
         )
 
@@ -65,8 +65,8 @@ class BondingCurveInitializer:
 
 class BondingCurve(BondingCurveInitializer):
 
-    def __init__(self, reserve_balance=100, initial_price=5, initial_supply=100, entry_tribute=0.05, exit_tribute=0.05):
-        super().__init__(reserve_balance, initial_price, initial_supply)
+    def __init__(self, reserve_balance=100, opening_price=5, initial_supply=100, entry_tribute=0.05, exit_tribute=0.05):
+        super().__init__(reserve_balance, opening_price, initial_supply)
         self.current_supply = self.initial_supply
         self.current_balance = self.get_balance(self.initial_supply)
         self.entry_tribute = entry_tribute
@@ -98,7 +98,7 @@ class BondingCurveHandler():
 
     commons_percentage: int between 0-95. Percentage of funds that get substracted from the total funding to go to the commons pool
     ragequit_percentage: int between 0-20. Percentage of supply burned before the bonding curve gets initialized
-    initial_price: float. No real limit but, expected to be between 1 and 4
+    opening_price: float. No real limit but, expected to be between 1 and 4
     entry_tribute: int between 0-99. Percentage of funds substracted on buy (mint) operations before interacting with the bonding curve
     exit_tribute: int between 0-99. Percentage of funds substracted on sell (burn) operations after interacting with the boding curve
     steplist: list with format [["AMOUNT", "TOKEN"],["AMOUNT", "TOKEN"]]. Set of buy/sell operations applied to the bonding curve.
@@ -110,10 +110,10 @@ class BondingCurveHandler():
     def __init__(self,
                  commons_percentage,
                  ragequit_percentage,
-                 initial_price,
+                 opening_price,
                  entry_tribute,
                  exit_tribute,
-                 hatch_scenario_funding,
+                 scenario_reserve_balance,
                  steplist,
                  zoom_graph=0,
                  plot_mode=0):
@@ -123,20 +123,20 @@ class BondingCurveHandler():
         params_valid = self.check_param_validity( 
                  commons_percentage,
                  ragequit_percentage,
-                 initial_price,
+                 opening_price,
                  entry_tribute,
                  exit_tribute,
-                 float(hatch_scenario_funding),
+                 float(scenario_reserve_balance),
                  steplist,
                  int(zoom_graph),
                  int(plot_mode)
                  )
         #The numbers for initial supply and taken from the constants
-        self.bonding_curve = self.create_bonding_curve(commons_percentage=commons_percentage, ragequit_percentage=ragequit_percentage, initial_price=initial_price, entry_tribute= entry_tribute / 100, exit_tribute= exit_tribute / 100)
+        self.bonding_curve = self.create_bonding_curve(commons_percentage=commons_percentage, ragequit_percentage=ragequit_percentage, opening_price=opening_price, entry_tribute= entry_tribute / 100, exit_tribute= exit_tribute / 100)
         
         #set the current supply to the point where the scenarios are going to happen
-        if(float(hatch_scenario_funding) != TOTAL_HACTH_FUNDING):
-            scenario_supply= self.bonding_curve.get_supply(float(hatch_scenario_funding))
+        if(float(scenario_reserve_balance) != TOTAL_HACTH_FUNDING):
+            scenario_supply= self.bonding_curve.get_supply(float(scenario_reserve_balance))
             self.bonding_curve.set_new_supply(scenario_supply)
         
         self.steps_table = self.generate_outputs_table(bondingCurve= self.bonding_curve, steplist= steplist)
@@ -157,14 +157,14 @@ class BondingCurveHandler():
 
             return figure_bonding_curve, figure_buy_sell_table
 
-    def create_bonding_curve(self, commons_percentage=50, ragequit_percentage=5,  initial_price=3, entry_tribute=0.05, exit_tribute=0.05):
+    def create_bonding_curve(self, commons_percentage=50, ragequit_percentage=5,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05):
         
         initial_supply = TOTAL_INITIAL_TECH_SUPPLY * (1 - (ragequit_percentage/100))
         hatch_funding= TOTAL_HACTH_FUNDING * (1 - (ragequit_percentage/100))
 
         initial_reserve = hatch_funding - (hatch_funding * (commons_percentage/100))
         
-        bCurve = BondingCurve(initial_reserve, initial_price, initial_supply, entry_tribute, exit_tribute)
+        bCurve = BondingCurve(initial_reserve, opening_price, initial_supply, entry_tribute, exit_tribute)
 
         return bCurve
 
@@ -278,18 +278,18 @@ class BondingCurveHandler():
 
         return [min_range, max_range]
 
-    def check_param_validity(self, commons_percentage, ragequit_percentage, initial_price, entry_tribute, exit_tribute,  hatch_scenario_funding,  steplist, zoom_graph, plot_mode):
+    def check_param_validity(self, commons_percentage, ragequit_percentage, opening_price, entry_tribute, exit_tribute,  scenario_reserve_balance,  steplist, zoom_graph, plot_mode):
         if commons_percentage < 0 or commons_percentage > 95:
             raise ValueError("Error: Invalid Commons Percentage Parameter.")
         if ragequit_percentage < 0 or ragequit_percentage > 20:
             raise ValueError("Error: Invalid Ragequit Percentage Parameter.")
-        if initial_price <=0:
+        if opening_price <=0:
             raise ValueError("Error: Invalid Initial Price Parameter.")
         if entry_tribute < 0 or entry_tribute >= 100:
             raise ValueError("Error: Invalid Entry Tribute Parameter.")
         if exit_tribute < 0 or exit_tribute >= 100:
             raise ValueError("Error: Invalid Exit Tribute Parameter.")
-        if hatch_scenario_funding <= 0:
+        if scenario_reserve_balance <= 0:
             raise ValueError("Error: Invalid  Hatch Scenario Funding Parameter.")
         if not isinstance(steplist, list):
             raise ValueError("Error: Invalid Steplist Parameter.")
