@@ -148,7 +148,7 @@ class BondingCurveHandler():
 
         [min_range, max_range] = self.get_scenario_range(steps_table= self.steps_table, zoom_graph=self.zoom_graph)
 
-        figure_bonding_curve = self.get_data_augmented_bonding_curve(bondingCurve= self.bonding_curve, min_range=min_range, max_range=max_range, plot_mode=self.plot_mode).to_json()
+        figure_bonding_curve = self.get_data_augmented_bonding_curve(bondingCurve= self.bonding_curve, min_range=min_range, max_range=max_range, plot_mode=self.plot_mode).to_dict(orient='list')
         
         if self.steps_table.empty:
             return figure_bonding_curve
