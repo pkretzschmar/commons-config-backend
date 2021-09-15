@@ -75,6 +75,7 @@ class AugmentedBondingCurve(Resource):
         parser.add_argument('entryTribute', type=float)
         parser.add_argument('exitTribute', type=float)
         parser.add_argument('reserveBalance', type=float)
+        parser.add_argument('initialBuy', type=float)
         parser.add_argument('stepList', action='append')
         parser.add_argument('zoomGraph', type=int)
         parameters = parser.parse_args()
@@ -83,9 +84,12 @@ class AugmentedBondingCurve(Resource):
         opening_price = parameters['openingPrice']
         entry_tribute = parameters['entryTribute']
         exit_tribute = parameters['exitTribute']
+        initial_buy = parameters['initialBuy']
         scenario_reserve_balance = parameters['reserveBalance']
         #parse the steplist (which gets read as string) into the right format
         steplist = []
+        if initial_buy > 0: 
+            steplist.append([initial_buy, "wxDai"])
         if parameters['stepList']:
             for step in parameters['stepList']:
                 buf = step.strip('][').split(', ')

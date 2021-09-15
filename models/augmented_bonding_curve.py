@@ -150,12 +150,14 @@ class BondingCurveHandler():
 
         figure_bonding_curve = self.get_data_augmented_bonding_curve(bondingCurve= self.bonding_curve, min_range=min_range, max_range=max_range, plot_mode=self.plot_mode).to_dict(orient='list')
         
+        reserve_ratio = {"reserve ratio": self.bonding_curve.reserve_ratio()}
+
         if self.steps_table.empty:
-            return figure_bonding_curve
+            return figure_bonding_curve, reserve_ratio
         else: 
             figure_buy_sell_table = self.steps_table.loc[:,["step", "currentPrice", "amountIn", "tributeCollected", "amountOut", "newPrice", "slippage"]].to_dict(orient='list')
 
-            return figure_bonding_curve, figure_buy_sell_table
+            return figure_bonding_curve, reserve_ratio, figure_buy_sell_table
 
     def create_bonding_curve(self, commons_percentage=50, ragequit_percentage=5,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05):
         
