@@ -4,7 +4,7 @@ import numpy as np
 
 
 #These numbers are fixed from the hatch results (in thousands)
-TOTAL_HACTH_FUNDING = 1571.22357 
+TOTAL_HATCH_FUNDING = 1571.22357 
 TOTAL_INITIAL_TECH_SUPPLY= 2035.918945 
 
 
@@ -135,7 +135,7 @@ class BondingCurveHandler():
         self.bonding_curve = self.create_bonding_curve(commons_percentage=commons_percentage, ragequit_percentage=ragequit_percentage, opening_price=opening_price, entry_tribute= entry_tribute / 100, exit_tribute= exit_tribute / 100)
         
         #set the current supply to the point where the scenarios are going to happen
-        if(float(scenario_reserve_balance) != TOTAL_HACTH_FUNDING):
+        if(float(scenario_reserve_balance) != TOTAL_HATCH_FUNDING):
             scenario_supply= self.bonding_curve.get_supply(float(scenario_reserve_balance))
             self.bonding_curve.set_new_supply(scenario_supply)
         
@@ -148,21 +148,32 @@ class BondingCurveHandler():
 
         [min_range, max_range] = self.get_scenario_range(steps_table= self.steps_table, zoom_graph=self.zoom_graph)
 
-        figure_bonding_curve = self.get_data_augmented_bonding_curve(bondingCurve= self.bonding_curve, min_range=min_range, max_range=max_range, plot_mode=self.plot_mode).to_dict(orient='list')
+        clean_figure_data = self.get_data_augmented_bonding_curve(bondingCurve= self.bonding_curve, min_range=min_range, max_range=max_range, plot_mode=self.plot_mode).to_dict(orient='list')
+        clean_figure_data['reserveRatio'] = self.bonding_curve.reserve_ratio()
         
-        reserve_ratio = {"reserveRatio": self.bonding_curve.reserve_ratio()}
+        figure_bonding_curve= {"chartData": {}}
+        
+        #reserve_ratio = {"reserveRatio": self.bonding_curve.reserve_ratio()}
 
         if self.steps_table.empty:
-            return figure_bonding_curve, reserve_ratio
+            figure_bonding_curve['chartData'] = clean_figure_data
+            return figure_bonding_curve
         else: 
-            figure_buy_sell_table = self.steps_table.loc[:,["step", "currentPriceParsed", "amountIn", "tributeCollected", "amountOut", "newPriceParsed", "slippage"]].to_dict(orient='list')
+            figure_buy_sell_table ={"stepTable": self.steps_table.loc[:,["step", "currentPriceParsed", "amountIn", "tributeCollected", "amountOut", "newPriceParsed", "slippage"]].to_dict(orient='list')}
+            extended_figure_data = clean_figure_data
+            #get single points with full coordinates
+            extended_figure_data['singlePoints'] = self.get_single_point_coordinates(self.steps_table)
+            #get linspace from every step.
+            extended_figure_data['stepLinSpaces'] = self.get_step_linspaces(self.bonding_curve, self.steps_table)
 
-            return figure_bonding_curve, reserve_ratio, figure_buy_sell_table
+            figure_bonding_curve['chartData'] = extended_figure_data
+
+            return figure_bonding_curve, figure_buy_sell_table
 
     def create_bonding_curve(self, commons_percentage=50, ragequit_percentage=5,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05):
         
         initial_supply = TOTAL_INITIAL_TECH_SUPPLY * (1 - (ragequit_percentage/100))
-        hatch_funding= TOTAL_HACTH_FUNDING * (1 - (ragequit_percentage/100))
+        hatch_funding= TOTAL_HATCH_FUNDING * (1 - (ragequit_percentage/100))
 
         initial_reserve = hatch_funding - (hatch_funding * (commons_percentage/100))
         
@@ -252,17 +263,17 @@ class BondingCurveHandler():
             # add to Dataframe
             outputTable.loc[len(outputTable.index)] = [
                 (index+1),
-                round(current_price, 2),
+                current_price,
                 current_price_parsed,
-                round(bondingCurve.current_supply, 2),
-                round(bondingCurve.current_balance, 2),
+                bondingCurve.current_supply,
+                bondingCurve.current_balance,
                 amount_in_parsed,
                 tribute_collected_parsed,
                 amount_out_parsed,
-                round(new_price, 2),
+                new_price,
                 new_price_parsed,
-                round(new_supply, 2),
-                round(new_balance, 2),
+                new_supply,
+                new_balance,
                 slippage_pct,
             ]
 
@@ -281,7 +292,34 @@ class BondingCurveHandler():
         
         return curve_draw
 
-    
+    def get_single_point_coordinates(self, steps_table):
+
+        coord_list= []
+        
+        for index, row in steps_table.iterrows():
+            #point = {'pointBalance' : row['currentBalance'], 'pointPrice': row['currentPrice'], 'pointSupply': row['currentSupply']}
+            point = {'pointBalance' : row['currentBalance'], 'pointPrice': row['currentPrice']}
+            coord_list.append(point)          
+        
+        last_row = steps_table.iloc[-1]
+        #last_point = {'pointBalance' : last_row['newBalance'], 'pointPrice': last_row['newPrice'], 'pointSupply': row['newSupply']}
+        last_point = {'pointBalance' : last_row['newBalance'], 'pointPrice': last_row['newPrice']}
+        coord_list.append(last_point) 
+
+        return coord_list
+
+    def get_step_linspaces(self, bondingCurve, steps_table):
+
+        linspace_list = []
+
+        for index, row in steps_table.iterrows():
+            lin_step = bondingCurve.curve_over_balance(row['currentBalance'], row['newBalance'], steps=100).to_dict(orient='list')
+            #print("Interval:" + str(row['currentBalance']) + " - " + str(row['newBalance']))
+            linspace_list.append(lin_step)
+
+        return linspace_list
+
+
     def get_scenario_range(self, steps_table, zoom_graph=0):
 
         if steps_table.empty :
