@@ -313,8 +313,8 @@ class BondingCurveHandler():
         linspace_list = []
 
         for index, row in steps_table.iterrows():
-            lin_step = bondingCurve.curve_over_balance(row['currentBalance'], row['newBalance'], steps=100).to_dict(orient='list')
-            #print("Interval:" + str(row['currentBalance']) + " - " + str(row['newBalance']))
+            lin_step = bondingCurve.curve_over_balance(bondingCurve.get_supply(row['currentBalance']), bondingCurve.get_supply(row['newBalance']), steps=100).to_dict(orient='list')
+            print("Interval:" + str(row['currentBalance']) + " - " + str(row['newBalance']))
             linspace_list.append(lin_step)
 
         return linspace_list
@@ -339,9 +339,9 @@ class BondingCurveHandler():
             raise ValueError("Error: Invalid Ragequit Percentage Parameter.")
         if opening_price <=0:
             raise ValueError("Error: Invalid Initial Price Parameter.")
-        if entry_tribute < 0 or entry_tribute >= 100:
+        if entry_tribute < 0 or entry_tribute >= 1:
             raise ValueError("Error: Invalid Entry Tribute Parameter.")
-        if exit_tribute < 0 or exit_tribute >= 100:
+        if exit_tribute < 0 or exit_tribute >= 1:
             raise ValueError("Error: Invalid Exit Tribute Parameter.")
         if scenario_reserve_balance <= 0:
             raise ValueError("Error: Invalid  Hatch Scenario Funding Parameter.")

@@ -82,8 +82,8 @@ class AugmentedBondingCurve(Resource):
         commons_percentage = parameters['commonsTribute'] if parameters['commonsTribute'] is not None else 5
         ragequit_percentage = parameters['ragequitPercentage'] if parameters['ragequitPercentage'] is not None else 5
         opening_price = parameters['openingPrice'] if parameters['openingPrice'] is not None else 3
-        entry_tribute = parameters['entryTribute'] if parameters['entryTribute']  is not None else 0.05
-        exit_tribute = parameters['exitTribute'] if parameters['exitTribute'] is not None else 0.05
+        entry_tribute = (parameters['entryTribute'] / 100) if parameters['entryTribute']  is not None else 0.05
+        exit_tribute = (parameters['exitTribute'] / 100) if parameters['exitTribute'] is not None else 0.05
         initial_buy = parameters['initialBuy'] if parameters['initialBuy'] is not None else 0
         scenario_reserve_balance = parameters['reserveBalance'] if parameters['reserveBalance'] is not None else 1571.22357
         #parse the steplist (which gets read as string) into the right format
