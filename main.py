@@ -79,13 +79,13 @@ class AugmentedBondingCurve(Resource):
         parser.add_argument('stepList', action='append')
         parser.add_argument('zoomGraph', type=int)
         parameters = parser.parse_args()
-        commons_percentage = parameters['commonsTribute']
-        ragequit_percentage = parameters['ragequitPercentage']
-        opening_price = parameters['openingPrice']
-        entry_tribute = parameters['entryTribute']
-        exit_tribute = parameters['exitTribute']
-        initial_buy = parameters['initialBuy']
-        scenario_reserve_balance = parameters['reserveBalance']
+        commons_percentage = parameters['commonsTribute'] if parameters['commonsTribute'] is not None else 5
+        ragequit_percentage = parameters['ragequitPercentage'] if parameters['ragequitPercentage'] is not None else 5
+        opening_price = parameters['openingPrice'] if parameters['openingPrice'] is not None else 3
+        entry_tribute = parameters['entryTribute'] if parameters['entryTribute']  is not None else 0.05
+        exit_tribute = parameters['exitTribute'] if parameters['exitTribute'] is not None else 0.05
+        initial_buy = parameters['initialBuy'] if parameters['initialBuy'] is not None else 0
+        scenario_reserve_balance = parameters['reserveBalance'] if parameters['reserveBalance'] is not None else 1571.22357
         #parse the steplist (which gets read as string) into the right format
         steplist = []
         if initial_buy > 0: 
@@ -97,7 +97,7 @@ class AugmentedBondingCurve(Resource):
                 buf[1] = buf[1].strip("'")
                 steplist.append(buf)
 
-        zoom_graph = parameters['zoomGraph']
+        zoom_graph = parameters['zoomGraph'] if parameters['zoomGraph'] is not None else 0
 
         augmented_bonding_curve_model = BondingCurveHandler(
                 commons_percentage= commons_percentage,
