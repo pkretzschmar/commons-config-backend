@@ -314,7 +314,7 @@ class BondingCurveHandler():
 
         for index, row in steps_table.iterrows():
             lin_step = bondingCurve.curve_over_balance(bondingCurve.get_supply(row['currentBalance']), bondingCurve.get_supply(row['newBalance']), steps=100).to_dict(orient='list')
-            print("Interval:" + str(row['currentBalance']) + " - " + str(row['newBalance']))
+            #print("Interval:" + str(row['currentBalance']) + " - " + str(row['newBalance']))
             linspace_list.append(lin_step)
 
         return linspace_list
