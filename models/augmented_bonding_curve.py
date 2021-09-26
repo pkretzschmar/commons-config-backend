@@ -152,12 +152,13 @@ class BondingCurveHandler():
         clean_figure_data['reserveRatio'] = self.bonding_curve.reserve_ratio()
         
         figure_bonding_curve= {"chartData": {}}
+        figure_milestone_table = { "milestoneTable":  self.get_milestone_table(self.bonding_curve) }
         
         #reserve_ratio = {"reserveRatio": self.bonding_curve.reserve_ratio()}
 
         if self.steps_table.empty:
             figure_bonding_curve['chartData'] = clean_figure_data
-            return figure_bonding_curve
+            return figure_bonding_curve, figure_milestone_table
         else: 
             figure_buy_sell_table ={"stepTable": self.steps_table.loc[:,["step", "currentPriceParsed", "amountIn", "tributeCollected", "amountOut", "newPriceParsed", "slippage"]].to_dict(orient='list')}
             extended_figure_data = clean_figure_data
@@ -168,7 +169,7 @@ class BondingCurveHandler():
 
             figure_bonding_curve['chartData'] = extended_figure_data
 
-            return figure_bonding_curve, figure_buy_sell_table
+            return figure_bonding_curve, figure_buy_sell_table, figure_milestone_table
 
     def create_bonding_curve(self, commons_percentage=50, ragequit_percentage=5,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05):
         
@@ -331,6 +332,25 @@ class BondingCurveHandler():
 
 
         return [min_range, max_range]
+
+    def get_milestone_table(self, bCurve):
+        balance_list  = [250, 500, 1000, 2000, 3000, 5000, 10000]
+        price_list = []
+        supply_list = []
+
+        for bal in balance_list:
+            sup = bCurve.get_supply(bal)
+            supply_list.append(sup)
+            price_list.append(bCurve.get_price(sup))
+        
+        #print(balance_list)
+        #print(price_list)
+        #print(supply_list)
+
+        table_data = { "balance": balance_list, "supply": supply_list, "price": price_list}
+
+        #TO DO: See where to return it to
+        return table_data
 
     def check_param_validity(self, commons_percentage, ragequit_percentage, opening_price, entry_tribute, exit_tribute,  scenario_reserve_balance,  steplist, zoom_graph, plot_mode):
         if commons_percentage < 0 or commons_percentage > 95:
