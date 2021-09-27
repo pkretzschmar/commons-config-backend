@@ -70,38 +70,43 @@ class DisputableVoting(Resource):
 class AugmentedBondingCurve(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('commonsPercentage', type=float)
+        parser.add_argument('commonsTribute', type=float)
         parser.add_argument('ragequitPercentage', type=float)
-        parser.add_argument('initialPrice', type=float)
+        parser.add_argument('openingPrice', type=float)
         parser.add_argument('entryTribute', type=float)
         parser.add_argument('exitTribute', type=float)
-        parser.add_argument('hatchScenarioFunding', type=float)
+        parser.add_argument('reserveBalance', type=float)
+        parser.add_argument('initialBuy', type=float)
         parser.add_argument('stepList', action='append')
         parser.add_argument('zoomGraph', type=int)
         parameters = parser.parse_args()
-        commons_percentage = parameters['commonsPercentage']
-        ragequit_percentage = parameters['ragequitPercentage']
-        initial_price = parameters['initialPrice']
-        entry_tribute = parameters['entryTribute']
-        exit_tribute = parameters['exitTribute']
-        hatch_scenario_funding = parameters['hatchScenarioFunding']
+        commons_percentage = parameters['commonsTribute'] if parameters['commonsTribute'] is not None else 5
+        ragequit_percentage = parameters['ragequitPercentage'] if parameters['ragequitPercentage'] is not None else 5
+        opening_price = parameters['openingPrice'] if parameters['openingPrice'] is not None else 3
+        entry_tribute = (parameters['entryTribute'] / 100) if parameters['entryTribute']  is not None else 0.05
+        exit_tribute = (parameters['exitTribute'] / 100) if parameters['exitTribute'] is not None else 0.05
+        initial_buy = parameters['initialBuy'] if parameters['initialBuy'] is not None else 0
+        scenario_reserve_balance = parameters['reserveBalance'] if parameters['reserveBalance'] is not None else 1571.22357
         #parse the steplist (which gets read as string) into the right format
         steplist = []
-        for step in parameters['stepList']:
-            buf = step.strip('][').split(', ')
-            buf[0] = float(buf[0])
-            buf[1] = buf[1].strip("'")
-            steplist.append(buf)
+        if initial_buy > 0: 
+            steplist.append([initial_buy, "wxDai"])
+        if parameters['stepList']:
+            for step in parameters['stepList']:
+                buf = step.strip('][').split(', ')
+                buf[0] = float(buf[0])
+                buf[1] = buf[1].strip("'")
+                steplist.append(buf)
 
-        zoom_graph = parameters['zoomGraph']
+        zoom_graph = parameters['zoomGraph'] if parameters['zoomGraph'] is not None else 0
 
         augmented_bonding_curve_model = BondingCurveHandler(
                 commons_percentage= commons_percentage,
                 ragequit_percentage= ragequit_percentage,
-                initial_price=initial_price,
+                opening_price=opening_price,
                 entry_tribute=entry_tribute,
                 exit_tribute=exit_tribute,
-                hatch_scenario_funding=hatch_scenario_funding,
+                scenario_reserve_balance=scenario_reserve_balance,
                 steplist=steplist,
                 zoom_graph= zoom_graph )
 
