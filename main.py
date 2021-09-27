@@ -6,6 +6,7 @@ import json
 from models.disputable_voting import DisputableVotingModel
 from models.token_lockup import TokenLockupModel
 from models.augmented_bonding_curve import BondingCurveHandler
+from models.conviction_voting import ConvictionVotingModel
 
 app = Flask(__name__)
 api = Api(app)
@@ -112,11 +113,36 @@ class AugmentedBondingCurve(Resource):
         
         return jsonify(augmented_bonding_curve_model.get_data())
 
+class ConvictionVoting(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('spendingLimit', type=float)
+        parser.add_argument('minimumConviction', type=float)
+        parser.add_argument('convictionGrowth', type=int)
+        parser.add_argument('convictionVotingPeriodDays', type=int)
+        parameters = parser.parse_args()
+        spending_limit = parameters['spendingLimit']
+        minimum_conviction = parameters['minimumConviction']
+        conviction_growth = parameters['convictionGrowth']
+        voting_period_days = parameters['convictionVotingPeriodDays']
+
+        conviction_voting_model = ConvictionVotingModel(
+            spending_limit=spending_limit,
+            minimum_conviction=minimum_conviction,
+            conviction_growth=conviction_growth,
+            voting_period_days=voting_period_days
+        )
+
+        return jsonify(conviction_voting_model.get_data())
+
+
 
 api.add_resource(status, '/')
 api.add_resource(TokenLockup, '/token-lockup/')
 api.add_resource(DisputableVoting, '/disputable-voting/')
 api.add_resource(AugmentedBondingCurve, '/augmented-bonding-curve/')
+api.add_resource(ConvictionVoting, '/conviction-voting/')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
