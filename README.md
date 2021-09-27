@@ -76,6 +76,25 @@ To do an API call with the model input and receive the model outputs, it uses a 
 }
 ```
 
+### 4. Conviction Voting
+The model inputs are:
+- `convictionGrowth` (Number of days to a staked vote to acquire 50% of the maximum conviction)
+- `convictionVotingPeriodDays` (Number of days that a vote is staked and acquiring conviction)
+- `minimumConviction` (Minimum conviction to pass the smallest proposal possible)
+- `spendingLimit` (Maximum percentage of the Commons Pool requested by a proposal)
+
+The model output is a line chart plot of the percentage of effective supply voting on a proposal over the percentage of the commons pool funds being requested and a table showing different scenarios of the amount in the Commons Pool.
+
+To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/conviction-voting/` with the following body:
+```json
+{
+  "convictionGrowth": 2,
+  "convictionVotingPeriodDays": 7,
+  "minimumConviction": 0.05,
+  "spendingLimit": 0.2
+}
+```
+
 ## Install
 
 For setting up the Python3 virtual environment
