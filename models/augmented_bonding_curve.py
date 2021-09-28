@@ -152,15 +152,16 @@ class BondingCurveHandler():
         clean_figure_data['reserveRatio'] = self.bonding_curve.reserve_ratio()
         
         figure_bonding_curve= {"chartData": {}}
-        figure_milestone_table = { "milestoneTable":  self.get_milestone_table(self.bonding_curve) }
+        figure_milestone_table =self.get_milestone_table(self.bonding_curve) 
         
         #reserve_ratio = {"reserveRatio": self.bonding_curve.reserve_ratio()}
 
         if self.steps_table.empty:
             figure_bonding_curve['chartData'] = clean_figure_data
-            return figure_bonding_curve, figure_milestone_table
+            figure_bonding_curve['milestoneTable'] = figure_milestone_table
+            return figure_bonding_curve
         else: 
-            figure_buy_sell_table ={"stepTable": self.steps_table.loc[:,["step", "currentPriceParsed", "amountIn", "tributeCollected", "amountOut", "newPriceParsed", "slippage"]].to_dict(orient='list')}
+            figure_buy_sell_table =self.steps_table.loc[:,["step", "currentPriceParsed", "amountIn", "tributeCollected", "amountOut", "newPriceParsed", "slippage"]].to_dict(orient='list')
             extended_figure_data = clean_figure_data
             #get single points with full coordinates
             extended_figure_data['singlePoints'] = self.get_single_point_coordinates(self.steps_table)
@@ -168,8 +169,10 @@ class BondingCurveHandler():
             extended_figure_data['stepLinSpaces'] = self.get_step_linspaces(self.bonding_curve, self.steps_table)
 
             figure_bonding_curve['chartData'] = extended_figure_data
+            figure_bonding_curve['stepTable'] = figure_buy_sell_table
+            figure_bonding_curve['milestoneTable'] = figure_milestone_table
 
-            return figure_bonding_curve, figure_buy_sell_table, figure_milestone_table
+            return figure_bonding_curve
 
     def create_bonding_curve(self, commons_percentage=0.5, ragequit_percentage=0.05,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05):
         
