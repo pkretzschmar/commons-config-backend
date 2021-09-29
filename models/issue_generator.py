@@ -26,7 +26,7 @@ class IssueGeneratorModel:
             "tokenThaw": 15
         }
         self.abc = abc if abc is not None else {
-            "commonsTribute": 25,
+            "commonsTribute": 0.25,
             "ragequit": 0.05,
             "initialPrice":1.5,
             "entryTribute": 0.5,
@@ -97,7 +97,14 @@ class IssueGeneratorModel:
             commons_tribute_remainder="{0:.2f}".format(100 - 100 * self.abc.get("commonsTribute", "")),
             entry_tribute="{0:.2f}".format(100 * self.abc.get("entryTribute", "")),
             exit_tribute="{0:.2f}".format(100 * self.abc.get("exitTribute", "")),
-            reserve_ratio="{0:.2f}".format(100 * augmented_bonding_curve_output[0]["chartData"]["reserveRatio"]),
+            reserve_ratio="{0:.2f}".format(100 * augmented_bonding_curve_output["chartData"]["reserveRatio"]),
+            step=augmented_bonding_curve_output["stepTable"]["step"],
+            current_price=augmented_bonding_curve_output["stepTable"]["currentPriceParsed"],
+            amount_in=augmented_bonding_curve_output["stepTable"]["amountIn"],
+            tribute_collected=augmented_bonding_curve_output["stepTable"]["tributeCollected"],
+            amount_out=augmented_bonding_curve_output["stepTable"]["amountOut"],
+            new_price=augmented_bonding_curve_output["stepTable"]["newPriceParsed"],
+            price_slippage=augmented_bonding_curve_output["stepTable"]["slippage"],
 
             support_required=self.tao_voting.get("supportRequired", ""),
             minimum_quorum=self.tao_voting.get("minimumQuorum", ""),

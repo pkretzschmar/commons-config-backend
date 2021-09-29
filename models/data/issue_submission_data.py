@@ -42,11 +42,11 @@ Here the proposer can explain their parameter choices, briefly or in depth if th
 
 ![](https://i.imgur.com/44MoI7N.png)
 
-| Step #     | Current Price                | Amount In      | Tribute Collected            | Amount Out      | New Price                | Price Slippage       |
-| ---------- | ---------------------------- | -------------- | ---------------------------- | --------------- | ------------------------ | -------------------- |
-| **Step 1** | current_price[0] wxDAI/TEC | amount_in[0] | tribute_collected[0] wxDAI | amount_out[0] | new_price[0] wxDAI/TEC | price_slippage[0]% |
-| **Step 2** | current_price[1] wxDAI/TEC | amount_in[1] | tribute_collected[1] wxDAI | amount_out[1] | new_price[1] wxDAI/TEC | price_slippage[1]% |
-| **Step 3** | current_price[2] wxDAI/TEC | amount_in[2] | tribute_collected[2] wxDAI | amount_out[2] | new_price[1] wxDAI/TEC | price_slippage[2]% |
+| Step #             | Current Price      | Amount In      | Tribute Collected      | Amount Out      | New Price      | Price Slippage      |
+| ------------------ | ------------------ | -------------- | ---------------------- | --------------- | -------------- | ------------------- |
+| **Step {step[0]}** | {current_price[0]} | {amount_in[0]} | {tribute_collected[0]} | {amount_out[0]} | {new_price[0]} | {price_slippage[0]} |
+| **Step {step[1]}** | {current_price[1]} | {amount_in[1]} | {tribute_collected[1]} | {amount_out[1]} | {new_price[1]} | {price_slippage[1]} |
+| **Step {step[2]}** | {current_price[2]} | {amount_in[2]} | {tribute_collected[2]} | {amount_out[2]} | {new_price[1]} | {price_slippage[2]} |
 
 
 # Module 3: Tao Voting 
