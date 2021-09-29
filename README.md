@@ -95,6 +95,51 @@ To do an API call with the model input and receive the model outputs, it uses a 
 }
 ```
 
+### 5. Output Generator
+This final endpoint takas as input all the previous model inputs and generate a github issue with all the selected parameters and outputs. 
+
+To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/issue-generator/` with the following body:
+```json
+{
+  "title": "TEC Dashboard Parameters Proposal",
+  "tokenLockup": {
+    "openingPrice": 5,
+    "tokenFreeze": 20,
+    "tokenThaw": 15
+  },
+  "augmentedBondingCurve": {
+    "commonsTribute": 0.25,
+    "ragequit": 0.05,
+    "initialPrice":1.5,
+    "entryTribute": 0.5,
+    "exitTribute": 0.15,
+    "hatchScenarioFunding": 1571.22357,
+    "stepList": [[5, "TEC"], [1000, "wxDai"], [10, "TEC"]],
+    "zoomGraph": 0
+  },
+  "taoVoting": {
+    "supportRequired": 40,
+    "minimumQuorum": 10,
+    "voteDuration": 7,
+    "delegatedVotingPeriod": 3,
+    "quietEndingPeriod": 2,
+    "quietEndingExtension": 1,
+    "executionDelay": 1
+  },
+  "convictionVoting": {
+    "convictionGrowth": 2,
+    "minimumConviction": 0.01,
+    "votingPeriodDays": 7,
+    "spendingLimit": 0.2
+  },
+  "advancedSettings": {
+    "minimumEffectiveSupply": 4,
+    "hatchersRageQuit": 3,
+    "virtualBalance": 3000000
+  }
+}
+```
+
 ## Install
 
 For setting up the Python3 virtual environment
