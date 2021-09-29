@@ -4,8 +4,10 @@ import json
 import os
 from dotenv import load_dotenv
 
-from data.issue_submission_data import test_issue_data
-
+from models.data.issue_submission_data import test_issue_data
+from models.token_lockup import TokenLockupModel
+from models.conviction_voting import ConvictionVotingModel
+from models.augmented_bonding_curve import BondingCurveHandler
 
 load_dotenv() 
 
@@ -19,61 +21,107 @@ class IssueGeneratorModel:
                  advanced_settings=None):
         self.title = title if title is not None else "TEC Config Dashboard Proposal test"
         self.token_lockup = token_lockup if token_lockup is not None else {
-            "opening_price": 5,
-            "token_freeze": 20,
-            "token_thaw": 15
+            "openingPrice": 5,
+            "tokenFreeze": 20,
+            "tokenThaw": 15
         }
         self.abc = abc if abc is not None else {
-            "commons_tribute": 25,
-            "entry_tribute": 5,
-            "exit_tribute": 15
+            "commonsTribute": 25,
+            "ragequit": 0.05,
+            "initialPrice":1.5,
+            "entryTribute": 0.5,
+            "exitTribute": 0.15,
+            "hatchScenarioFunding": 1571.22357,
+            "stepList": [[5, "TEC"], [1000, "wxDai"], [10, "TEC"]],
+            "zoomGraph": 0
         }
         self.tao_voting = tao_voting if tao_voting is not None else {
-            "support_required": 40,
-            "minimum_quorum": 10,
-            "vote_duration": 7,
-            "delegated_voting_period": 3,
-            "quiet_ending_period": 2,
-            "quiet_ending_extension": 1,
-            "execution_delay": 1
+            "supportRequired": 40,
+            "minimumQuorum": 10,
+            "voteDuration": 7,
+            "delegatedVotingPeriod": 3,
+            "quietEndingPeriod": 2,
+            "quietEndingExtension": 1,
+            "executionDelay": 1
         }
         self.conviction_voting = conviction_voting if conviction_voting is not None else {
-            "conviction_growth": 2,
-            "minimum_conviction": 1,
-            "relative_spending_limit": 20
+            "convictionGrowth": 2,
+            "minimumConviction": 0.01,
+            "votingPeriodDays": 7,
+            "spendingLimit": 0.2
         }
         self.advanced_settings = advanced_settings if advanced_settings is not None else {
-            "minimum_effective_supply": 4,
-            "hatchers_rage_quit": 3,
-            "virtual_balance": 3_000_000
+            "minimumEffectiveSupply": 4,
+            "hatchersRageQuit": 3,
+            "virtualBalance": 3_000_000
         }
 
     def format_output_issue(self):
+        token_lockup_model = TokenLockupModel(
+            opening_price=self.token_lockup.get("openingPrice", ""),
+            token_freeze_period=self.token_lockup.get("tokenFreeze", ""),
+            token_thaw_period=self.token_lockup.get("tokenThaw", ""),
+        )
+        token_lockup_output = token_lockup_model.get_data().get("output", "")
+        token_lockup_table = token_lockup_output.get("table", "")
+
+        augmented_bonding_curve_model = BondingCurveHandler(
+                        commons_percentage=self.abc.get("commonsTribute", ""),
+                        ragequit_percentage= self.abc.get("ragequit", ""),
+                        opening_price=self.abc.get("initialPrice", ""),
+                        entry_tribute=self.abc.get("entryTribute", ""),
+                        exit_tribute=self.abc.get("exitTribute", ""),
+                        scenario_reserve_balance=self.abc.get("hatchScenarioFunding", ""),
+                        steplist=self.abc.get("stepList", ""),
+                        zoom_graph= self.abc.get("zoomGraph", ""))
+        augmented_bonding_curve_output = augmented_bonding_curve_model.get_data()
+
+        conviction_voting_model = ConvictionVotingModel(
+            conviction_growth=self.conviction_voting.get("convictionGrowth", ""),
+            minimum_conviction=self.conviction_voting.get("minimumConviction", ""),
+            voting_period_days=self.conviction_voting.get("votingPeriodDays", ""),
+            spending_limit=self.conviction_voting.get("spendingLimit", ""),
+        )
+        conviction_voting_output = conviction_voting_model.get_data().get("output", "")
+        conviction_voting_table = conviction_voting_output.get("table", "")
+
         formated_output = test_issue_data.format(
-            token_freeze_period=self.token_lockup.get("token_freeze", ""),
-            token_thaw_period=self.token_lockup.get("token_thaw", ""),
-            opening_price=self.token_lockup.get("opening_price", ""),
+            token_freeze_period=self.token_lockup.get("tokenFreeze", ""),
+            token_thaw_period=self.token_lockup.get("tokenThaw", ""),
+            opening_price=self.token_lockup.get("openingPrice", ""),
+            token_lockup_week=token_lockup_table["week"],
+            tokens_released=["{0:.2f}".format(100 * item) for item in token_lockup_table["tokensReleased"]],
+            price_floor=["{0:.2f}".format(item) for item in token_lockup_table["price"]],
 
-            commons_tribute=self.abc.get("commons_tribute", ""),
-            commons_tribute_remainder= 100 - self.abc.get("commons_tribute", ""),
-            entry_tribute=self.abc.get("entry_tribute", ""),
-            exit_tribute=self.abc.get("exit_tribute", ""),
-            support_required=self.tao_voting.get("support_required", ""),
-            minimum_quorum=self.tao_voting.get("minimum_quorum", ""),
+            commons_tribute="{0:.2f}".format(100 * self.abc.get("commonsTribute", "")),
+            commons_tribute_remainder="{0:.2f}".format(100 - 100 * self.abc.get("commonsTribute", "")),
+            entry_tribute="{0:.2f}".format(100 * self.abc.get("entryTribute", "")),
+            exit_tribute="{0:.2f}".format(100 * self.abc.get("exitTribute", "")),
+            reserve_ratio="{0:.2f}".format(100 * augmented_bonding_curve_output[0]["chartData"]["reserveRatio"]),
 
-            vote_duration_days=self.tao_voting.get("vote_duration", ""),
-            delegated_voting_days=self.tao_voting.get("delegated_voting_period", ""),
-            quiet_ending_days=self.tao_voting.get("quiet_ending_period", ""),
-            quiet_ending_extension_days=self.tao_voting.get("quiet_ending_extension", ""),
-            execution_delay_hours=self.tao_voting.get("execution_delay", ""),
+            support_required=self.tao_voting.get("supportRequired", ""),
+            minimum_quorum=self.tao_voting.get("minimumQuorum", ""),
+            vote_duration_days=self.tao_voting.get("voteDuration", ""),
+            delegated_voting_days=self.tao_voting.get("delegatedVotingPeriod", ""),
+            quiet_ending_days=self.tao_voting.get("quietEndingPeriod", ""),
+            quiet_ending_extension_days=self.tao_voting.get("quietEndingExtension", ""),
+            execution_delay_days=self.tao_voting.get("executionDelay", ""),
 
-            conviction_growth_days=self.conviction_voting.get("conviction_growth", ""),
-            minimum_conviction=self.conviction_voting.get("minimum_conviction", ""),
-            relative_spending_limit=self.conviction_voting.get("relative_spending_limit", ""),
-        
-            minimum_effective_supply=self.advanced_settings.get("minimum_effective_supply", ""),
-            hatchers_rage_quit=self.advanced_settings.get("hatchers_rage_quit", ""),
-            virtual_balance="{:,}".format(self.advanced_settings.get("virtual_balance", ""))
+            vote_duration_days_1_extension = self.tao_voting.get("voteDuration", "") + self.tao_voting.get("executionDelay", ""),
+            vote_duration_days_2_extensions = self.tao_voting.get("voteDuration", "") + self.tao_voting.get("quietEndingExtension", "") + self.tao_voting.get("executionDelay", ""),
+
+            conviction_growth_days=self.conviction_voting.get("convictionGrowth", ""),
+            minimum_conviction=100 * self.conviction_voting.get("minimumConviction", ""),
+            relative_spending_limit=100 * self.conviction_voting.get("spendingLimit", ""),
+            effective_supply=conviction_voting_table["totalEffectiveSupply"],
+            requested_amount=conviction_voting_table["requestedAmount"],
+            amount_common_pool=conviction_voting_table["amountInCommonPool"],
+            min_tokens_pass=conviction_voting_table["minTokensToPass"],
+            tokens_pass_2_weeks=conviction_voting_table["tokensToPassIn2Weeks"],
+
+            minimum_effective_supply=self.advanced_settings.get("minimumEffectiveSupply", ""),
+            hatchers_rage_quit=self.advanced_settings.get("hatchersRageQuit", ""),
+            virtual_balance="{:,}".format(self.advanced_settings.get("virtualBalance", ""))
 
         )
         return formated_output
@@ -83,4 +131,4 @@ class IssueGeneratorModel:
         headers = {'Content-Type': 'application/json', 'Authorization': PARAMS_BOT_AUTH_TOKEN}
         data = {"title": self.title, "body": self.format_output_issue()}
         r = requests.post('https://api.github.com/repos/CommonsBuild/test-issues-config-dashboard/issues', data=json.dumps(data), headers=headers)
-        return r.text
+        return (r.status_code, r.json().get("html_url", ""))
