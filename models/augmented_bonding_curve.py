@@ -96,11 +96,11 @@ class BondingCurveHandler():
 
     The constrctor receives following args:
 
-    commons_percentage: int between 0-95. Percentage of funds that get substracted from the total funding to go to the commons pool
-    ragequit_percentage: int between 0-20. Percentage of supply burned before the bonding curve gets initialized
+    commons_percentage: float between 0-0.95. Percentage of funds that get substracted from the total funding to go to the commons pool
+    ragequit_percentage: int between 0-0.20. Percentage of supply burned before the bonding curve gets initialized
     opening_price: float. No real limit but, expected to be between 1 and 4
-    entry_tribute: int between 0-99. Percentage of funds substracted on buy (mint) operations before interacting with the bonding curve
-    exit_tribute: int between 0-99. Percentage of funds substracted on sell (burn) operations after interacting with the boding curve
+    entry_tribute: float between 0-0.99. Percentage of funds substracted on buy (mint) operations before interacting with the bonding curve
+    exit_tribute: float between 0-0.99. Percentage of funds substracted on sell (burn) operations after interacting with the boding curve
     steplist: list with format [["AMOUNT", "TOKEN"],["AMOUNT", "TOKEN"]]. Set of buy/sell operations applied to the bonding curve.
     zoom_graph=0: optional. value 0 or 1. To specify if the draw function should show the whole curve(0) or "zoom in" into the area where operations are happening (1)
     plot_mode=0: optional. value 0 or 1. Not in the scope of this iteration. Specifies if the draw function should plot the price against the balance (0) or the supply (1)
@@ -152,14 +152,16 @@ class BondingCurveHandler():
         clean_figure_data['reserveRatio'] = self.bonding_curve.reserve_ratio()
         
         figure_bonding_curve= {"chartData": {}}
+        figure_milestone_table =self.get_milestone_table(self.bonding_curve) 
         
         #reserve_ratio = {"reserveRatio": self.bonding_curve.reserve_ratio()}
 
         if self.steps_table.empty:
             figure_bonding_curve['chartData'] = clean_figure_data
+            figure_bonding_curve['milestoneTable'] = figure_milestone_table
             return figure_bonding_curve
         else: 
-            figure_buy_sell_table ={"stepTable": self.steps_table.loc[:,["step", "currentPriceParsed", "amountIn", "tributeCollected", "amountOut", "newPriceParsed", "slippage"]].to_dict(orient='list')}
+            figure_buy_sell_table =self.steps_table.loc[:,["step", "currentPriceParsed", "amountIn", "tributeCollected", "amountOut", "newPriceParsed", "slippage"]].to_dict(orient='list')
             extended_figure_data = clean_figure_data
             #get single points with full coordinates
             extended_figure_data['singlePoints'] = self.get_single_point_coordinates(self.steps_table)
@@ -167,15 +169,17 @@ class BondingCurveHandler():
             extended_figure_data['stepLinSpaces'] = self.get_step_linspaces(self.bonding_curve, self.steps_table)
 
             figure_bonding_curve['chartData'] = extended_figure_data
+            figure_bonding_curve['stepTable'] = figure_buy_sell_table
+            figure_bonding_curve['milestoneTable'] = figure_milestone_table
 
-            return figure_bonding_curve, figure_buy_sell_table
+            return figure_bonding_curve
 
-    def create_bonding_curve(self, commons_percentage=50, ragequit_percentage=5,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05):
+    def create_bonding_curve(self, commons_percentage=0.5, ragequit_percentage=0.05,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05):
         
-        initial_supply = TOTAL_INITIAL_TECH_SUPPLY * (1 - (ragequit_percentage/100))
-        hatch_funding= TOTAL_HATCH_FUNDING * (1 - (ragequit_percentage/100))
+        initial_supply = TOTAL_INITIAL_TECH_SUPPLY * (1 - ragequit_percentage)
+        hatch_funding= TOTAL_HATCH_FUNDING * (1 - ragequit_percentage)
 
-        initial_reserve = hatch_funding - (hatch_funding * (commons_percentage/100))
+        initial_reserve = hatch_funding - (hatch_funding * commons_percentage)
         
         bCurve = BondingCurve(initial_reserve, opening_price, initial_supply, entry_tribute, exit_tribute)
 
@@ -332,10 +336,29 @@ class BondingCurveHandler():
 
         return [min_range, max_range]
 
+    def get_milestone_table(self, bCurve):
+        balance_list  = [250, 500, 1000, 2000, 3000, 5000, 10000]
+        price_list = []
+        supply_list = []
+
+        for bal in balance_list:
+            sup = bCurve.get_supply(bal)
+            supply_list.append(sup)
+            price_list.append(bCurve.get_price(sup))
+        
+        #print(balance_list)
+        #print(price_list)
+        #print(supply_list)
+
+        table_data = { "balance": balance_list, "supply": supply_list, "price": price_list}
+
+        #TO DO: See where to return it to
+        return table_data
+
     def check_param_validity(self, commons_percentage, ragequit_percentage, opening_price, entry_tribute, exit_tribute,  scenario_reserve_balance,  steplist, zoom_graph, plot_mode):
-        if commons_percentage < 0 or commons_percentage > 95:
+        if commons_percentage < 0 or commons_percentage > 0.95:
             raise ValueError("Error: Invalid Commons Percentage Parameter.")
-        if ragequit_percentage < 0 or ragequit_percentage > 20:
+        if ragequit_percentage < 0 or ragequit_percentage > 0.20:
             raise ValueError("Error: Invalid Ragequit Percentage Parameter.")
         if opening_price <=0:
             raise ValueError("Error: Invalid Initial Price Parameter.")
