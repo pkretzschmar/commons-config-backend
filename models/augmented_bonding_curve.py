@@ -301,13 +301,13 @@ class BondingCurveHandler():
         coord_list= []
         
         for index, row in steps_table.iterrows():
-            #point = {'pointBalance' : row['currentBalance'], 'pointPrice': row['currentPrice'], 'pointSupply': row['currentSupply']}
-            point = {'pointBalance' : row['currentBalance'], 'pointPrice': row['currentPrice']}
+            #point = {'x' : row['currentBalance'], 'y': row['currentPrice'], 'pointSupply': row['currentSupply']}
+            point = {'x' : row['currentBalance'], 'y': row['currentPrice']}
             coord_list.append(point)          
         
         last_row = steps_table.iloc[-1]
-        #last_point = {'pointBalance' : last_row['newBalance'], 'pointPrice': last_row['newPrice'], 'pointSupply': row['newSupply']}
-        last_point = {'pointBalance' : last_row['newBalance'], 'pointPrice': last_row['newPrice']}
+        #last_point = {'x' : last_row['newBalance'], 'y': last_row['newPrice'], 'pointSupply': row['newSupply']}
+        last_point = {'x' : last_row['newBalance'], 'y': last_row['newPrice']}
         coord_list.append(last_point) 
 
         return coord_list
@@ -317,7 +317,9 @@ class BondingCurveHandler():
         linspace_list = []
 
         for index, row in steps_table.iterrows():
-            lin_step = bondingCurve.curve_over_balance(bondingCurve.get_supply(row['currentBalance']), bondingCurve.get_supply(row['newBalance']), steps=100).to_dict(orient='list')
+            lin_step_df = bondingCurve.curve_over_balance(bondingCurve.get_supply(row['currentBalance']), bondingCurve.get_supply(row['newBalance']), steps=100)
+            lin_step_df = lin_step_df.rename(columns={"balanceInThousands": "x", "price": "y"})
+            lin_step = lin_step_df.to_dict(orient='list')
             #print("Interval:" + str(row['currentBalance']) + " - " + str(row['newBalance']))
             linspace_list.append(lin_step)
 
