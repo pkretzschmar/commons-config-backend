@@ -18,12 +18,15 @@ class IssueGeneratorModel:
                  abc=None,
                  tao_voting=None,
                  conviction_voting=None,
-                 advanced_settings=None):
+                 advanced_settings=None,
+                 overall_strategy=None):
         self.title = title if title is not None else "TEC Config Dashboard Proposal test"
+        self.overall_strategy = overall_strategy if overall_strategy is not None else ""
         self.token_lockup = token_lockup if token_lockup is not None else {
             "openingPrice": 5,
             "tokenFreeze": 20,
-            "tokenThaw": 15
+            "tokenThaw": 15,
+            "strategy": ""
         }
         self.abc = abc if abc is not None else {
             "commonsTribute": 0.25,
@@ -33,7 +36,8 @@ class IssueGeneratorModel:
             "exitTribute": 0.15,
             "hatchScenarioFunding": 1571.22357,
             "stepList": [[5, "TEC"], [1000, "wxDai"], [10, "TEC"]],
-            "zoomGraph": 0
+            "zoomGraph": 0,
+            "strategy": ""
         }
         self.tao_voting = tao_voting if tao_voting is not None else {
             "supportRequired": 40,
@@ -42,18 +46,20 @@ class IssueGeneratorModel:
             "delegatedVotingPeriod": 3,
             "quietEndingPeriod": 2,
             "quietEndingExtension": 1,
-            "executionDelay": 1
+            "executionDelay": 1,
+            "strategy": ""
         }
         self.conviction_voting = conviction_voting if conviction_voting is not None else {
             "convictionGrowth": 2,
             "minimumConviction": 0.01,
             "votingPeriodDays": 7,
-            "spendingLimit": 0.2
+            "spendingLimit": 0.2,
+            "strategy": ""
         }
         self.advanced_settings = advanced_settings if advanced_settings is not None else {
             "minimumEffectiveSupply": 4,
             "hatchersRageQuit": 3,
-            "virtualBalance": 3_000_000
+            "virtualBalance": 3_000_000,
         }
 
     def format_output_issue(self):
@@ -86,6 +92,9 @@ class IssueGeneratorModel:
         conviction_voting_table = conviction_voting_output.get("table", "")
 
         formated_output = test_issue_data.format(
+            overall_strategy=self.overall_strategy,
+
+            token_lockup_strategy=self.token_lockup.get("strategy", ""),
             token_freeze_period=self.token_lockup.get("tokenFreeze", ""),
             token_thaw_period=self.token_lockup.get("tokenThaw", ""),
             opening_price=self.token_lockup.get("openingPrice", ""),
@@ -93,6 +102,7 @@ class IssueGeneratorModel:
             tokens_released=["{0:.2f}".format(100 * item) for item in token_lockup_table["tokensReleased"]],
             price_floor=["{0:.2f}".format(item) for item in token_lockup_table["price"]],
 
+            abc_strategy=self.abc.get("strategy", ""),
             commons_tribute="{0:.2f}".format(100 * self.abc.get("commonsTribute", "")),
             commons_tribute_remainder="{0:.2f}".format(100 - 100 * self.abc.get("commonsTribute", "")),
             entry_tribute="{0:.2f}".format(100 * self.abc.get("entryTribute", "")),
@@ -106,6 +116,7 @@ class IssueGeneratorModel:
             new_price=augmented_bonding_curve_output["stepTable"]["newPriceParsed"],
             price_slippage=augmented_bonding_curve_output["stepTable"]["slippage"],
 
+            tao_voting_strategy=self.tao_voting.get("strategy", ""),
             support_required=self.tao_voting.get("supportRequired", ""),
             minimum_quorum=self.tao_voting.get("minimumQuorum", ""),
             vote_duration_days=self.tao_voting.get("voteDuration", ""),
@@ -113,10 +124,10 @@ class IssueGeneratorModel:
             quiet_ending_days=self.tao_voting.get("quietEndingPeriod", ""),
             quiet_ending_extension_days=self.tao_voting.get("quietEndingExtension", ""),
             execution_delay_days=self.tao_voting.get("executionDelay", ""),
-
             vote_duration_days_1_extension = self.tao_voting.get("voteDuration", "") + self.tao_voting.get("executionDelay", ""),
             vote_duration_days_2_extensions = self.tao_voting.get("voteDuration", "") + self.tao_voting.get("quietEndingExtension", "") + self.tao_voting.get("executionDelay", ""),
 
+            conviction_voting_strategy=self.conviction_voting.get("strategy", ""),
             conviction_growth_days=self.conviction_voting.get("convictionGrowth", ""),
             minimum_conviction=100 * self.conviction_voting.get("minimumConviction", ""),
             relative_spending_limit=100 * self.conviction_voting.get("spendingLimit", ""),
@@ -138,4 +149,4 @@ class IssueGeneratorModel:
         headers = {'Content-Type': 'application/json', 'Authorization': PARAMS_BOT_AUTH_TOKEN}
         data = {"title": self.title, "body": self.format_output_issue()}
         r = requests.post('https://api.github.com/repos/CommonsBuild/test-issues-config-dashboard/issues', data=json.dumps(data), headers=headers)
-        return (r.status_code, r.json().get("html_url", ""))
+        return {"status": r.status_code, "url": r.json().get("html_url", "")}

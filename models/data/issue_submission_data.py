@@ -4,7 +4,7 @@ test_issue_data = """
 #### Advanced Settings Modified? (Yes or No)
 
 ## What is your overall Commons Configuration strategy? 
-The proposer here should outline their big picture thought process for the settings they chose. Also here they can highlight if their proposal is a fork, what they changed or perhaps any unique and/or contentious settings they chose and why.
+{overall_strategy}
 
 ### [FORK MY PROPOSAL]() (link)
 
@@ -14,7 +14,7 @@ The proposer here should outline their big picture thought process for the setti
 - The **Opening Price** is set to **{opening_price} wxDAI**, meaning at the outset of the Commons Upgrade the price to buy TEC on the Augmented Bonding Curve will be {opening_price} wxDAI. 
 
 ### Strategy:
-Here the proposer can explain their parameter choices, briefly or in depth if they choose.
+{token_lockup_strategy}
 
 ### Data:
 ![](https://i.imgur.com/Wk3jgGo.jpg)
@@ -34,7 +34,7 @@ Here the proposer can explain their parameter choices, briefly or in depth if th
 - **Exit Tribute** is set to **{exit_tribute}%** meaning that from every **SELL** order on the ABC, {exit_tribute}% of the order value in wxDAI is subtracted and sent to the Common Pool. 
 
 ### Strategy:
-Here the proposer can explain their parameter choices, briefly or in depth if they choose.
+{abc_strategy}
 
 ### Data:
 
@@ -57,12 +57,11 @@ Here the proposer can explain their parameter choices, briefly or in depth if th
 - **Quiet Ending Period** is set to **{quiet_ending_days} day(s)**, this means that {quiet_ending_days} day(s) before the end of the Vote Duration, if the vote outcome changes, the Quiet Ending Extension will be triggered. 
 - **Quiet Ending Extension** is set to **{quiet_ending_extension_days} day(s)**, meaning that if the vote outcome changes during the Quiet Ending Period, an additional {quiet_ending_extension_days} day(s) will be added for voting.
 - **Execution Delay** is set to **{execution_delay_days} days(s)**, meaning that there is an {execution_delay_days} day delay after the vote is passed before the proposed action is executed.  
+
 ### Strategy:
-Here the proposer can explain their parameter choices, briefly or in depth if they choose.
+{tao_voting_strategy}
 
 ### Data: 
-
-
 ![](https://i.imgur.com/UE0J1sR.png)
 
 |# of Quiet Ending Extensions                 | No Extensions             | With 1 Extension                      | With 2 Extensions                      |
@@ -73,8 +72,9 @@ Here the proposer can explain their parameter choices, briefly or in depth if th
 - **Conviction Growth** is set to **{conviction_growth_days} day(s)**, meaning that Conviction will increase by 50% every {conviction_growth_days} day(s).
 - **Minimum Conviction** is set to **{minimum_conviction}%**, this means that to pass a funding request for an infinitely small amount will still take a minimum of {minimum_conviction}% of the total TEC currently active in the Conviction Voting application.
 - The **Spending Limit** is set to **{relative_spending_limit}%**, which means that no more than {relative_spending_limit}% of the total funds in the Common Pool can be requested by a single proposal. 
+
 ###  Strategy: 
-Here the proposer can explain their parameter choices, briefly or in depth if they choose.
+{conviction_voting_strategy}
 
 ### Data: 
 ![](https://i.imgur.com/9RK5Hom.png)

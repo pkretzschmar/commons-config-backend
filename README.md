@@ -102,12 +102,15 @@ To do an API call with the model input and receive the model outputs, it uses a 
 ```json
 {
   "title": "TEC Dashboard Parameters Proposal",
+	"overallStrategy": "",
   "tokenLockup": {
+		"strategy": "",
     "openingPrice": 5,
     "tokenFreeze": 20,
     "tokenThaw": 15
   },
   "augmentedBondingCurve": {
+		"strategy": "",
     "commonsTribute": 0.25,
     "ragequit": 0.05,
     "initialPrice":1.5,
@@ -118,6 +121,7 @@ To do an API call with the model input and receive the model outputs, it uses a 
     "zoomGraph": 0
   },
   "taoVoting": {
+		"strategy": "",
     "supportRequired": 40,
     "minimumQuorum": 10,
     "voteDuration": 7,
@@ -127,6 +131,7 @@ To do an API call with the model input and receive the model outputs, it uses a 
     "executionDelay": 1
   },
   "convictionVoting": {
+		"strategy": "",
     "convictionGrowth": 2,
     "minimumConviction": 0.01,
     "votingPeriodDays": 7,

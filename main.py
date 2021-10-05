@@ -118,6 +118,7 @@ class IssueGenerator(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('title', type=str)
+        parser.add_argument('overallStrategy', type=str)
         parser.add_argument('tokenLockup', type=dict)
         parser.add_argument('augmentedBondingCurve', type=dict)
         parser.add_argument('taoVoting', type=dict)
@@ -126,6 +127,7 @@ class IssueGenerator(Resource):
 
         parameters = parser.parse_args()
         title = parameters['title']
+        overall_strategy = parameters['overallStrategy']
         token_lockup = parameters['tokenLockup']
         abc = parameters['augmentedBondingCurve']
         tao_voting = parameters['taoVoting']
@@ -138,7 +140,8 @@ class IssueGenerator(Resource):
             abc=abc,
             tao_voting=tao_voting,
             conviction_voting=conviction_voting,
-            advanced_settings=advanced_settings
+            advanced_settings=advanced_settings,
+            overall_strategy=overall_strategy
         )
 
         return jsonify(issue_generator.generate_output())
