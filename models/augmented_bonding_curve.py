@@ -3,9 +3,10 @@ import pandas as pd
 import numpy as np
 
 
-#These numbers are fixed from the hatch results (in thousands)
+#These numbers are fixed from the hatch results (all in thousands except the token price)
 TOTAL_HATCH_FUNDING = 1571.22357 
 TOTAL_INITIAL_TECH_SUPPLY= 2035.918945 
+HATCH_FINAL_TECH_PRICE = 1.5 #NOT THE REAL NUMBER!!! UPDATE 
 
 
 class BondingCurveInitializer:
@@ -97,7 +98,7 @@ class BondingCurveHandler():
     The constrctor receives following args:
 
     commons_percentage: float between 0-0.95. Percentage of funds that get substracted from the total funding to go to the commons pool
-    ragequit_percentage: int between 0-0.20. Percentage of supply burned before the bonding curve gets initialized
+    ragequit_amount: float, wxDai in thousands . Amount of reserve returned to ragequitters before the bonding curve gets initialized
     opening_price: float. No real limit but, expected to be between 1 and 4
     entry_tribute: float between 0-0.99. Percentage of funds substracted on buy (mint) operations before interacting with the bonding curve
     exit_tribute: float between 0-0.99. Percentage of funds substracted on sell (burn) operations after interacting with the boding curve
@@ -109,10 +110,11 @@ class BondingCurveHandler():
 
     def __init__(self,
                  commons_percentage,
-                 ragequit_percentage,
+                 ragequit_amount,
                  opening_price,
                  entry_tribute,
                  exit_tribute,
+                 initial_buy,
                  scenario_reserve_balance,
                  steplist,
                  zoom_graph=0,
@@ -122,17 +124,18 @@ class BondingCurveHandler():
         #
         params_valid = self.check_param_validity( 
                  commons_percentage,
-                 ragequit_percentage,
+                 ragequit_amount,
                  opening_price,
                  entry_tribute,
                  exit_tribute,
+                 initial_buy,
                  float(scenario_reserve_balance),
                  steplist,
                  int(zoom_graph),
                  int(plot_mode)
                  )
         #The numbers for initial supply and taken from the constants
-        self.bonding_curve = self.create_bonding_curve(commons_percentage=commons_percentage, ragequit_percentage=ragequit_percentage, opening_price=opening_price, entry_tribute= entry_tribute / 100, exit_tribute= exit_tribute / 100)
+        self.bonding_curve = self.create_bonding_curve(commons_percentage=commons_percentage, ragequit_amount=ragequit_amount, opening_price=opening_price, entry_tribute= entry_tribute / 100, exit_tribute= exit_tribute / 100, initial_buy=initial_buy)
         
         #set the current supply to the point where the scenarios are going to happen
         if(float(scenario_reserve_balance) != TOTAL_HATCH_FUNDING):
@@ -161,7 +164,7 @@ class BondingCurveHandler():
             figure_bonding_curve['milestoneTable'] = figure_milestone_table
             return figure_bonding_curve
         else: 
-            figure_buy_sell_table =self.steps_table.loc[:,["step", "currentPriceParsed", "amountIn", "tributeCollected", "amountOut", "newPriceParsed", "slippage"]].to_dict(orient='list')
+            figure_buy_sell_table =self.steps_table.loc[:,["step", "currentPriceParsed", "currentSupplyParsed","amountIn", "tributeCollected", "amountOut", "newPriceParsed", "slippage"]].to_dict(orient='list')
             extended_figure_data = clean_figure_data
             #get single points with full coordinates
             extended_figure_data['singlePoints'] = self.get_single_point_coordinates(self.steps_table)
@@ -174,12 +177,12 @@ class BondingCurveHandler():
 
             return figure_bonding_curve
 
-    def create_bonding_curve(self, commons_percentage=0.5, ragequit_percentage=0.05,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05):
+    def create_bonding_curve(self, commons_percentage=0.5, ragequit_amount=100,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05, initial_buy=0):
         
-        initial_supply = TOTAL_INITIAL_TECH_SUPPLY * (1 - ragequit_percentage)
-        hatch_funding= TOTAL_HATCH_FUNDING * (1 - ragequit_percentage)
+        initial_supply = TOTAL_INITIAL_TECH_SUPPLY - (ragequit_amount / HATCH_FINAL_TECH_PRICE)
+        hatch_funding= TOTAL_HATCH_FUNDING  - ragequit_amount  - initial_buy
 
-        initial_reserve = hatch_funding - (hatch_funding * commons_percentage)
+        initial_reserve = hatch_funding * (1 - commons_percentage)
         
         bCurve = BondingCurve(initial_reserve, opening_price, initial_supply, entry_tribute, exit_tribute)
 
@@ -192,23 +195,33 @@ class BondingCurveHandler():
             "currentPrice",
             "currentPriceParsed",
             "currentSupply",
+            "currentSupplyParsed",
             "currentBalance",
+            "currentBalanceParsed",
             "amountIn",
             "tributeCollected",
             "amountOut",
             "newPrice",
             "newPriceParsed",
             "newSupply",
+            "newSupplyParsed",
             "newBalance",
+            "newBalanceParsed",
             "slippage",
         ]
         outputTable = pd.DataFrame(columns=column_names)
 
         for index, step in enumerate(steplist):
 
-            current_price = bondingCurve.get_price(bondingCurve.current_supply)
+            current_supply = float(bondingCurve.current_supply)
+            current_supply_parsed = str(format(current_supply, '.2f')) + " TEC"
+
+            current_price = bondingCurve.get_price(current_supply)
             current_price_parsed = str(format(current_price, '.2f')) + " wxDAI"
             #current_price_parsed = str(round(current_price, 2)) + " wxDAI"
+
+            current_balance = float(bondingCurve.current_balance)
+            current_balance_parsed = str(format(current_balance, '.2f')) + " wxDAI"
 
             amount_in = step[0]
             token_type = "wxDAI" if step[1] == "wxDai" else step[1] #to avoid the most obvious error. TO DO: in-depth validation of the steplist...
@@ -231,12 +244,12 @@ class BondingCurveHandler():
                 tribute_collected_parsed = str(format(tribute_collected, '.2f')) + "k wxDAI"
                 #tribute_collected_parsed = str(round(tribute_collected, 2)) + "k wxDAI"
 
-                slippage = (amount_in - tribute_collected)/bondingCurve.get_price(bondingCurve.current_supply) - amount_out
-                slippage_pct = slippage / ((amount_in - tribute_collected)/bondingCurve.get_price(bondingCurve.current_supply))
+                slippage = (amount_in - tribute_collected)/bondingCurve.get_price(current_supply) - amount_out
+                slippage_pct = slippage / ((amount_in - tribute_collected)/bondingCurve.get_price(current_supply))
                 slippage_pct = str(format((slippage_pct*100), '.2f')) + "%"
 
                 new_supply = max(
-                    0, bondingCurve.current_supply + amount_out
+                    0, current_supply + amount_out
                 )
             elif token_type == "TEC":
                 #this section works, but all the -1 mults are a bit of a mess. 
@@ -251,40 +264,49 @@ class BondingCurveHandler():
                 amount_out_parsed = str(format((amount_out*-1), '.2f')) + "k wxDAI" 
                 #amount_out_parsed = str(round((amount_out*-1), 2)) + "k wxDAI"
 
-                slippage = ((amount_in*(1-bondingCurve.exit_tribute))*bondingCurve.get_price(bondingCurve.current_supply) - amount_out) *-1
-                slippage_pct = slippage / ((amount_in*(1-bondingCurve.exit_tribute))*bondingCurve.get_price(bondingCurve.current_supply)) *-1
+                slippage = ((amount_in*(1-bondingCurve.exit_tribute))*bondingCurve.get_price(current_supply) - amount_out) *-1
+                slippage_pct = slippage / ((amount_in*(1-bondingCurve.exit_tribute))*bondingCurve.get_price(current_supply)) *-1
                 slippage_pct = str(format((slippage_pct*100), '.2f')) + "%"
 
                 new_supply = max(
-                    0, bondingCurve.current_supply + bondingCurve.purchase_return(amount_out),
+                    0, current_supply + bondingCurve.purchase_return(amount_out),
                 )
+                
 
             new_price = bondingCurve.get_price(new_supply)
             new_price_parsed = str(format(new_price, '.2f')) + " wxDAI"
-            #new_price_parsed = str(roud(new_price, 2)) + " wxDAI"
+            #new_price_parsed = str(round(new_price, 2)) + " wxDAI"
+
+            new_supply_parsed = str(format(new_supply, '.2f')) + " TEC"
+
             new_balance = bondingCurve.get_balance(new_supply)
+            new_balance_parsed = str(format(new_balance, '.2f')) + " wxDAI"
 
             # add to Dataframe
             outputTable.loc[len(outputTable.index)] = [
                 (index+1),
                 current_price,
                 current_price_parsed,
-                bondingCurve.current_supply,
-                bondingCurve.current_balance,
+                current_supply,
+                current_supply_parsed,
+                current_balance,
+                current_balance_parsed,
                 amount_in_parsed,
                 tribute_collected_parsed,
                 amount_out_parsed,
                 new_price,
                 new_price_parsed,
                 new_supply,
+                new_supply_parsed,
                 new_balance,
+                new_balance_parsed,
                 slippage_pct,
             ]
 
             # update current supply and balance 
             bondingCurve.set_new_supply(new_supply)
 
-
+        #print(outputTable)
         return outputTable
 
     def get_data_augmented_bonding_curve(self, bondingCurve, min_range, max_range, plot_mode=0):
@@ -354,20 +376,21 @@ class BondingCurveHandler():
 
         table_data = { "balance": balance_list, "supply": supply_list, "price": price_list}
 
-        #TO DO: See where to return it to
         return table_data
 
-    def check_param_validity(self, commons_percentage, ragequit_percentage, opening_price, entry_tribute, exit_tribute,  scenario_reserve_balance,  steplist, zoom_graph, plot_mode):
+    def check_param_validity(self, commons_percentage, ragequit_amount, opening_price, entry_tribute, exit_tribute, initial_buy,  scenario_reserve_balance,  steplist, zoom_graph, plot_mode):
         if commons_percentage < 0 or commons_percentage > 0.95:
             raise ValueError("Error: Invalid Commons Percentage Parameter.")
-        if ragequit_percentage < 0 or ragequit_percentage > 0.20:
-            raise ValueError("Error: Invalid Ragequit Percentage Parameter.")
+        if ragequit_amount < 0:
+            raise ValueError("Error: Invalid Ragequit Amount Parameter.")
         if opening_price <=0:
             raise ValueError("Error: Invalid Initial Price Parameter.")
         if entry_tribute < 0 or entry_tribute >= 1:
             raise ValueError("Error: Invalid Entry Tribute Parameter.")
         if exit_tribute < 0 or exit_tribute >= 1:
             raise ValueError("Error: Invalid Exit Tribute Parameter.")
+        if initial_buy < 0 or initial_buy > (TOTAL_HATCH_FUNDING - ragequit_amount):
+            raise ValueError("Error: The Initial Buy is either negative or bigger than the remaining Hatch Funding after Ragequits.")
         if scenario_reserve_balance <= 0:
             raise ValueError("Error: Invalid  Hatch Scenario Funding Parameter.")
         if not isinstance(steplist, list):
