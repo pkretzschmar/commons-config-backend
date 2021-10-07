@@ -30,14 +30,14 @@ class IssueGeneratorModel:
         }
         self.abc = abc if abc is not None else {
             "commonsTribute": 0.25,
-            "ragequitAmount": 0.05,
-            "initialBuy": 0,
-            "openingPrice":1.5,
+            "ragequitAmount": 60,
+            "initialBuy": 200,
+            "openingPrice":1.65,
             "reserveBalance": 1571.22357,
-            "entryTribute": 0.5,
+            "entryTribute": 0.05,
             "exitTribute": 0.15,
             "hatchScenarioFunding": 1571.22357,
-            "stepList": [[5, "TEC"], [1000, "wxDai"], [10, "TEC"]],
+            "stepList": [[5000, "wxDai"], [100000, "wxDai"], [3000, "TEC"]],
             "zoomGraph": 0,
             "strategy": ""
         }
