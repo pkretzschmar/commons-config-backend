@@ -72,7 +72,7 @@ class AugmentedBondingCurve(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('commonsTribute', type=float)
-        parser.add_argument('ragequitPercentage', type=float)
+        parser.add_argument('ragequitAmount', type=float)
         parser.add_argument('openingPrice', type=float)
         parser.add_argument('entryTribute', type=float)
         parser.add_argument('exitTribute', type=float)
@@ -82,7 +82,7 @@ class AugmentedBondingCurve(Resource):
         parser.add_argument('zoomGraph', type=int)
         parameters = parser.parse_args()
         commons_percentage = parameters['commonsTribute'] if parameters['commonsTribute'] is not None else 0.05
-        ragequit_percentage = parameters['ragequitPercentage'] if parameters['ragequitPercentage'] is not None else 0.05
+        ragequit_amount = parameters['ragequitAmount'] if parameters['ragequitAmount'] is not None else 100
         opening_price = parameters['openingPrice'] if parameters['openingPrice'] is not None else 3
         entry_tribute = parameters['entryTribute'] if parameters['entryTribute']  is not None else 0.05
         exit_tribute = parameters['exitTribute'] if parameters['exitTribute'] is not None else 0.05
@@ -95,7 +95,7 @@ class AugmentedBondingCurve(Resource):
         if parameters['stepList']:
             for step in parameters['stepList']:
                 buf = step.strip('][').split(', ')
-                buf[0] = float(buf[0])
+                buf[0] = (float(buf[0]) / 1000)
                 buf[1] = buf[1].strip("'")
                 steplist.append(buf)
 
@@ -103,10 +103,11 @@ class AugmentedBondingCurve(Resource):
 
         augmented_bonding_curve_model = BondingCurveHandler(
                 commons_percentage= commons_percentage,
-                ragequit_percentage= ragequit_percentage,
+                ragequit_amount= ragequit_amount,
                 opening_price=opening_price,
                 entry_tribute=entry_tribute,
                 exit_tribute=exit_tribute,
+                initial_buy=initial_buy,
                 scenario_reserve_balance=scenario_reserve_balance,
                 steplist=steplist,
                 zoom_graph= zoom_graph )
