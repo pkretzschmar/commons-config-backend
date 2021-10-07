@@ -18,12 +18,12 @@ class ConvictionVotingModel:
         self.min_active_stake_pct = 0.05
         self.table_scenarios = {
                 'totalEffectiveSupply': [
-                    100_000,
-                    100_000,
-                    100_000,
-                    100_000,
-                    100_000,
-                    100_000,
+                    1_500_000,
+                    1_500_000,
+                    1_500_000,
+                    1_500_000,
+                    1_500_000,
+                    1_500_000,
                 ],
                 'requestedAmount': [
                     1_000,
@@ -34,7 +34,7 @@ class ConvictionVotingModel:
                     25_000,
                 ],
                 'amountInCommonPool': [
-                    10_000,
+                    100_000,
                     750_000,
                     100_000,
                     750_000,
