@@ -39,14 +39,15 @@ The model output is a linechart data of the price plotted over the wxDai balance
 
 To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/augmented-bonding-curve/` with the following body:
 ```json
-{ 
-  "commonsPercentage": 25,
-  "ragequitPercentage": 5,
-  "initialPrice": 1.5,
-  "entryTribute": 5, 
-  "exitTribute": 5, 
-  "hatchScenarioFunding": 1571.22357, 
-  "stepList": [[5, "TEC"], [1000, "wxDai"], [10, "TEC"]], 
+{
+  "commonsTribute": 0.5,
+  "ragequitAmount": 60,
+  "openingPrice": 1.65,
+  "entryTribute": 0.02,
+  "exitTribute": 0.15,
+  "reserveBalance": 1571.22357,
+  "initialBuy": 0,
+  "stepList": [[5000, "wxDai"], [100000, "wxDai"], [3000, "TEC"]],
   "zoomGraph": 0
 }
 ```
@@ -110,14 +111,15 @@ To do an API call with the model input and receive the model outputs, it uses a 
     "tokenThaw": 15
   },
   "augmentedBondingCurve": {
-		"strategy": "",
-    "commonsTribute": 0.25,
-    "ragequit": 0.05,
-    "initialPrice":1.5,
-    "entryTribute": 0.5,
+    "strategy": "",
+    "commonsTribute": 0.5,
+    "ragequitAmount": 60,
+    "openingPrice": 1.65,
+    "entryTribute": 0.02,
     "exitTribute": 0.15,
-    "hatchScenarioFunding": 1571.22357,
-    "stepList": [[5, "TEC"], [1000, "wxDai"], [10, "TEC"]],
+    "reserveBalance": 1571.22357,
+    "initialBuy": 0,
+    "stepList": [[5000, "wxDai"], [100000, "wxDai"], [3000, "TEC"]],
     "zoomGraph": 0
   },
   "taoVoting": {

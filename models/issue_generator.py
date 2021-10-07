@@ -30,8 +30,10 @@ class IssueGeneratorModel:
         }
         self.abc = abc if abc is not None else {
             "commonsTribute": 0.25,
-            "ragequit": 0.05,
-            "initialPrice":1.5,
+            "ragequitAmount": 0.05,
+            "initialBuy": 0,
+            "openingPrice":1.5,
+            "reserveBalance": 1571.22357,
             "entryTribute": 0.5,
             "exitTribute": 0.15,
             "hatchScenarioFunding": 1571.22357,
@@ -73,11 +75,12 @@ class IssueGeneratorModel:
 
         augmented_bonding_curve_model = BondingCurveHandler(
                         commons_percentage=self.abc.get("commonsTribute", ""),
-                        ragequit_percentage= self.abc.get("ragequit", ""),
-                        opening_price=self.abc.get("initialPrice", ""),
+                        ragequit_amount=self.abc.get("ragequitAmount", ""),
+                        opening_price=self.abc.get("openingPrice", ""),
                         entry_tribute=self.abc.get("entryTribute", ""),
                         exit_tribute=self.abc.get("exitTribute", ""),
-                        scenario_reserve_balance=self.abc.get("hatchScenarioFunding", ""),
+                        scenario_reserve_balance=self.abc.get("reserveBalance", ""),
+                        initial_buy=self.abc.get("initialBuy", ""),
                         steplist=self.abc.get("stepList", ""),
                         zoom_graph= self.abc.get("zoomGraph", ""))
         augmented_bonding_curve_output = augmented_bonding_curve_model.get_data()
