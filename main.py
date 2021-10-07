@@ -85,19 +85,9 @@ class AugmentedBondingCurve(Resource):
         opening_price = parameters['openingPrice'] if parameters['openingPrice'] is not None else 3
         entry_tribute = parameters['entryTribute'] if parameters['entryTribute']  is not None else 0.05
         exit_tribute = parameters['exitTribute'] if parameters['exitTribute'] is not None else 0.05
-        initial_buy = parameters['initialBuy'] if parameters['initialBuy'] is not None else 0
         scenario_reserve_balance = parameters['reserveBalance'] if parameters['reserveBalance'] is not None else 1571.22357
-        #parse the steplist (which gets read as string) into the right format
-        steplist = []
-        if initial_buy > 0: 
-            steplist.append([initial_buy, "wxDai"])
-        if parameters['stepList']:
-            for step in parameters['stepList']:
-                buf = step.strip('][').split(', ')
-                buf[0] = (float(buf[0]) / 1000)
-                buf[1] = buf[1].strip("'")
-                steplist.append(buf)
-
+        initial_buy = parameters['initialBuy'] if parameters['initialBuy'] is not None else 0        
+        steplist = parameters['stepList'] if parameters['stepList'] is not None else ""
         zoom_graph = parameters['zoomGraph'] if parameters['zoomGraph'] is not None else 0
 
         augmented_bonding_curve_model = BondingCurveHandler(
