@@ -71,7 +71,8 @@ class ConvictionVotingModel:
         return np.where(staked > self.min_active_stake_pct, staked, self.min_active_stake_pct)
 
     def get_threshold(self, requested_pct):
-        return self.get_weight() / (self.spending_limit - requested_pct) ** 2 if np.any(requested_pct > self.minimum_conviction) else self.minimum_conviction
+        return self.get_weight() / (self.spending_limit - requested_pct) ** 2
+        #return self.get_weight() / (self.spending_limit - requested_pct) ** 2 if np.any(requested_pct <= self.minimum_conviction) else float('inf')
 
     def current_conviction_pergentage_of_max(self, time):
         current_conviction = self.get_conviction(0, self.staked_on_proposal, time=time)
