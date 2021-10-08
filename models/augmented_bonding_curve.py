@@ -6,7 +6,7 @@ import numpy as np
 #These numbers are fixed from the hatch results (all in thousands except the token price)
 TOTAL_HATCH_FUNDING = 1571.22357 
 TOTAL_INITIAL_TECH_SUPPLY= 2035.918945 
-HATCH_FINAL_TECH_PRICE = 1.5 #NOT THE REAL NUMBER!!! UPDATE 
+HATCH_FINAL_TECH_PRICE = 0.8 #NOT THE REAL NUMBER!!! UPDATE 
 
 
 class BondingCurveInitializer:
@@ -119,9 +119,16 @@ class BondingCurveHandler():
                  steplist,
                  zoom_graph=0,
                  plot_mode=0):
-        #
-        #check here for validity of parameters
-        #
+
+        #parse the steplist (which gets read as string) into the right format
+        steplist_parsed = []
+        if steplist != "":
+            for step in steplist:
+                buf = step.strip('][').split(', ')
+                buf[0] = (float(buf[0]) / 1000)
+                buf[1] = buf[1].strip("'")
+                steplist_parsed.append(buf)
+
         params_valid = self.check_param_validity( 
                  commons_percentage,
                  ragequit_amount,
@@ -130,19 +137,29 @@ class BondingCurveHandler():
                  exit_tribute,
                  initial_buy,
                  float(scenario_reserve_balance),
-                 steplist,
+                 steplist_parsed,
                  int(zoom_graph),
                  int(plot_mode)
                  )
         #The numbers for initial supply and taken from the constants
         self.bonding_curve = self.create_bonding_curve(commons_percentage=commons_percentage, ragequit_amount=ragequit_amount, opening_price=opening_price, entry_tribute= entry_tribute / 100, exit_tribute= exit_tribute / 100, initial_buy=initial_buy)
         
-        #set the current supply to the point where the scenarios are going to happen
+        #If there is an initial buy, perform it here  
+        self.steps_table = pd.DataFrame()  
+        if initial_buy > 0: 
+            #the buy-in gets saved as "step zero"
+            self.steps_table = self.steps_table.append(self.generate_outputs_table(bondingCurve= self.bonding_curve, steplist= [[initial_buy, "wxDai"]]))
+            self.steps_table["step"] = 0
+
+
+        #set the current supply to the point where the scenarios are going to happen (if it isn't the launch situation)
+        # if it's the launch situation, the supply change from the buy in has already been saved before
         if(float(scenario_reserve_balance) != TOTAL_HATCH_FUNDING):
             scenario_supply= self.bonding_curve.get_supply(float(scenario_reserve_balance))
             self.bonding_curve.set_new_supply(scenario_supply)
         
-        self.steps_table = self.generate_outputs_table(bondingCurve= self.bonding_curve, steplist= steplist)
+        #calculate the scenarios
+        self.steps_table = self.steps_table.append(self.generate_outputs_table(bondingCurve= self.bonding_curve, steplist= steplist_parsed))
         self.zoom_graph = zoom_graph
         self.plot_mode = plot_mode
     
@@ -157,8 +174,6 @@ class BondingCurveHandler():
         figure_bonding_curve= {"chartData": {}}
         figure_milestone_table =self.get_milestone_table(self.bonding_curve) 
         
-        #reserve_ratio = {"reserveRatio": self.bonding_curve.reserve_ratio()}
-
         if self.steps_table.empty:
             figure_bonding_curve['chartData'] = clean_figure_data
             figure_bonding_curve['milestoneTable'] = figure_milestone_table
