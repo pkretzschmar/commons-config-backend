@@ -156,7 +156,7 @@ class BondingCurveHandler():
         # if it's the launch situation, the supply change from the buy in has already been saved before
         # rounded a bit to make sure it gets triggered when necessary
         adjusted_start_balance = round((TOTAL_HATCH_FUNDING * (1- commons_percentage)), 3)
-        if(round(scenario_reserve_balance, 3) != adjusted_start_balance ):
+        if(round(scenario_reserve_balance, 3) != adjusted_start_balance):
             scenario_supply= self.bonding_curve.get_supply(float(scenario_reserve_balance))
             self.bonding_curve.set_new_supply(scenario_supply)
         
