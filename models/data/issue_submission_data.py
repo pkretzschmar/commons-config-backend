@@ -1,6 +1,4 @@
 test_issue_data = """
-# My Submission Title
-
 #### Advanced Settings Modified? (Yes or No)
 
 ## What is your overall Commons Configuration strategy? 

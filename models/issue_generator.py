@@ -73,16 +73,26 @@ class IssueGeneratorModel:
         token_lockup_output = token_lockup_model.get_data().get("output", "")
         token_lockup_table = token_lockup_output.get("table", "")
 
+        commons_percentage = self.abc.get("commonsTribute", 0.05)
+        ragequit_amount = ragequit_amount=self.abc.get("ragequitAmount", 100)
+        opening_price = self.abc.get("openingPrice", 3)
+        entry_tribute = self.abc.get("entryTribute", 0.05)
+        exit_tribute = self.abc.get("entryTribute", 0.05)
+        scenario_reserve_balance = self.abc.get("reserveBalance", 1571.22357)
+        initial_buy = self.abc.get("initialBuy", 0)     
+        steplist = self.abc.get("stepList", "")
+        zoom_graph = self.abc.get("zoomGraph", 0)
+
         augmented_bonding_curve_model = BondingCurveHandler(
-                        commons_percentage=self.abc.get("commonsTribute", ""),
-                        ragequit_amount=self.abc.get("ragequitAmount", ""),
-                        opening_price=self.abc.get("openingPrice", ""),
-                        entry_tribute=self.abc.get("entryTribute", ""),
-                        exit_tribute=self.abc.get("exitTribute", ""),
-                        scenario_reserve_balance=self.abc.get("reserveBalance", ""),
-                        initial_buy=self.abc.get("initialBuy", ""),
-                        steplist=self.abc.get("stepList", ""),
-                        zoom_graph= self.abc.get("zoomGraph", ""))
+                        commons_percentage=commons_percentage,
+                        ragequit_amount=ragequit_amount,
+                        opening_price=opening_price,
+                        entry_tribute=entry_tribute,
+                        exit_tribute=exit_tribute,
+                        scenario_reserve_balance=scenario_reserve_balance,
+                        initial_buy=initial_buy,
+                        steplist=steplist,
+                        zoom_graph=zoom_graph)
         augmented_bonding_curve_output = augmented_bonding_curve_model.get_data()
 
         conviction_voting_model = ConvictionVotingModel(
