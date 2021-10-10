@@ -124,7 +124,7 @@ class BondingCurveHandler():
         steplist_parsed = []
         if steplist != "":
             for step in steplist:
-                buf = step.strip('][').split(', ')
+                buf = str(step).strip('][').split(', ')
                 buf[0] = (float(buf[0]) / 1000)
                 buf[1] = buf[1].strip("'")
                 steplist_parsed.append(buf)

@@ -6,6 +6,7 @@ import json
 from models.disputable_voting import DisputableVotingModel
 from models.token_lockup import TokenLockupModel
 from models.augmented_bonding_curve import BondingCurveHandler
+from models.issue_generator import IssueGeneratorModel
 from models.conviction_voting import ConvictionVotingModel
 
 app = Flask(__name__)
@@ -104,6 +105,38 @@ class AugmentedBondingCurve(Resource):
         
         return jsonify(augmented_bonding_curve_model.get_data())
 
+class IssueGenerator(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('title', type=str)
+        parser.add_argument('overallStrategy', type=str)
+        parser.add_argument('tokenLockup', type=dict)
+        parser.add_argument('augmentedBondingCurve', type=dict)
+        parser.add_argument('taoVoting', type=dict)
+        parser.add_argument('convictionVoting', type=dict)
+        parser.add_argument('advancedSettings', type=dict)
+
+        parameters = parser.parse_args()
+        title = parameters['title']
+        overall_strategy = parameters['overallStrategy']
+        token_lockup = parameters['tokenLockup']
+        abc = parameters['augmentedBondingCurve']
+        tao_voting = parameters['taoVoting']
+        conviction_voting = parameters['convictionVoting']
+        advanced_settings = parameters['advancedSettings']
+
+        issue_generator = IssueGeneratorModel(
+            title=title,
+            token_lockup=token_lockup,
+            abc=abc,
+            tao_voting=tao_voting,
+            conviction_voting=conviction_voting,
+            advanced_settings=advanced_settings,
+            overall_strategy=overall_strategy
+        )
+
+        return jsonify(issue_generator.generate_output())
+
 class ConvictionVoting(Resource):
     def post(self):
         parser = reqparse.RequestParser()
@@ -132,6 +165,7 @@ api.add_resource(status, '/')
 api.add_resource(TokenLockup, '/token-lockup/')
 api.add_resource(DisputableVoting, '/disputable-voting/')
 api.add_resource(AugmentedBondingCurve, '/augmented-bonding-curve/')
+api.add_resource(IssueGenerator, '/issue-generator/')
 api.add_resource(ConvictionVoting, '/conviction-voting/')
 
 
