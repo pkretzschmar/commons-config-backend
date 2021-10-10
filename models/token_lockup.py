@@ -52,7 +52,7 @@ class TokenLockupModel:
         df.loc[df['week'] <= self.token_freeze_period, 'price'] = self.opening_price
         df.loc[df['week'] > self.token_freeze_period, 'price'] = (self.opening_price - (df['week'] - self.token_freeze_period) * weekly_token_thaw)
         df.loc[df['price'] < 0, 'price'] = 0
-        df['tokensReleased'] =  (1 - df['price'] / self.opening_price)
+        df['tokensReleased'] = 1 - (df['price'] / self.opening_price)
 
         self.output_dict['output']['table'] = df.to_dict(orient='list')
 
