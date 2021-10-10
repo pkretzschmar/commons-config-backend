@@ -39,14 +39,15 @@ The model output is a linechart data of the price plotted over the wxDai balance
 
 To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/augmented-bonding-curve/` with the following body:
 ```json
-{ 
-  "commonsPercentage": 25,
-  "ragequitPercentage": 5,
-  "initialPrice": 1.5,
-  "entryTribute": 5, 
-  "exitTribute": 5, 
-  "hatchScenarioFunding": 1571.22357, 
-  "stepList": [[5, "TEC"], [1000, "wxDai"], [10, "TEC"]], 
+{
+  "commonsTribute": 0.5,
+  "ragequitAmount": 60,
+  "openingPrice": 1.65,
+  "entryTribute": 0.02,
+  "exitTribute": 0.15,
+  "reserveBalance": 1571.22357,
+  "initialBuy": 0,
+  "stepList": [[5000, "wxDai"], [100000, "wxDai"], [3000, "TEC"]],
   "zoomGraph": 0
 }
 ```
@@ -92,6 +93,57 @@ To do an API call with the model input and receive the model outputs, it uses a 
   "convictionVotingPeriodDays": 7,
   "minimumConviction": 0.05,
   "spendingLimit": 0.2
+}
+```
+
+### 5. Output Generator
+This final endpoint takas as input all the previous model inputs and generate a github issue with all the selected parameters and outputs. 
+
+To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/issue-generator/` with the following body:
+```json
+{
+  "title": "TEC Dashboard Parameters Proposal",
+	"overallStrategy": "",
+  "tokenLockup": {
+		"strategy": "",
+    "openingPrice": 5,
+    "tokenFreeze": 20,
+    "tokenThaw": 15
+  },
+  "augmentedBondingCurve": {
+    "strategy": "",
+    "commonsTribute": 0.5,
+    "ragequitAmount": 60,
+    "openingPrice": 1.65,
+    "entryTribute": 0.02,
+    "exitTribute": 0.15,
+    "reserveBalance": 1571.22357,
+    "initialBuy": 0,
+    "stepList": [[5000, "wxDai"], [100000, "wxDai"], [3000, "TEC"]],
+    "zoomGraph": 0
+  },
+  "taoVoting": {
+		"strategy": "",
+    "supportRequired": 40,
+    "minimumQuorum": 10,
+    "voteDuration": 7,
+    "delegatedVotingPeriod": 3,
+    "quietEndingPeriod": 2,
+    "quietEndingExtension": 1,
+    "executionDelay": 1
+  },
+  "convictionVoting": {
+		"strategy": "",
+    "convictionGrowth": 2,
+    "minimumConviction": 0.01,
+    "votingPeriodDays": 7,
+    "spendingLimit": 0.2
+  },
+  "advancedSettings": {
+    "minimumEffectiveSupply": 4,
+    "hatchersRageQuit": 3,
+    "virtualBalance": 3000000
+  }
 }
 ```
 
