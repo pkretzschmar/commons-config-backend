@@ -71,6 +71,8 @@ class ConvictionVotingModel:
         return np.where(staked > self.min_active_stake_pct, staked, self.min_active_stake_pct)
 
     def get_threshold(self, requested_pct):
+        if self.spending_limit == requested_pct:
+            return float('inf')
         return self.get_weight() / (self.spending_limit - requested_pct) ** 2
         #return self.get_weight() / (self.spending_limit - requested_pct) ** 2 if np.any(requested_pct <= self.minimum_conviction) else float('inf')
 
@@ -103,7 +105,7 @@ class ConvictionVotingModel:
         }
 
         # Conviction Threshold Chart Data
-        x = np.linspace(1, 100 * (self.spending_limit - np.sqrt(self.get_weight())), 100)
+        x = np.linspace(0.0001, 100 * (self.spending_limit - np.sqrt(self.get_weight())), 100)
         y = [100 * (self.get_threshold(i / 100) / self.current_conviction_pergentage_of_max(time=self.voting_period_days)) for i in x]
         df = pd.DataFrame(zip(x,y), columns=['requestedPercentage', 'thresholdPercentage'])
         self.output_dict['output']['convictionThresholdChart'] = df.to_dict(orient='list')
