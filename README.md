@@ -19,9 +19,9 @@ The model output is a linechart data of the price floor over time and a table wi
 To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/token-lockup/` with the following body:
 ```json
 {
-  "OpeningPrice": 5,
-  "TokenFreeze": 20,
-  "TokenThaw": 15
+  "openingPrice": 5,
+  "tokenFreeze": 20,
+  "tokenThaw": 15
 }
 ```
 
