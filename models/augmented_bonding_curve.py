@@ -142,7 +142,7 @@ class BondingCurveHandler():
                  int(plot_mode)
                  )
         #The numbers for initial supply and taken from the constants
-        self.bonding_curve = self.create_bonding_curve(commons_percentage=commons_percentage, ragequit_amount=ragequit_amount, opening_price=opening_price, entry_tribute= entry_tribute / 100, exit_tribute= exit_tribute / 100, initial_buy=initial_buy)
+        self.bonding_curve = self.create_bonding_curve(commons_percentage=commons_percentage, ragequit_amount=ragequit_amount, opening_price=opening_price, entry_tribute= entry_tribute, exit_tribute= exit_tribute, initial_buy=initial_buy)
         
         #If there is an initial buy, perform it here  
         self.steps_table = pd.DataFrame()  
@@ -181,12 +181,15 @@ class BondingCurveHandler():
             figure_bonding_curve['milestoneTable'] = figure_milestone_table
             return figure_bonding_curve
         else: 
-            figure_buy_sell_table =self.steps_table.loc[:,["step", "currentPriceParsed", "currentSupplyParsed","amountIn", "tributeCollected", "amountOut", "newPriceParsed", "slippage"]].to_dict(orient='list')
+            figure_buy_sell_table =self.steps_table.loc[:,["step", "currentPriceParsed", "currentSupplyParsed","amountInParsed", "tributeCollectedParsed", "amountOutParsed", "newPriceParsed", "slippage"]].to_dict(orient='list')
             extended_figure_data = clean_figure_data
             #get single points with full coordinates
             extended_figure_data['singlePoints'] = self.get_single_point_coordinates(self.steps_table)
             #get linspace from every step.
             extended_figure_data['stepLinSpaces'] = self.get_step_linspaces(self.bonding_curve, self.steps_table)
+
+            #For debugging purposes
+            #print(self.steps_table.loc[:,["step", "currentPrice", "currentSupply", "currentBalance", "amountIn", "tributeCollected", "amountOut", "newPrice", "newSupply", "newBalance", "slippage"]])
 
             figure_bonding_curve['chartData'] = extended_figure_data
             figure_bonding_curve['stepTable'] = figure_buy_sell_table
@@ -216,8 +219,11 @@ class BondingCurveHandler():
             "currentBalance",
             "currentBalanceParsed",
             "amountIn",
+            "amountInParsed",
             "tributeCollected",
+            "tributeCollectedParsed",
             "amountOut",
+            "amountOutParsed",
             "newPrice",
             "newPriceParsed",
             "newSupply",
@@ -231,19 +237,21 @@ class BondingCurveHandler():
         for index, step in enumerate(steplist):
 
             current_supply = float(bondingCurve.current_supply)
-            current_supply_parsed = str(format(current_supply, '.2f')) + " TEC"
+            #current_supply_parsed = str(format(current_supply, '.2f')) + "k TEC"
+            current_supply_parsed = round(current_supply*1000, 2) 
 
             current_price = bondingCurve.get_price(current_supply)
-            current_price_parsed = str(format(current_price, '.2f')) + " wxDAI"
-            #current_price_parsed = str(round(current_price, 2)) + " wxDAI"
+            #current_price_parsed = str(format(current_price, '.2f')) + " wxDAI"
+            current_price_parsed = round(current_price, 2)
 
             current_balance = float(bondingCurve.current_balance)
-            current_balance_parsed = str(format(current_balance, '.2f')) + " wxDAI"
+            #current_balance_parsed = str(format(current_balance, '.2f')) + " wxDAI"
+            current_balance_parsed = round(current_balance*1000, 2) 
 
             amount_in = step[0]
             token_type = "wxDAI" if step[1] == "wxDai" else step[1] #to avoid the most obvious error. TO DO: in-depth validation of the steplist...
             
-            amount_in_parsed = str(format(amount_in, '.2f')) + "k " + str(token_type)
+            amount_in_parsed = str(format(amount_in*1000, '.2f')) + " " +  str(token_type)
             #amount_in_parsed = str(round(amount_in, 2)) + "k " + str(token_type)
         
             amount_out = 0
@@ -256,10 +264,11 @@ class BondingCurveHandler():
                 amountAfterTribute = amount_in - tribute_collected
 
                 amount_out = bondingCurve.purchase_return(amountAfterTribute)
-                amount_out_parsed = str(format(amount_out, '.2f')) + "k TEC"
-                #amount_out_parsed = str(round(amount_out, 2)) + "k TEC"
-                tribute_collected_parsed = str(format(tribute_collected, '.2f')) + "k wxDAI"
-                #tribute_collected_parsed = str(round(tribute_collected, 2)) + "k wxDAI"
+                amount_out_parsed = str(format(amount_out*1000, '.2f')) + " TEC"
+                #amount_out_parsed = round(amount_out*1000, 2)
+                
+                #tribute_collected_parsed = str(format(tribute_collected, '.2f')) + "k wxDAI"
+                tribute_collected_parsed = round(tribute_collected*1000, 2)
 
                 slippage = (amount_in - tribute_collected)/bondingCurve.get_price(current_supply) - amount_out
                 slippage_pct = slippage / ((amount_in - tribute_collected)/bondingCurve.get_price(current_supply))
@@ -274,30 +283,33 @@ class BondingCurveHandler():
                 amount_in = amount_in * -1 #because we are reducing the supply (burning)
                 amountBeforeTribute = bondingCurve.sale_return(amount_in)            
 
-                tribute_collected = amountBeforeTribute * bondingCurve.exit_tribute #since it is a sale, the number returned is negative
-                tribute_collected_parsed = str(format((tribute_collected*-1), '.2f')) + "k wxDAI"
-                #tribute_collected_parsed = str(round((tribute_collected*-1), 2)) + "k wxDAI"
+                tribute_collected = amountBeforeTribute * bondingCurve.exit_tribute  #since it is a sale, the number returned is negative
+                #tribute_collected_parsed = str(format((tribute_collected * -1), '.2f')) + "k wxDAI"
+                tribute_collected_parsed = round((tribute_collected*-1000), 2)
+
                 amount_out = (amountBeforeTribute - tribute_collected) #we leave it negative for the supply calculations down below
-                amount_out_parsed = str(format((amount_out*-1), '.2f')) + "k wxDAI" 
+                amount_out_parsed = str(format((amount_out*-1000), '.2f')) + " wxDAI" 
                 #amount_out_parsed = str(round((amount_out*-1), 2)) + "k wxDAI"
 
                 slippage = ((amount_in*(1-bondingCurve.exit_tribute))*bondingCurve.get_price(current_supply) - amount_out) *-1
                 slippage_pct = slippage / ((amount_in*(1-bondingCurve.exit_tribute))*bondingCurve.get_price(current_supply)) *-1
                 slippage_pct = str(format((slippage_pct*100), '.2f')) + "%"
-
-                new_supply = max(
-                    0, current_supply + bondingCurve.purchase_return(amount_out),
-                )
                 
+                new_supply = max(
+                    0, (current_supply + amount_in),
+                )
+
 
             new_price = bondingCurve.get_price(new_supply)
-            new_price_parsed = str(format(new_price, '.2f')) + " wxDAI"
-            #new_price_parsed = str(round(new_price, 2)) + " wxDAI"
+            #new_price_parsed = str(format(new_price, '.2f')) + " wxDAI"
+            new_price_parsed = round(new_price, 2)
 
-            new_supply_parsed = str(format(new_supply, '.2f')) + " TEC"
+            #new_supply_parsed = str(format(new_supply, '.2f')) + "k TEC"
+            new_supply_parsed = round(new_supply*1000, 2) 
 
             new_balance = bondingCurve.get_balance(new_supply)
-            new_balance_parsed = str(format(new_balance, '.2f')) + " wxDAI"
+            #new_balance_parsed = str(format(new_balance, '.2f')) + " wxDAI"
+            new_balance_parsed = round(new_balance*1000, 2)
 
             # add to Dataframe
             outputTable.loc[len(outputTable.index)] = [
@@ -308,8 +320,11 @@ class BondingCurveHandler():
                 current_supply_parsed,
                 current_balance,
                 current_balance_parsed,
+                amount_in,
                 amount_in_parsed,
+                tribute_collected,
                 tribute_collected_parsed,
+                amount_out,
                 amount_out_parsed,
                 new_price,
                 new_price_parsed,
