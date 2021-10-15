@@ -123,9 +123,9 @@ class IssueGeneratorModel:
             reserve_ratio="{0:.2f}".format(100 * augmented_bonding_curve_output["chartData"]["reserveRatio"]),
             step=augmented_bonding_curve_output["stepTable"]["step"],
             current_price=augmented_bonding_curve_output["stepTable"]["currentPriceParsed"],
-            amount_in=augmented_bonding_curve_output["stepTable"]["amountIn"],
-            tribute_collected=augmented_bonding_curve_output["stepTable"]["tributeCollected"],
-            amount_out=augmented_bonding_curve_output["stepTable"]["amountOut"],
+            amount_in=augmented_bonding_curve_output["stepTable"]["amountInParsed"],
+            tribute_collected=augmented_bonding_curve_output["stepTable"]["tributeCollectedParsed"],
+            amount_out=augmented_bonding_curve_output["stepTable"]["amountOutParsed"],
             new_price=augmented_bonding_curve_output["stepTable"]["newPriceParsed"],
             price_slippage=augmented_bonding_curve_output["stepTable"]["slippage"],
 

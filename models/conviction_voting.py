@@ -131,7 +131,7 @@ class ConvictionVotingModel:
                 scenarios['tokensToPassIn2Weeks'].append(
                     int(
                         scenarios['minTokensToPass'][idx] / 
-                        self.current_conviction_pergentage_of_max(time=4)
+                        self.current_conviction_pergentage_of_max(time=self.voting_period_days)
                     )
                 )
             self.output_dict['output']['table'] = scenarios
