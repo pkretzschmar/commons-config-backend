@@ -1,5 +1,30 @@
-test_issue_data = """
-#### Advanced Settings Modified? (Yes or No)
+advanced_settings_data = """
+### *Advanced Settings 
+
+>This will be empty or non-existant if the user did not change any advanced settings from their default. Any settings changed from default will show up here
+
+| Parameter               | Value                       |
+| ----------------------- | --------------------------- |
+| Common Pool Amount      | {commons_pool_amount} wxDAI |
+| HNY Liquidity           | {hny_liquidity} wxDAI       |
+| Garden Liquidity        | {garden_liquidity} TEC      |
+| Virtual Supply          | {virtual_supply} TEC        |
+| Virtual Balance         | {virtual_balance} wxDAI     |
+| Transferability         | {transferability}           |
+| Token Name              | {token_name}                |
+| Token Symbol            | {token_symbol}              |
+| Proposal Deposit        | {proposal_deposit}          |
+| Challenge Deposit       | {challenge_deposit}         |
+| Settlement Period       | {settlement_period}         |
+| Minmum Effective Supply | {minimum_effective_supply}% |
+| Hatchers Rage Quit      | {hatchers_rage_quit}%       |
+| Initial Buy             | {initial_buy}               |
+
+[*Learn more about Advanced Settings on the TEC forum](https://forum.tecommons.org/c/defi-legos-and-how-they-work-together/adv-ccd-params/27)
+"""
+
+issue_data = """
+#### Advanced Settings Modified? {has_advanced_settings}
 
 ## What is your overall Commons Configuration strategy? 
 {overall_strategy}
@@ -129,17 +154,7 @@ test_issue_data = """
 | Minimum Conviction | {minimum_conviction}%           |
 | Spending Limit     | {relative_spending_limit}%      |
 
-### *Advanced Settings 
-
->This will be empty or non-existant if the user did not change any advanced settings from their default. Any settings changed from default will show up here
-
-| Parameter               | Value                       |
-| ----------------------- | --------------------------- |
-| Minmum Effective Supply | {minimum_effective_supply}% |
-| Hatchers Rage Quit      | {hatchers_rage_quit}%       |
-| Virtual Balance         | {virtual_balance} wxDAI     |
-
-[*Learn more about Advanced Settings on the TEC forum](https://forum.tecommons.org/c/defi-legos-and-how-they-work-together/adv-ccd-params/27)
+{advanced_settings_section}
 
 ### [FORK MY PROPOSAL]() (link)
 """
