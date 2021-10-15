@@ -70,14 +70,15 @@ class IssueGeneratorModel:
         token_lockup_table = token_lockup_output.get("table", "")
 
         commons_percentage = self.abc.get("commonsTribute", 0.05)
-        ragequit_amount = ragequit_amount=self.abc.get("ragequitAmount", 100)
         opening_price = self.abc.get("openingPrice", 3)
         entry_tribute = self.abc.get("entryTribute", 0.05)
         exit_tribute = self.abc.get("entryTribute", 0.05)
         scenario_reserve_balance = self.abc.get("reserveBalance", 1571.22357)
-        initial_buy = self.abc.get("initialBuy", 0)     
         steplist = self.abc.get("stepList", "")
         zoom_graph = self.abc.get("zoomGraph", 0)
+
+        initial_buy = self.advanced_settings.get("initialBuy", self.abc.get("initialBuy", 0))
+        ragequit_amount = self.advanced_settings.get("ragequitAmount", self.abc.get("ragequitAmount", 100))
 
         augmented_bonding_curve_model = BondingCurveHandler(
                         commons_percentage=commons_percentage,
@@ -113,7 +114,7 @@ class IssueGeneratorModel:
             challenge_deposit=self.advanced_settings.get("challengeDeposit", ""),
             settlement_period=self.advanced_settings.get("settlementPeriod", ""),
             minimum_effective_supply=self.advanced_settings.get("minimumEffectiveSupply", ""),
-            hatchers_rage_quit=self.advanced_settings.get("hatchersRageQuit", ""),
+            hatchers_rage_quit=self.advanced_settings.get("ragequitAmount", ""),
             initial_buy=self.advanced_settings.get("initialBuy", ""),
         )
 
