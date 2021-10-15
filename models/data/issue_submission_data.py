@@ -13,12 +13,12 @@ advanced_settings_data = """
 | Transferability         | {transferability}           |
 | Token Name              | {token_name}                |
 | Token Symbol            | {token_symbol}              |
-| Proposal Deposit        | {proposal_deposit}          |
-| Challenge Deposit       | {challenge_deposit}         |
-| Settlement Period       | {settlement_period}         |
+| Proposal Deposit        | {proposal_deposit} wxDAI    |
+| Challenge Deposit       | {challenge_deposit} wxDAI   |
+| Settlement Period       | {settlement_period} days    |
 | Minmum Effective Supply | {minimum_effective_supply}% |
-| Hatchers Rage Quit      | {hatchers_rage_quit}%       |
-| Initial Buy             | {initial_buy}               |
+| Hatchers Rage Quit      | {hatchers_rage_quit} wxDAI  |
+| Initial Buy             | {initial_buy} wxDAI         |
 
 [*Learn more about Advanced Settings on the TEC forum](https://forum.tecommons.org/c/defi-legos-and-how-they-work-together/adv-ccd-params/27)
 """
