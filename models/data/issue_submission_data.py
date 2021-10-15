@@ -103,7 +103,7 @@ test_issue_data = """
 | ---------------- | ------------------ |
 | Commons Tribute  | {commons_tribute}% |
 | Entry Tribute    | {entry_tribute}%   |
-| Exit Tribute     | {commons_tribute}% |
+| Exit Tribute     | {exit_tribute}% |
 | *_Reserve Ratio_ | {reserve_ratio}%   |
 
 *Reserve Ratio is an output derived from the Opening Price and Commons Tribute. [Learn more about the Reserve Ratio here](https://forum.tecommons.org/t/augmented-bonding-curve-opening-price-reserve-ratio/516).
