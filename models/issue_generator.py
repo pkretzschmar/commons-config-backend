@@ -4,7 +4,7 @@ import json
 import os
 from dotenv import load_dotenv
 
-from models.data.issue_submission_data import test_issue_data
+from models.data.issue_submission_data import issue_data, advanced_settings_data
 from models.token_lockup import TokenLockupModel
 from models.conviction_voting import ConvictionVotingModel
 from models.augmented_bonding_curve import BondingCurveHandler
@@ -58,11 +58,7 @@ class IssueGeneratorModel:
             "spendingLimit": 0.2,
             "strategy": ""
         }
-        self.advanced_settings = advanced_settings if advanced_settings is not None else {
-            "minimumEffectiveSupply": 4,
-            "hatchersRageQuit": 3,
-            "virtualBalance": 3_000_000,
-        }
+        self.advanced_settings = advanced_settings
 
     def format_output_issue(self):
         token_lockup_model = TokenLockupModel(
@@ -74,14 +70,15 @@ class IssueGeneratorModel:
         token_lockup_table = token_lockup_output.get("table", "")
 
         commons_percentage = self.abc.get("commonsTribute", 0.05)
-        ragequit_amount = ragequit_amount=self.abc.get("ragequitAmount", 100)
         opening_price = self.abc.get("openingPrice", 3)
         entry_tribute = self.abc.get("entryTribute", 0.05)
         exit_tribute = self.abc.get("entryTribute", 0.05)
         scenario_reserve_balance = self.abc.get("reserveBalance", 1571.22357)
-        initial_buy = self.abc.get("initialBuy", 0)     
         steplist = self.abc.get("stepList", "")
         zoom_graph = self.abc.get("zoomGraph", 0)
+
+        initial_buy = self.advanced_settings.get("initialBuy", self.abc.get("initialBuy", 0))
+        ragequit_amount = self.advanced_settings.get("ragequitAmount", self.abc.get("ragequitAmount", 100))
 
         augmented_bonding_curve_model = BondingCurveHandler(
                         commons_percentage=commons_percentage,
@@ -104,7 +101,24 @@ class IssueGeneratorModel:
         conviction_voting_output = conviction_voting_model.get_data().get("output", "")
         conviction_voting_table = conviction_voting_output.get("table", "")
 
-        formated_output = test_issue_data.format(
+        formated_advanced_settings_data = advanced_settings_data.format(
+            commons_pool_amount=self.advanced_settings.get("commonPoolAmount", ""),
+            hny_liquidity=self.advanced_settings.get("HNYLiquidity", ""),
+            garden_liquidity=self.advanced_settings.get("gardenLiquidity", ""),
+            virtual_supply=self.advanced_settings.get("virtualSupply", ""),
+            virtual_balance="{:,}".format(self.advanced_settings.get("virtualBalance", "")),
+            transferability=self.advanced_settings.get("transferability", ""),
+            token_name=self.advanced_settings.get("tokenName", ""),
+            token_symbol=self.advanced_settings.get("tokenSymbol", ""),
+            proposal_deposit=self.advanced_settings.get("proposalDeposit", ""),
+            challenge_deposit=self.advanced_settings.get("challengeDeposit", ""),
+            settlement_period=self.advanced_settings.get("settlementPeriod", ""),
+            minimum_effective_supply=self.advanced_settings.get("minimumEffectiveSupply", ""),
+            hatchers_rage_quit=self.advanced_settings.get("ragequitAmount", ""),
+            initial_buy=self.advanced_settings.get("initialBuy", ""),
+        )
+
+        formated_output = issue_data.format(
             overall_strategy=self.overall_strategy,
 
             token_lockup_strategy=self.token_lockup.get("strategy", ""),
@@ -150,10 +164,8 @@ class IssueGeneratorModel:
             min_tokens_pass=conviction_voting_table["minTokensToPass"],
             tokens_pass_2_weeks=conviction_voting_table["tokensToPassIn2Weeks"],
 
-            minimum_effective_supply=self.advanced_settings.get("minimumEffectiveSupply", ""),
-            hatchers_rage_quit=self.advanced_settings.get("hatchersRageQuit", ""),
-            virtual_balance="{:,}".format(self.advanced_settings.get("virtualBalance", ""))
-
+            has_advanced_settings="Yes" if self.advanced_settings else "No",
+            advanced_settings_section=formated_advanced_settings_data if self.advanced_settings else ""
         )
         return formated_output
 
