@@ -79,6 +79,8 @@ class AugmentedBondingCurve(Resource):
         parser.add_argument('reserveBalance', type=float)
         parser.add_argument('initialBuy', type=float)
         parser.add_argument('stepList', action='append')
+        parser.add_argument('virtualSupply', type=float)
+        parser.add_argument('virtualBalance', type=float)
         parser.add_argument('zoomGraph', type=int)
         parameters = parser.parse_args()
         commons_percentage = parameters['commonsTribute'] if parameters['commonsTribute'] is not None else 0.05
@@ -87,6 +89,9 @@ class AugmentedBondingCurve(Resource):
         entry_tribute = parameters['entryTribute'] if parameters['entryTribute']  is not None else 0.05
         exit_tribute = parameters['exitTribute'] if parameters['exitTribute'] is not None else 0.05
         scenario_reserve_balance = parameters['reserveBalance'] if parameters['reserveBalance'] is not None else 1571.22357
+        initial_buy = parameters['initialBuy'] if parameters['initialBuy'] is not None else 0 
+        virtual_supply = parameters['virtualSupply'] if parameters['virtualSupply'] is not None else 2035.918945  
+        virtual_balance = parameters['virtualBalance'] if parameters['virtualBalance'] is not None else 1571.22357 
         initial_buy = parameters['initialBuy'] if parameters['initialBuy'] is not None else 0        
         steplist = parameters['stepList'] if parameters['stepList'] is not None else ""
         zoom_graph = parameters['zoomGraph'] if parameters['zoomGraph'] is not None else 0
@@ -99,6 +104,8 @@ class AugmentedBondingCurve(Resource):
                 exit_tribute=exit_tribute,
                 initial_buy=initial_buy,
                 scenario_reserve_balance=scenario_reserve_balance,
+                virtual_supply= virtual_supply,
+                virtual_balance= virtual_balance,
                 steplist=steplist,
                 zoom_graph= zoom_graph )
 
