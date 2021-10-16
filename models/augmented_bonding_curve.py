@@ -102,9 +102,10 @@ class BondingCurveHandler():
     opening_price: float. No real limit but, expected to be between 1 and 4
     entry_tribute: float between 0-0.99. Percentage of funds substracted on buy (mint) operations before interacting with the bonding curve
     exit_tribute: float between 0-0.99. Percentage of funds substracted on sell (burn) operations after interacting with the boding curve
+    initial_buy: float. Allows to represent an initial buy-in from the TEC in the scenario calculations
+    scenario_reserve_balance: float. Sets the point on the curve from which the scenario calculations are started
     virtual_supply: optional. Float, defaults to TOTAL_INITIAL_TECH_SUPPLY. Allows generating the bonding curve from a supply number different than the real one (eg to model lockups)
-    virtual_balance: optional. Float, defaults to TOTAL_HATCH_FUNDING.
-    
+    virtual_balance: optional. Float, defaults to TOTAL_HATCH_FUNDING. Allows generating the bonding curve from a balance  number different than the real one (eg to model locked liquidity)
     steplist: list with format [["AMOUNT", "TOKEN"],["AMOUNT", "TOKEN"]]. Set of buy/sell operations applied to the bonding curve.
     zoom_graph=0: optional. value 0 or 1. To specify if the draw function should show the whole curve(0) or "zoom in" into the area where operations are happening (1)
     plot_mode=0: optional. value 0 or 1. Not in the scope of this iteration. Specifies if the draw function should plot the price against the balance (0) or the supply (1)
