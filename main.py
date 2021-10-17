@@ -84,15 +84,14 @@ class AugmentedBondingCurve(Resource):
         parser.add_argument('zoomGraph', type=int)
         parameters = parser.parse_args()
         commons_percentage = parameters['commonsTribute'] if parameters['commonsTribute'] is not None else 0.05
-        ragequit_amount = parameters['ragequitAmount'] if parameters['ragequitAmount'] is not None else 100
-        opening_price = parameters['openingPrice'] if parameters['openingPrice'] is not None else 3
+        ragequit_amount = parameters['ragequitAmount'] if parameters['ragequitAmount'] is not None else 0
+        opening_price = parameters['openingPrice'] if parameters['openingPrice'] is not None else 1.50
         entry_tribute = parameters['entryTribute'] if parameters['entryTribute']  is not None else 0.05
         exit_tribute = parameters['exitTribute'] if parameters['exitTribute'] is not None else 0.05
         scenario_reserve_balance = parameters['reserveBalance'] if parameters['reserveBalance'] is not None else 1571.22357
         initial_buy = parameters['initialBuy'] if parameters['initialBuy'] is not None else 0 
         virtual_supply = parameters['virtualSupply'] if parameters['virtualSupply'] is not None else 2035.918945  
-        virtual_balance = parameters['virtualBalance'] if parameters['virtualBalance'] is not None else 1571.22357 
-        initial_buy = parameters['initialBuy'] if parameters['initialBuy'] is not None else 0        
+        virtual_balance = parameters['virtualBalance'] if parameters['virtualBalance'] is not None else 1571.22357         
         steplist = parameters['stepList'] if parameters['stepList'] is not None else ""
         zoom_graph = parameters['zoomGraph'] if parameters['zoomGraph'] is not None else 0
 
