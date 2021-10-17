@@ -102,6 +102,10 @@ class BondingCurveHandler():
     opening_price: float. No real limit but, expected to be between 1 and 4
     entry_tribute: float between 0-0.99. Percentage of funds substracted on buy (mint) operations before interacting with the bonding curve
     exit_tribute: float between 0-0.99. Percentage of funds substracted on sell (burn) operations after interacting with the boding curve
+    initial_buy: float. Allows to represent an initial buy-in from the TEC in the scenario calculations
+    scenario_reserve_balance: float. Sets the point on the curve from which the scenario calculations are started
+    virtual_supply: optional. Float, defaults to TOTAL_INITIAL_TECH_SUPPLY. Allows generating the bonding curve from a supply number different than the real one (eg to model lockups)
+    virtual_balance: optional. Float, defaults to TOTAL_HATCH_FUNDING. Allows generating the bonding curve from a balance  number different than the real one (eg to model locked liquidity)
     steplist: list with format [["AMOUNT", "TOKEN"],["AMOUNT", "TOKEN"]]. Set of buy/sell operations applied to the bonding curve.
     zoom_graph=0: optional. value 0 or 1. To specify if the draw function should show the whole curve(0) or "zoom in" into the area where operations are happening (1)
     plot_mode=0: optional. value 0 or 1. Not in the scope of this iteration. Specifies if the draw function should plot the price against the balance (0) or the supply (1)
@@ -116,7 +120,9 @@ class BondingCurveHandler():
                  exit_tribute,
                  initial_buy,
                  scenario_reserve_balance,
-                 steplist,
+                 steplist,   
+                 virtual_supply= TOTAL_INITIAL_TECH_SUPPLY,
+                 virtual_balance= TOTAL_HATCH_FUNDING,
                  zoom_graph=0,
                  plot_mode=0):
 
@@ -138,11 +144,13 @@ class BondingCurveHandler():
                  initial_buy,
                  float(scenario_reserve_balance),
                  steplist_parsed,
+                 float(virtual_supply),
+                 float(virtual_balance),
                  int(zoom_graph),
                  int(plot_mode)
                  )
         #The numbers for initial supply and taken from the constants
-        self.bonding_curve = self.create_bonding_curve(commons_percentage=commons_percentage, ragequit_amount=ragequit_amount, opening_price=opening_price, entry_tribute= entry_tribute, exit_tribute= exit_tribute, initial_buy=initial_buy)
+        self.bonding_curve = self.create_bonding_curve(commons_percentage=commons_percentage, ragequit_amount=ragequit_amount, opening_price=opening_price, entry_tribute= entry_tribute, exit_tribute= exit_tribute, initial_buy=initial_buy, initialization_supply = virtual_supply, initialization_balance=virtual_balance)
         
         #If there is an initial buy, perform it here  
         self.steps_table = pd.DataFrame()  
@@ -155,7 +163,7 @@ class BondingCurveHandler():
         #set the current supply to the point where the scenarios are going to happen (if it isn't the launch situation)
         # if it's the launch situation, the supply change from the buy in has already been saved before
         # rounded a bit to make sure it gets triggered when necessary
-        adjusted_start_balance = round((TOTAL_HATCH_FUNDING * (1- commons_percentage)), 3)
+        adjusted_start_balance = round((virtual_balance * (1- commons_percentage)), 3)
         if(round(scenario_reserve_balance, 3) != adjusted_start_balance):
             scenario_supply= self.bonding_curve.get_supply(float(scenario_reserve_balance))
             self.bonding_curve.set_new_supply(scenario_supply)
@@ -197,10 +205,10 @@ class BondingCurveHandler():
 
             return figure_bonding_curve
 
-    def create_bonding_curve(self, commons_percentage=0.5, ragequit_amount=100,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05, initial_buy=0):
+    def create_bonding_curve(self, commons_percentage=0.5, ragequit_amount=100,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05, initial_buy=0, initialization_supply= TOTAL_INITIAL_TECH_SUPPLY, initialization_balance= TOTAL_HATCH_FUNDING ):
         
-        initial_supply = TOTAL_INITIAL_TECH_SUPPLY - (ragequit_amount / HATCH_FINAL_TECH_PRICE)
-        hatch_funding= TOTAL_HATCH_FUNDING  - ragequit_amount  - initial_buy
+        initial_supply = initialization_supply - (ragequit_amount / HATCH_FINAL_TECH_PRICE)
+        hatch_funding= initialization_balance  - ragequit_amount  - initial_buy
 
         initial_reserve = hatch_funding * (1 - commons_percentage)
         
@@ -410,18 +418,22 @@ class BondingCurveHandler():
 
         return table_data
 
-    def check_param_validity(self, commons_percentage, ragequit_amount, opening_price, entry_tribute, exit_tribute, initial_buy,  scenario_reserve_balance,  steplist, zoom_graph, plot_mode):
+    def check_param_validity(self, commons_percentage, ragequit_amount, opening_price, entry_tribute, exit_tribute, initial_buy,  scenario_reserve_balance, steplist, virtual_supply, virtual_balance, zoom_graph, plot_mode):
         if commons_percentage < 0 or commons_percentage > 0.95:
             raise ValueError("Error: Invalid Commons Percentage Parameter.")
         if ragequit_amount < 0:
             raise ValueError("Error: Invalid Ragequit Amount Parameter.")
         if opening_price <=0:
             raise ValueError("Error: Invalid Initial Price Parameter.")
+        if virtual_supply <= 0:
+            raise ValueError("Error: Invalid  Virtual Supply Parameter.")
+        if virtual_balance <= 0:
+            raise ValueError("Error: Invalid  Virtual Balance Parameter.")
         if entry_tribute < 0 or entry_tribute >= 1:
             raise ValueError("Error: Invalid Entry Tribute Parameter.")
         if exit_tribute < 0 or exit_tribute >= 1:
             raise ValueError("Error: Invalid Exit Tribute Parameter.")
-        if initial_buy < 0 or initial_buy > (TOTAL_HATCH_FUNDING - ragequit_amount):
+        if initial_buy < 0 or initial_buy > (virtual_balance - ragequit_amount):
             raise ValueError("Error: The Initial Buy is either negative or bigger than the remaining Hatch Funding after Ragequits.")
         if scenario_reserve_balance <= 0:
             raise ValueError("Error: Invalid  Hatch Scenario Funding Parameter.")
