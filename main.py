@@ -2,6 +2,9 @@ from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
 import json
+import os
+from dotenv import load_dotenv
+from pymongo import MongoClient
 
 from models.disputable_voting import DisputableVotingModel
 from models.token_lockup import TokenLockupModel
@@ -12,6 +15,7 @@ from models.conviction_voting import ConvictionVotingModel
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
+load_dotenv() 
 
 
 class status(Resource):
@@ -133,6 +137,7 @@ class IssueGenerator(Resource):
         advanced_settings = parameters['advancedSettings']
 
         issue_generator = IssueGeneratorModel(
+            raw_body=parameters,
             title=title,
             token_lockup=token_lockup,
             abc=abc,
@@ -166,9 +171,24 @@ class ConvictionVoting(Resource):
 
         return jsonify(conviction_voting_model.get_data())
 
+class ImportParams(Resource):
+    def get(self):
+        MONGODB_CLIENT = os.getenv('MONGODB_CLIENT')
+        client = MongoClient(MONGODB_CLIENT)
+        db = client.get_database('test_tec_params_db')
+        test_params_db = db.test_params
+        parser = reqparse.RequestParser()
+        parser.add_argument('issueNumber', type=int)
+        parameters = parser.parse_args()
+        issue_number = parameters.get('issueNumber', '')
+        issue_data = test_params_db.find_one({'issue_number':issue_number})
+        issue_data.pop('_id', None)
+
+        return jsonify(issue_data)
 
 
 api.add_resource(status, '/')
+api.add_resource(ImportParams, '/import-parameters/')
 api.add_resource(TokenLockup, '/token-lockup/')
 api.add_resource(DisputableVoting, '/disputable-voting/')
 api.add_resource(AugmentedBondingCurve, '/augmented-bonding-curve/')

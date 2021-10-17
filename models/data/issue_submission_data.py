@@ -29,7 +29,7 @@ issue_data = """
 ## What is your overall Commons Configuration strategy? 
 {overall_strategy}
 
-### [FORK MY PROPOSAL]() (link)
+### [FORK MY PROPOSAL](https://commons-dashboard.netlify.app/config/import/{issue_number}) (link)
 
 # Module 1: Token Freeze and Token Thaw 
 - **Token Freeze** is set to **{token_freeze_period} weeks**, meaning that 100% of TEC tokens minted for Hatchers will remain locked from being sold or transferred for {token_freeze_period} weeks. 
@@ -111,7 +111,7 @@ issue_data = """
 | Tokens Needed To Pass in 2 weeks | {tokens_pass_2_weeks[0]}  | {tokens_pass_2_weeks[1]}  | {tokens_pass_2_weeks[2]}  | {tokens_pass_2_weeks[3]}  | {tokens_pass_2_weeks[4]}  | {tokens_pass_2_weeks[5]}  |
 ------
 
-### [FORK MY PROPOSAL]() (link)
+### [FORK MY PROPOSAL](https://commons-dashboard.netlify.app/config/import/{issue_number}) (link)
 
 # Summary 
 ### Module 1: Token Freeze & Token Thaw
@@ -156,5 +156,5 @@ issue_data = """
 
 {advanced_settings_section}
 
-### [FORK MY PROPOSAL]() (link)
+### [FORK MY PROPOSAL](https://commons-dashboard.netlify.app/config/import/{issue_number}) (link)
 """
