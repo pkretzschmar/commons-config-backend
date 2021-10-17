@@ -149,8 +149,13 @@ class BondingCurveHandler():
                  int(zoom_graph),
                  int(plot_mode)
                  )
+        print(ragequit_amount)
+
+        #
+        initialization_supply, initialization_balance = self.get_initialization_values(received_supply=virtual_supply, received_balance=virtual_balance, commons_percentage=commons_percentage, initial_buy=initial_buy, ragequit_amount=ragequit_amount)
+
         #The numbers for initial supply and taken from the constants
-        self.bonding_curve = self.create_bonding_curve(commons_percentage=commons_percentage, ragequit_amount=ragequit_amount, opening_price=opening_price, entry_tribute= entry_tribute, exit_tribute= exit_tribute, initial_buy=initial_buy, initialization_supply = virtual_supply, initialization_balance=virtual_balance)
+        self.bonding_curve = BondingCurve(initialization_balance, opening_price, initialization_supply, entry_tribute, exit_tribute)
         
         #If there is an initial buy, perform it here  
         self.steps_table = pd.DataFrame()  
@@ -163,8 +168,9 @@ class BondingCurveHandler():
         #set the current supply to the point where the scenarios are going to happen (if it isn't the launch situation)
         # if it's the launch situation, the supply change from the buy in has already been saved before
         # rounded a bit to make sure it gets triggered when necessary
-        adjusted_start_balance = round((virtual_balance * (1- commons_percentage)), 3)
-        if(round(scenario_reserve_balance, 3) != adjusted_start_balance):
+        print("Scen: " + str(scenario_reserve_balance))
+        print("Init: " + str(initialization_balance))
+        if(round(scenario_reserve_balance, 3) != round(initialization_balance, 3)):
             scenario_supply= self.bonding_curve.get_supply(float(scenario_reserve_balance))
             self.bonding_curve.set_new_supply(scenario_supply)
         
@@ -197,24 +203,13 @@ class BondingCurveHandler():
             extended_figure_data['stepLinSpaces'] = self.get_step_linspaces(self.bonding_curve, self.steps_table)
 
             #For debugging purposes
-            #print(self.steps_table.loc[:,["step", "currentPrice", "currentSupply", "currentBalance", "amountIn", "tributeCollected", "amountOut", "newPrice", "newSupply", "newBalance", "slippage"]])
+            print(self.steps_table.loc[:,["step", "currentPrice", "currentSupply", "currentBalance", "amountIn", "tributeCollected", "amountOut", "newPrice", "newSupply", "newBalance", "slippage"]])
 
             figure_bonding_curve['chartData'] = extended_figure_data
             figure_bonding_curve['stepTable'] = figure_buy_sell_table
             figure_bonding_curve['milestoneTable'] = figure_milestone_table
 
             return figure_bonding_curve
-
-    def create_bonding_curve(self, commons_percentage=0.5, ragequit_amount=100,  opening_price=3, entry_tribute=0.05, exit_tribute=0.05, initial_buy=0, initialization_supply= TOTAL_INITIAL_TECH_SUPPLY, initialization_balance= TOTAL_HATCH_FUNDING ):
-        
-        initial_supply = initialization_supply - (ragequit_amount / HATCH_FINAL_TECH_PRICE)
-        hatch_funding= initialization_balance  - ragequit_amount  - initial_buy
-
-        initial_reserve = hatch_funding * (1 - commons_percentage)
-        
-        bCurve = BondingCurve(initial_reserve, opening_price, initial_supply, entry_tribute, exit_tribute)
-
-        return bCurve
 
     def generate_outputs_table(self, bondingCurve, steplist):
 
@@ -358,6 +353,26 @@ class BondingCurveHandler():
         
         return curve_draw
 
+    def get_initialization_values(self, received_supply, received_balance, commons_percentage, initial_buy, ragequit_amount):
+        initialization_supply = TOTAL_INITIAL_TECH_SUPPLY
+        initialization_balance = TOTAL_HATCH_FUNDING
+        
+        if (received_supply == TOTAL_INITIAL_TECH_SUPPLY ):
+            #no virtual supply, use real data
+            initialization_supply = received_supply - (ragequit_amount / HATCH_FINAL_TECH_PRICE)
+        else:  
+            #we just use the virtual supply
+            initialization_supply = received_supply
+
+        if( received_balance == TOTAL_HATCH_FUNDING):
+            #no virtual balance, use real data
+            initialization_balance =  (received_balance - ragequit_amount  - initial_buy) * (1- commons_percentage)
+        else: 
+            #we just use the virtual balance
+            initialization_balance = received_balance
+
+        return initialization_supply, initialization_balance
+
     def get_single_point_coordinates(self, steps_table):
 
         coord_list= []
@@ -418,6 +433,7 @@ class BondingCurveHandler():
 
         return table_data
 
+    #very basic validity check. TO DO expand balance and steplist checking
     def check_param_validity(self, commons_percentage, ragequit_amount, opening_price, entry_tribute, exit_tribute, initial_buy,  scenario_reserve_balance, steplist, virtual_supply, virtual_balance, zoom_graph, plot_mode):
         if commons_percentage < 0 or commons_percentage > 0.95:
             raise ValueError("Error: Invalid Commons Percentage Parameter.")
@@ -433,7 +449,7 @@ class BondingCurveHandler():
             raise ValueError("Error: Invalid Entry Tribute Parameter.")
         if exit_tribute < 0 or exit_tribute >= 1:
             raise ValueError("Error: Invalid Exit Tribute Parameter.")
-        if initial_buy < 0 or initial_buy > (virtual_balance - ragequit_amount):
+        if initial_buy < 0 or initial_buy > (TOTAL_HATCH_FUNDING - ragequit_amount):
             raise ValueError("Error: The Initial Buy is either negative or bigger than the remaining Hatch Funding after Ragequits.")
         if scenario_reserve_balance <= 0:
             raise ValueError("Error: Invalid  Hatch Scenario Funding Parameter.")
