@@ -149,7 +149,7 @@ class BondingCurveHandler():
                  int(zoom_graph),
                  int(plot_mode)
                  )
-        print(ragequit_amount)
+
 
         #
         initialization_supply, initialization_balance = self.get_initialization_values(received_supply=virtual_supply, received_balance=virtual_balance, commons_percentage=commons_percentage, initial_buy=initial_buy, ragequit_amount=ragequit_amount)
@@ -168,8 +168,6 @@ class BondingCurveHandler():
         #set the current supply to the point where the scenarios are going to happen (if it isn't the launch situation)
         # if it's the launch situation, the supply change from the buy in has already been saved before
         # rounded a bit to make sure it gets triggered when necessary
-        print("Scen: " + str(scenario_reserve_balance))
-        print("Init: " + str(initialization_balance))
         if(round(scenario_reserve_balance, 3) != round(initialization_balance, 3)):
             scenario_supply= self.bonding_curve.get_supply(float(scenario_reserve_balance))
             self.bonding_curve.set_new_supply(scenario_supply)
@@ -203,7 +201,7 @@ class BondingCurveHandler():
             extended_figure_data['stepLinSpaces'] = self.get_step_linspaces(self.bonding_curve, self.steps_table)
 
             #For debugging purposes
-            print(self.steps_table.loc[:,["step", "currentPrice", "currentSupply", "currentBalance", "amountIn", "tributeCollected", "amountOut", "newPrice", "newSupply", "newBalance", "slippage"]])
+            #print(self.steps_table.loc[:,["step", "currentPrice", "currentSupply", "currentBalance", "amountIn", "tributeCollected", "amountOut", "newPrice", "newSupply", "newBalance", "slippage"]])
 
             figure_bonding_curve['chartData'] = extended_figure_data
             figure_bonding_curve['stepTable'] = figure_buy_sell_table
