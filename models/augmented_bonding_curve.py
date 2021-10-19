@@ -37,6 +37,7 @@ class BondingCurveInitializer:
         while self.get_balance(supply_ref) <  balance:
             supply_ref = supply_ref + 10
 
+        #increase number of steps for higher precision, but with increased calculation time
         df = self.curve_over_balance(supply_ref-10, supply_ref, 100000)
         df_rounded = df.round(3)
         
@@ -121,17 +122,24 @@ class BondingCurveHandler():
                  initial_buy,
                  scenario_reserve_balance,
                  steplist,   
-                 virtual_supply= TOTAL_INITIAL_TECH_SUPPLY,
-                 virtual_balance= TOTAL_HATCH_FUNDING,
+                 virtual_supply= -1,
+                 virtual_balance= -1,
                  zoom_graph=0,
                  plot_mode=0):
 
-        #parse the steplist (which gets read as string) into the right format
+        #scale input numbers down by 1000 for the bonding curve calculations
+        ragequit_amount = ragequit_amount / 1000
+        initial_buy= initial_buy / 1000
+        scenario_reserve_balance = scenario_reserve_balance / 1000
+        virtual_supply =  TOTAL_INITIAL_TECH_SUPPLY if virtual_supply == -1 else (virtual_supply / 1000)
+        virtual_balance = TOTAL_HATCH_FUNDING if virtual_balance == -1 else (virtual_balance / 1000)
+
+        #parse the steplist (which gets read as string) into the right format and scale the values
         steplist_parsed = []
         if steplist != "":
             for step in steplist:
                 buf = str(step).strip('][').split(', ')
-                buf[0] = (float(buf[0]) / 1000)
+                buf[0] = (float(buf[0].strip("'")) / 1000)
                 buf[1] = buf[1].strip("'")
                 steplist_parsed.append(buf)
 
@@ -151,10 +159,9 @@ class BondingCurveHandler():
                  )
 
 
-        #
+        # Determine initial supply and balance based on input and initialize the bonding curve
         initialization_supply, initialization_balance = self.get_initialization_values(received_supply=virtual_supply, received_balance=virtual_balance, commons_percentage=commons_percentage, initial_buy=initial_buy, ragequit_amount=ragequit_amount)
-
-        #The numbers for initial supply and taken from the constants
+        
         self.bonding_curve = BondingCurve(initialization_balance, opening_price, initialization_supply, entry_tribute, exit_tribute)
         
         #If there is an initial buy, perform it here  
