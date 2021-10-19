@@ -99,7 +99,7 @@ class BondingCurveHandler():
     The constrctor receives following args:
 
     commons_percentage: float between 0-0.95. Percentage of funds that get substracted from the total funding to go to the commons pool
-    ragequit_amount: float, wxDai in thousands . Amount of reserve returned to ragequitters before the bonding curve gets initialized
+    ragequit_amount: float . Amount of reserve returned to ragequitters before the bonding curve gets initialized
     opening_price: float. No real limit but, expected to be between 1 and 4
     entry_tribute: float between 0-0.99. Percentage of funds substracted on buy (mint) operations before interacting with the bonding curve
     exit_tribute: float between 0-0.99. Percentage of funds substracted on sell (burn) operations after interacting with the boding curve
@@ -158,11 +158,10 @@ class BondingCurveHandler():
                  int(plot_mode)
                  )
 
-
         # Determine initial supply and balance based on input and initialize the bonding curve
-        initialization_supply, initialization_balance = self.get_initialization_values(received_supply=virtual_supply, received_balance=virtual_balance, commons_percentage=commons_percentage, initial_buy=initial_buy, ragequit_amount=ragequit_amount)
+        self.initialization_supply, self.initialization_balance, self.commons_reserve = self.get_initialization_values(received_supply=virtual_supply, received_balance=virtual_balance, commons_percentage=commons_percentage, initial_buy=initial_buy, ragequit_amount=ragequit_amount)
         
-        self.bonding_curve = BondingCurve(initialization_balance, opening_price, initialization_supply, entry_tribute, exit_tribute)
+        self.bonding_curve = BondingCurve(self.initialization_balance, opening_price, self.initialization_supply, entry_tribute, exit_tribute)
         
         #If there is an initial buy, perform it here  
         self.steps_table = pd.DataFrame()  
@@ -175,7 +174,7 @@ class BondingCurveHandler():
         #set the current supply to the point where the scenarios are going to happen (if it isn't the launch situation)
         # if it's the launch situation, the supply change from the buy in has already been saved before
         # rounded a bit to make sure it gets triggered when necessary
-        if(round(scenario_reserve_balance, 3) != round(initialization_balance, 3)):
+        if(round(scenario_reserve_balance, 3) != round(self.initialization_balance, 3)):
             scenario_supply= self.bonding_curve.get_supply(float(scenario_reserve_balance))
             self.bonding_curve.set_new_supply(scenario_supply)
         
@@ -194,10 +193,12 @@ class BondingCurveHandler():
         
         figure_bonding_curve= {"chartData": {}}
         figure_milestone_table =self.get_milestone_table(self.bonding_curve) 
+        figure_initial_fund_allocation = self.get_allocation_table(self.steps_table, self.initialization_balance, self.commons_reserve)
         
         if self.steps_table.empty:
             figure_bonding_curve['chartData'] = clean_figure_data
             figure_bonding_curve['milestoneTable'] = figure_milestone_table
+            figure_bonding_curve['fundAllocations'] = figure_initial_fund_allocation
             return figure_bonding_curve
         else: 
             figure_buy_sell_table =self.steps_table.loc[:,["step", "currentPriceParsed", "currentSupplyParsed","amountInParsed", "tributeCollectedParsed", "amountOutParsed", "newPriceParsed", "slippage"]].to_dict(orient='list')
@@ -213,6 +214,7 @@ class BondingCurveHandler():
             figure_bonding_curve['chartData'] = extended_figure_data
             figure_bonding_curve['stepTable'] = figure_buy_sell_table
             figure_bonding_curve['milestoneTable'] = figure_milestone_table
+            figure_bonding_curve['fundAllocations'] = figure_initial_fund_allocation
 
             return figure_bonding_curve
 
@@ -359,24 +361,26 @@ class BondingCurveHandler():
         return curve_draw
 
     def get_initialization_values(self, received_supply, received_balance, commons_percentage, initial_buy, ragequit_amount):
-        initialization_supply = TOTAL_INITIAL_TECH_SUPPLY
-        initialization_balance = TOTAL_HATCH_FUNDING
+        initialization_supply = -1
+        initialization_balance = -1
         
         if (received_supply == TOTAL_INITIAL_TECH_SUPPLY ):
             #no virtual supply, use real data
-            initialization_supply = received_supply - (ragequit_amount / HATCH_FINAL_TECH_PRICE)
+            initialization_supply = TOTAL_INITIAL_TECH_SUPPLY - (ragequit_amount / HATCH_FINAL_TECH_PRICE)
         else:  
             #we just use the virtual supply
             initialization_supply = received_supply
 
         if( received_balance == TOTAL_HATCH_FUNDING):
             #no virtual balance, use real data
-            initialization_balance =  (received_balance - ragequit_amount  - initial_buy) * (1- commons_percentage)
+            initialization_balance =  (TOTAL_HATCH_FUNDING - ragequit_amount  - initial_buy) * (1- commons_percentage)
+            commons_reserve = (TOTAL_HATCH_FUNDING - ragequit_amount  - initial_buy) * commons_percentage
         else: 
             #we just use the virtual balance
             initialization_balance = received_balance
+            commons_reserve = (TOTAL_HATCH_FUNDING - ragequit_amount  - initial_buy) * commons_percentage
 
-        return initialization_supply, initialization_balance
+        return initialization_supply, initialization_balance, commons_reserve
 
     def get_single_point_coordinates(self, steps_table):
 
@@ -430,13 +434,31 @@ class BondingCurveHandler():
             supply_list.append(sup)
             price_list.append(bCurve.get_price(sup))
         
-        #print(balance_list)
-        #print(price_list)
-        #print(supply_list)
 
-        table_data = { "balance": balance_list, "supply": supply_list, "price": price_list}
+        table_data = { "balance": [i * 1000 for i in balance_list], "supply": [i * 1000 for i in supply_list], "price": price_list}
+
+        #print(table_data)
 
         return table_data
+
+    def get_allocation_table(self, steps_table, initial_reserve, common_pool):
+        reserve_after = initial_reserve
+        pool_after = common_pool
+
+        #apply buy-in if present
+        if not steps_table.empty and 0 in steps_table["step"].values:
+            buy_row = steps_table.loc[steps_table['step'] == 0]
+            
+            reserve_after = buy_row.at[0, "newBalance"]
+            pool_after = pool_after + buy_row.at[0, "tributeCollected"]
+
+
+        table_data = { "commonPoolBefore": common_pool*1000, "reserveBalanceBefore": initial_reserve*1000, "commonPoolAfter": pool_after*1000, "reserveBalanceAfter": reserve_after*1000}
+        
+        #print(table_data)
+
+        return table_data
+    
 
     #very basic validity check. TO DO expand balance and steplist checking
     def check_param_validity(self, commons_percentage, ragequit_amount, opening_price, entry_tribute, exit_tribute, initial_buy,  scenario_reserve_balance, steplist, virtual_supply, virtual_balance, zoom_graph, plot_mode):
