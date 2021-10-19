@@ -3,6 +3,7 @@ import requests
 import json
 import os
 from dotenv import load_dotenv
+from pymongo import MongoClient
 
 from models.data.issue_submission_data import issue_data, advanced_settings_data
 from models.token_lockup import TokenLockupModel
@@ -13,6 +14,7 @@ load_dotenv()
 
 class IssueGeneratorModel:
     def __init__(self,
+                 raw_body={},
                  title=None,
                  token_lockup=None,
                  abc=None,
@@ -20,6 +22,8 @@ class IssueGeneratorModel:
                  conviction_voting=None,
                  advanced_settings=None,
                  overall_strategy=None):
+        self.raw_body = raw_body
+        self.issue_number = 0
         self.title = title if title is not None else "TEC Config Dashboard Proposal test"
         self.overall_strategy = overall_strategy if overall_strategy is not None else ""
         self.token_lockup = token_lockup if token_lockup is not None else {
@@ -119,6 +123,7 @@ class IssueGeneratorModel:
         )
 
         formated_output = issue_data.format(
+            issue_number=self.issue_number,
             overall_strategy=self.overall_strategy,
 
             token_lockup_strategy=self.token_lockup.get("strategy", ""),
@@ -169,9 +174,27 @@ class IssueGeneratorModel:
         )
         return formated_output
 
+    def save_parameters_database(self, issue_number):
+        MONGODB_CLIENT = os.getenv("MONGODB_CLIENT")
+        client = MongoClient(MONGODB_CLIENT)
+        db = client.get_database("test_tec_params_db")
+        test_params_db = db.test_params
+        self.raw_body["issue_number"] = issue_number
+        issue_data = self.raw_body
+
+        test_params_db.insert_one(issue_data)
+
     def generate_output(self):
         PARAMS_BOT_AUTH_TOKEN = os.getenv("PARAMS_BOT_AUTH_TOKEN")
         headers = {'Content-Type': 'application/json', 'Authorization': PARAMS_BOT_AUTH_TOKEN}
+        r_issue_data = requests.get('https://api.github.com/search/issues?q=repo:CommonsBuild/test-issues-config-dashboard')
+        self.issue_number = 1 + r_issue_data.json().get("total_count", "")
         data = {"title": self.title, "body": self.format_output_issue()}
+        
         r = requests.post('https://api.github.com/repos/CommonsBuild/test-issues-config-dashboard/issues', data=json.dumps(data), headers=headers)
-        return {"status": r.status_code, "url": r.json().get("html_url", "")}
+
+        if r.status_code == 201:
+            issue_number = r.json().get("number", "")
+            self.save_parameters_database(issue_number=issue_number)
+ 
+        return {"status": r.status_code, "url": r.json()}

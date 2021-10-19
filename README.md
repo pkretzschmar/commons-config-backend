@@ -97,7 +97,7 @@ To do an API call with the model input and receive the model outputs, it uses a 
 ```
 
 ### 5. Output Generator
-This final endpoint takas as input all the previous model inputs and generate a github issue with all the selected parameters and outputs. 
+This endpoint takes as input all the previous model inputs and generate a github issue with all the selected parameters and outputs. 
 
 To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/issue-generator/` with the following body:
 ```json
@@ -144,6 +144,15 @@ To do an API call with the model input and receive the model outputs, it uses a 
     "hatchersRageQuit": 3,
     "virtualBalance": 3000000
   }
+}
+```
+
+### 6. Import Parameters
+This endpoint takes as input the output issue number and return all of its parameters into a JSON format.
+To do an API call with the model input and receive the model outputs, it uses a GET request through the route `/import-parameters/` with the following body:
+```json
+{
+	"issueNumber": 177
 }
 ```
 
