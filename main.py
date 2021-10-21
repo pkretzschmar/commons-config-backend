@@ -100,8 +100,8 @@ class AugmentedBondingCurve(Resource):
         zoom_graph = int(parameters['zoomGraph']) if parameters['zoomGraph'] is not None else 0
 
         augmented_bonding_curve_model = BondingCurveHandler(
-                commons_percentage= commons_percentage,
-                ragequit_amount= ragequit_amount,
+                commons_percentage=commons_percentage,
+                ragequit_amount=ragequit_amount,
                 opening_price=opening_price,
                 entry_tribute=entry_tribute,
                 exit_tribute=exit_tribute,
@@ -134,6 +134,18 @@ class IssueGenerator(Resource):
         tao_voting = parameters['taoVoting']
         conviction_voting = parameters['convictionVoting']
         advanced_settings = parameters['advancedSettings']
+
+        abc['commonsTribute'] = float(abc['commonsTribute']) if abc['commonsTribute'] is not None else 0.05
+        abc['openingPrice'] = float(abc['openingPrice']) if abc['openingPrice'] is not None else 1.50
+        abc['entryTribute'] = float(abc['entryTribute']) if abc['entryTribute']  is not None else 0.05
+        abc['exitTribute'] = float(abc['exitTribute']) if abc['exitTribute'] is not None else 0.05
+        abc['ragequitAmount'] = float(abc['ragequitAmount']) if abc['ragequitAmount'] is not None else 0
+        abc['initialBuy'] = float(abc['initialBuy']) if abc['initialBuy'] is not None else 0 
+        abc['reserveBalance'] = float(abc['reserveBalance']) if abc['reserveBalance'] is not None else (1571223.57 - abc.initial_buy - abc.ragequit_amount)*(1-abc.commons_percentage)     
+        abc['stepList'] = abc['stepList'] if abc['stepList'] is not abc else ""
+        abc['virtualSupply'] = float(abc['virtualSupply']) if abc['virtualSupply'] is not None else -1
+        abc['virtualBalance'] = float(abc['virtualBalance']) if abc['virtualBalance'] is not None else -1 
+        abc['zoomGraph'] = int(abc['zoomGraph']) if abc['zoomGraph'] is not None else 0
 
         issue_generator = IssueGeneratorModel(
             raw_body=parameters,
