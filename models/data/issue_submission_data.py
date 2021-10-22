@@ -119,7 +119,7 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 | Common Pool (After Initial Buy)  | {common_pool_after}      |
 | Reserve (After Initial Buy)      | {reserve_balance_after}  |
 
-- **Commons Tribute**: **{commons_tribute}%**, which means that {commons_tribute}% of the Hatch funds ({commons_tribute_common_pool} wxDAI)  will go to the Common Pool and {commons_tribute_remainder}% ({commons_tribute_abc_reserve} wxDAI) will go to the ABC's Reserve.
+- **Commons Tribute**: **{commons_tribute}%**, which means that {commons_tribute}% of the Hatch funds ({common_pool_before} wxDAI)  will go to the Common Pool and {commons_tribute_remainder}% ({reserve_balance_before} wxDAI) will go to the ABC's Reserve.
 - **Entry Tribute**: **{entry_tribute}%** meaning that from every **BUY** order on the ABC, {entry_tribute}% of the order value in wxDAI is subtracted and sent to the Common Pool.
 - **Exit Tribute**: **{exit_tribute}%** meaning that from every **SELL** order on the ABC, {exit_tribute}% of the order value in wxDAI is subtracted and sent to the Common Pool. 
 

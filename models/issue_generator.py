@@ -80,9 +80,9 @@ class IssueGeneratorModel:
         scenario_reserve_balance = self.abc.get("reserveBalance", 1571.22357)
         steplist = self.abc.get("stepList", "")
         zoom_graph = self.abc.get("zoomGraph", 0)
-
-        initial_buy = self.advanced_settings.get("initialBuy", self.abc.get("initialBuy", 0))
-        ragequit_amount = self.advanced_settings.get("ragequitAmount", self.abc.get("ragequitAmount", 100))
+        initial_buy = self.abc.get("initialBuy", 0)
+        ragequit_amount = self.abc.get("ragequitAmount", 100)
+    
 
         augmented_bonding_curve_model = BondingCurveHandler(
                         commons_percentage=commons_percentage,
@@ -141,8 +141,6 @@ class IssueGeneratorModel:
             entry_tribute="{0:.2f}".format(100 * self.abc.get("entryTribute", "")),
             exit_tribute="{0:.2f}".format(100 * self.abc.get("exitTribute", "")),
             reserve_ratio="{0:.2f}".format(100 * augmented_bonding_curve_output["chartData"]["reserveRatio"]),
-            commons_tribute_common_pool="{0:.2f}".format(float(self.abc.get("commonsTribute", ""))*float(self.abc.get("hatchScenarioFunding", ""))),
-            commons_tribute_abc_reserve="{0:.2f}".format(float(1-self.abc.get("commonsTribute", ""))*float(self.abc.get("hatchScenarioFunding", ""))),
             step=augmented_bonding_curve_output["stepTable"]["step"],
             current_price=augmented_bonding_curve_output["stepTable"]["currentPriceParsed"],
             amount_in=augmented_bonding_curve_output["stepTable"]["amountInParsed"],
