@@ -138,4 +138,7 @@ class ConvictionVotingModel:
                 )
             self.output_dict['output']['table'] = scenarios
 
+        # Remove minTokenToPass from the output
+        scenarios.pop("minTokensToPass")
+
         return self.output_dict
