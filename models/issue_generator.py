@@ -106,6 +106,7 @@ class IssueGeneratorModel:
         conviction_voting_table = conviction_voting_output.get("table", "")
 
         formated_advanced_settings_data = advanced_settings_data.format(
+            issue_number=self.issue_number,
             commons_pool_amount=self.advanced_settings.get("commonPoolAmount", ""),
             hny_liquidity=self.advanced_settings.get("HNYLiquidity", ""),
             garden_liquidity=self.advanced_settings.get("gardenLiquidity", ""),
@@ -140,6 +141,8 @@ class IssueGeneratorModel:
             entry_tribute="{0:.2f}".format(100 * self.abc.get("entryTribute", "")),
             exit_tribute="{0:.2f}".format(100 * self.abc.get("exitTribute", "")),
             reserve_ratio="{0:.2f}".format(100 * augmented_bonding_curve_output["chartData"]["reserveRatio"]),
+            commons_tribute_common_pool="{0:.2f}".format(float(self.abc.get("commonsTribute", ""))*float(self.abc.get("hatchScenarioFunding", ""))),
+            commons_tribute_abc_reserve="{0:.2f}".format(float(1-self.abc.get("commonsTribute", ""))*float(self.abc.get("hatchScenarioFunding", ""))),
             step=augmented_bonding_curve_output["stepTable"]["step"],
             current_price=augmented_bonding_curve_output["stepTable"]["currentPriceParsed"],
             amount_in=augmented_bonding_curve_output["stepTable"]["amountInParsed"],
@@ -147,10 +150,15 @@ class IssueGeneratorModel:
             amount_out=augmented_bonding_curve_output["stepTable"]["amountOutParsed"],
             new_price=augmented_bonding_curve_output["stepTable"]["newPriceParsed"],
             price_slippage=augmented_bonding_curve_output["stepTable"]["slippage"],
+            common_pool_before="{0:.2f}".format(augmented_bonding_curve_output["fundAllocations"]["commonPoolBefore"]),
+            reserve_balance_before="{0:.2f}".format(augmented_bonding_curve_output["fundAllocations"]["reserveBalanceBefore"]),
+            common_pool_after="{0:.2f}".format(augmented_bonding_curve_output["fundAllocations"]["commonPoolAfter"]),
+            reserve_balance_after="{0:.2f}".format(augmented_bonding_curve_output["fundAllocations"]["reserveBalanceAfter"]),
 
             tao_voting_strategy=self.tao_voting.get("strategy", ""),
             support_required=self.tao_voting.get("supportRequired", ""),
             minimum_quorum=self.tao_voting.get("minimumQuorum", ""),
+            double_conviction_growth_days=2*self.tao_voting.get("voteDuration", ""),
             vote_duration_days=self.tao_voting.get("voteDuration", ""),
             delegated_voting_days=self.tao_voting.get("delegatedVotingPeriod", ""),
             quiet_ending_days=self.tao_voting.get("quietEndingPeriod", ""),
