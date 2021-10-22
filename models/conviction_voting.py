@@ -108,6 +108,7 @@ class ConvictionVotingModel:
         #x = np.linspace(0.0001, 100 * (self.spending_limit - np.sqrt(self.get_weight())), 100)
         x = np.linspace(0.0001, 100 * self.spending_limit, 100)
         y = [100 * (self.get_threshold(i / 100) / self.current_conviction_pergentage_of_max(time=self.voting_period_days)) for i in x]
+        y = ['inf' if math.isinf(i) else i for i in y]
         df = pd.DataFrame(zip(x,y), columns=['requestedPercentage', 'thresholdPercentage'])
         self.output_dict['output']['convictionThresholdChart'] = df.to_dict(orient='list')
 
