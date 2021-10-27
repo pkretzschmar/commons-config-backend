@@ -3,8 +3,8 @@
 This repository contains the API for the four models of the Token Engineering Commons Upgrade Dashboard:
 1. Token Freeze and Token Thaw
 2. Augmented Bonding Curve (ABC)
-3. Disputable Voting
-4. Disputable Conviction Voting
+3. Tao Voting
+4. Conviction Voting
 
 ## Models
 
@@ -52,7 +52,7 @@ To do an API call with the model input and receive the model outputs, it uses a 
 }
 ```
 
-### 3. Disputable Voting
+### 3. Tao Voting
 The model inputs are:
 - `supportRequired` (Minimum percentage of "yes" votes in relation to the total votes needed to a proposal pass)
 - `minimumQuorum` (Minimum percentage of quorum needed to a proposal pass)
@@ -62,9 +62,9 @@ The model inputs are:
 - `quietEndingExtension` (Quiet ending extension in days)
 - `executionDelay` (Execution delay in days)
 
-The model output is a bar chart plot of the voting timeline and a pie chart of the division of periods within the disputable voting.
+The model output is a bar chart plot of the voting timeline and a pie chart of the division of periods within the Tao voting.
 
-To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/disputable-voting/` with the following body:
+To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/disputable-voting/` (the old name for Tao Voting) with the following body:
 ```json
 {
   "supportRequired": 0.4,
