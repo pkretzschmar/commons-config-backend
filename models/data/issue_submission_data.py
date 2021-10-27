@@ -22,7 +22,7 @@ advanced_settings_data = """
 
 [*Learn more about Advanced Settings on the TEC forum](https://forum.tecommons.org/c/defi-legos-and-how-they-work-together/adv-ccd-params/27)
 
-### [FORK THIS PROPOSAL](https://commons-dashboard.netlify.app/config/import/{issue_number}) (link)
+### [FORK THIS PROPOSAL](http://config.tecommons.org/config/import/{issue_number}) (link)
 """
 
 issue_data = """
@@ -31,7 +31,7 @@ issue_data = """
 ## What is the overall Commons Configuration strategy? 
 {overall_strategy}
 
-### [FORK THIS PROPOSAL](https://commons-dashboard.netlify.app/config/import/{issue_number}) (link)
+### [FORK THIS PROPOSAL](http://config.tecommons.org/config/import/{issue_number}) (link)
 
 # Summary 
 ### Module 1: Token Freeze & Token Thaw
@@ -110,7 +110,7 @@ issue_data = """
 #### NOTE: 
 We're very bullish on TEC so we provide the BUY scenario at launch to compare proposals... to explore this proposal's ABC further Click the link  below to see their parameters in your dashboard, be warned this will clear any data you have in your dashboard: 
 
-### [FORK THIS PROPOSAL](https://commons-dashboard.netlify.app/config/import/{issue_number}) (link)
+### [FORK THIS PROPOSAL](http://config.tecommons.org/config/import/{issue_number}) (link)
 
 | Allocation of Funds              | wxDAI                    |
 |----------------------------------|--------------------------|
@@ -176,7 +176,7 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 | Tokens Needed To Pass in 2 weeks | {tokens_pass_2_weeks[0]}  | {tokens_pass_2_weeks[1]}  | {tokens_pass_2_weeks[2]}  | {tokens_pass_2_weeks[3]}  | {tokens_pass_2_weeks[4]}  | {tokens_pass_2_weeks[5]}  |
 
 
-### [FORK THIS PROPOSAL](https://commons-dashboard.netlify.app/config/import/{issue_number}) (link)
+### [FORK THIS PROPOSAL](http://config.tecommons.org/config/import/{issue_number}) (link)
 
 {advanced_settings_section}
 """
