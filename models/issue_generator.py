@@ -105,6 +105,20 @@ class IssueGeneratorModel:
         conviction_voting_output = conviction_voting_model.get_data().get("output", "")
         conviction_voting_table = conviction_voting_output.get("table", "")
 
+        formated_abc_steps = ""
+        abc_step_table = augmented_bonding_curve_output["stepTable"]
+        for idx in range(len(abc_step_table)-2):
+            if idx > 0:
+                formated_abc_steps += "| **Step {step}** | {current_price} | {amount_in} | {tribute_collected} | {amount_out} | {new_price} | {price_slippage} |\n".format(
+                    step=abc_step_table["step"][idx],
+                    current_price=abc_step_table["currentPriceParsed"][idx],
+                    amount_in=abc_step_table["amountInParsed"][idx],
+                    tribute_collected=abc_step_table["tributeCollectedParsed"][idx],
+                    amount_out=abc_step_table["amountOutParsed"][idx],
+                    new_price=abc_step_table["newPriceParsed"][idx],
+                    price_slippage=abc_step_table["slippage"][idx]
+                )
+
         formated_advanced_settings_data = advanced_settings_data.format(
             issue_number=self.issue_number,
             commons_pool_amount=self.advanced_settings.get("commonPoolAmount", ""),
@@ -152,6 +166,7 @@ class IssueGeneratorModel:
             reserve_balance_before="{0:.2f}".format(augmented_bonding_curve_output["fundAllocations"]["reserveBalanceBefore"]),
             common_pool_after="{0:.2f}".format(augmented_bonding_curve_output["fundAllocations"]["commonPoolAfter"]),
             reserve_balance_after="{0:.2f}".format(augmented_bonding_curve_output["fundAllocations"]["reserveBalanceAfter"]),
+            abc_steps=formated_abc_steps,
 
             tao_voting_strategy=self.tao_voting.get("strategy", ""),
             support_required=self.tao_voting.get("supportRequired", ""),
