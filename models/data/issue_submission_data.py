@@ -103,9 +103,7 @@ issue_data = """
 
 | Step #             | Current Price      | Amount In      | Tribute Collected      | Amount Out      | New Price      | Price Slippage      |
 | ------------------ | ------------------ | -------------- | ---------------------- | --------------- | -------------- | ------------------- |
-| **Step {step[0]}** | {current_price[0]} | {amount_in[0]} | {tribute_collected[0]} | {amount_out[0]} | {new_price[0]} | {price_slippage[0]} |
-| **Step {step[1]}** | {current_price[1]} | {amount_in[1]} | {tribute_collected[1]} | {amount_out[1]} | {new_price[1]} | {price_slippage[1]} |
-| **Step {step[2]}** | {current_price[2]} | {amount_in[2]} | {tribute_collected[2]} | {amount_out[2]} | {new_price[1]} | {price_slippage[2]} |
+{abc_steps}
 
 #### NOTE: 
 We're very bullish on TEC so we provide the BUY scenario at launch to compare proposals... to explore this proposal's ABC further Click the link  below to see their parameters in your dashboard, be warned this will clear any data you have in your dashboard: 
