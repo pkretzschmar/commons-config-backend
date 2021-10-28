@@ -58,4 +58,12 @@ class DisputableVotingModel:
         }
         self.output_dict['output']['pieChart'] = pie_chart_items
 
+        # Table Data
+        table_items = {
+            'noExtension': self.vote_duration,
+            'firstExtension': self.vote_duration + self.quiet_ending_extension,
+            'secondExtension': self.vote_duration + (2 * self.quiet_ending_extension)
+        }
+        self.output_dict['output']['table'] = table_items
+
         return self.output_dict
