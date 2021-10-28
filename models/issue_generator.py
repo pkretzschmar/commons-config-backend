@@ -107,7 +107,7 @@ class IssueGeneratorModel:
 
         formated_abc_steps = ""
         abc_step_table = augmented_bonding_curve_output["stepTable"]
-        for idx in range(len(abc_step_table)-2):
+        for idx in range(len(abc_step_table['step'])):
             if idx > 0:
                 formated_abc_steps += "| **Step {step}** | {current_price} | {amount_in} | {tribute_collected} | {amount_out} | {new_price} | {price_slippage} |\n".format(
                     step=abc_step_table["step"][idx],
