@@ -63,7 +63,7 @@ issue_data = """
 | Delegated Voting Period | {delegated_voting_days} day(s)       |
 | Quiet Ending Period     | {quiet_ending_days} day(s)           |
 | Quiet Ending Extension  | {quiet_ending_extension_days} day(s) |
-| Execution Delay         | {execution_delay_days} hour(s)       |
+| Execution Delay         | {execution_delay_days} day(s)       |
 
 
 ### Module 4: Conviction Voting
