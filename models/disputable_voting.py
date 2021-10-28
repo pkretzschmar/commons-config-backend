@@ -60,9 +60,9 @@ class DisputableVotingModel:
 
         # Table Data
         table_items = {
-            'no_extension': self.vote_duration,
-            '1_extension': self.vote_duration + self.quiet_ending_extension,
-            '2_extensions': self.vote_duration + (2 * self.quiet_ending_extension)
+            'noExtension': self.vote_duration,
+            'firstExtension': self.vote_duration + self.quiet_ending_extension,
+            'secondExtension': self.vote_duration + (2 * self.quiet_ending_extension)
         }
         self.output_dict['output']['table'] = table_items
 
