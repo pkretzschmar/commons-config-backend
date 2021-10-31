@@ -42,11 +42,10 @@ class TokenLockupModel:
         self.output_dict['output'] = {'chart' : df.to_dict(orient='list')}
 
         # Table Data
-        weeks_table_1_year = [5, 10, 20, 30, 40, 52]
-        weeks_table_5_years = [10, 50, 100, 150, 200, 260]
+        weeks_table = [13, 26, 39, 52, 78, 104, 156, 208, 260]
         df = pd.DataFrame(
             {
-                'week': weeks_table_1_year if self.token_freeze_period + self.token_thaw_period <= 52 else weeks_table_5_years
+                'week': weeks_table
             })
         df['price'] = 0
         df.loc[df['week'] <= self.token_freeze_period, 'price'] = self.opening_price

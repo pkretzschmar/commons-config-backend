@@ -26,10 +26,12 @@ advanced_settings_data = """
 """
 
 issue_data = """
-#### Advanced Settings Modified? {has_advanced_settings}
+![image](https://i.imgflip.com/5rop7m.jpg)
 
 ## What is the overall Commons Configuration strategy? 
 {overall_strategy}
+
+#### Advanced Settings Modified? {has_advanced_settings}
 
 ### [FORK THIS PROPOSAL](http://config.tecommons.org/config/import/{issue_number}) (link)
 
@@ -53,7 +55,7 @@ issue_data = """
 
 *This is an output. [Learn more about the Reserve Ratio here](https://forum.tecommons.org/t/augmented-bonding-curve-opening-price-reserve-ratio/516).
 
-### Module 3: Disputable Voting
+### Module 3: Tao Voting
 
 | Parameters              | Value                                |
 | ----------------------- | ------------------------------------ |
@@ -79,14 +81,17 @@ issue_data = """
 ### Data:
 ![](https://i.imgur.com/Wk3jgGo.jpg)
 
-| # of Weeks                   | % of Tokens Released  | Price Floor of Token   |
-| ---------------------------- | --------------------- | ---------------------- |
-| {token_lockup_week[0]} weeks | {tokens_released[0]}% | {price_floor[0]} wxDAI |
-| {token_lockup_week[1]} weeks | {tokens_released[1]}% | {price_floor[1]} wxDAI |
-| {token_lockup_week[2]} weeks | {tokens_released[2]}% | {price_floor[2]} wxDAI |
-| {token_lockup_week[3]} weeks | {tokens_released[3]}% | {price_floor[3]} wxDAI |
-| {token_lockup_week[4]} weeks | {tokens_released[4]}% | {price_floor[4]} wxDAI |
-| {token_lockup_week[5]} weeks | {tokens_released[5]}% | {price_floor[5]} wxDAI |
+| Duration                  | % of Tokens Released  | Price Floor of Token   |
+| ------------------------- | --------------------- | ---------------------- |
+| 3 months                  | {tokens_released[0]}% | {price_floor[0]} wxDAI |
+| 6 months                  | {tokens_released[1]}% | {price_floor[1]} wxDAI |
+| 9 months                  | {tokens_released[2]}% | {price_floor[2]} wxDAI |
+| 1 year                    | {tokens_released[3]}% | {price_floor[3]} wxDAI |
+| 1.5 years                 | {tokens_released[4]}% | {price_floor[4]} wxDAI |
+| 2 years                   | {tokens_released[5]}% | {price_floor[5]} wxDAI |
+| 3 years                   | {tokens_released[6]}% | {price_floor[6]} wxDAI |
+| 4 years                   | {tokens_released[7]}% | {price_floor[7]} wxDAI |
+| 5 years                   | {tokens_released[8]}% | {price_floor[8]} wxDAI |
 
 - **Token Freeze**: **{token_freeze_period} weeks**, meaning that 100% of TEC tokens minted for Hatchers will remain locked from being sold or transferred for {token_freeze_period} weeks. They can still be used to vote while frozen.
 - **Token Thaw**: **{token_thaw_period} weeks**, meaning the Hatchers frozen tokens will start to become transferable at a steady rate starting at the end of Token Freeze and ending {token_thaw_period} weeks later.
@@ -130,9 +135,11 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 
 ![](https://i.imgur.com/9RK5Hom.png)
 
-|# of Quiet Ending Extensions                 | No Extensions             | With 1 Extension                      | With 2 Extensions                      |
-| ------------------------------------------- | ------------------------- | ------------------------------------- | -------------------------------------- |
-| **Total Amount of Time to Complete a Vote** | {vote_duration_days} days | {vote_duration_days_1_extension} days | {vote_duration_days_2_extensions} days |
+|# of Quiet Ending Extensions                 | No Extensions                         | With 1 Extension                                  | With 2 Extensions                                  |
+| ------------------------------------------- | ------------------------------------- | ------------------------------------------------- | -------------------------------------------------- |
+| **Time to Vote on Proposals**               | {vote_duration_days} days             | {vote_duration_days_1_extension} days             | {vote_duration_days_2_extensions} days             |
+| **Time to Review a Delegates Vote**         | {review_duration_days} days           | {review_duration_days_1_extension} days           | {review_duration_days_2_extensions} days           |
+| **Time to Execute a Passing Proposal**      | {execute_proposal_duration_days} days | {execute_proposal_duration_days_1_extension} days | {execute_proposal_duration_days_2_extensions} days |
 
 - **Support Required**: **{support_required}%**, which means {support_required}% of all votes must be in favor of a proposal for it to pass.
 - **Minimum Quorum**: **{minimum_quorum}%**, meaning that {minimum_quorum}% of all tokens need to have voted on a proposal in order for it to become valid.
@@ -145,18 +152,19 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 ### Strategy:
 {tao_voting_strategy}
 
-# Module 4: Conviction Voting Strategy
+# Module 4: Conviction Voting
 
 ### Data: 
 ![](https://i.imgur.com/9RK5Hom.png)
 
-| Variables                        | Scenario 1                | Scenario 2                | Scenario 3                | Scenario 4                | Scenario 5                | Scenario 6                |
-| -------------------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- |
-| **Effective Supply**             | {effective_supply[0]}     | {effective_supply[1]}     | {effective_supply[2]}     | {effective_supply[3]}     | {effective_supply[4]}     | {effective_supply[5]}     |
-| **Requested Amount (wxDAI)**     | **{requested_amount[0]}** | **{requested_amount[1]}** | **{requested_amount[2]}** | **{requested_amount[3]}** | **{requested_amount[4]}** | **{requested_amount[5]}** |
-| Amount in Common Pool (wxDAI)    | {amount_common_pool[0]}   | {amount_common_pool[1]}   | {amount_common_pool[2]}   | {amount_common_pool[3]}   | {amount_common_pool[4]}   | {amount_common_pool[5]}   |
-| Minimum Tokens Needed to Pass    | {min_tokens_pass[0]}      | {min_tokens_pass[1]}      | {min_tokens_pass[2]}      | {min_tokens_pass[3]}      | {min_tokens_pass[4]}      | {min_tokens_pass[5]}      |
-| Tokens Needed To Pass in 2 weeks | {tokens_pass_2_weeks[0]}  | {tokens_pass_2_weeks[1]}  | {tokens_pass_2_weeks[2]}  | {tokens_pass_2_weeks[3]}  | {tokens_pass_2_weeks[4]}  | {tokens_pass_2_weeks[5]}  |
+| Proposal  | Requested Amount (wxDAI) | Common Pool (wxDAI)       | Effective supply (TEC)  | Tokens Needed To Pass (TEC) |
+| --------- | ------------------------ | ------------------------- | ----------------------- | --------------------------- |
+|     1     | {requested_amount[0]:,}  | {amount_common_pool[0]:,} | {effective_supply[0]:,} | {min_tokens_pass[0]}        |
+|     2     | {requested_amount[1]:,}  | {amount_common_pool[1]:,} | {effective_supply[1]:,} | {min_tokens_pass[1]}        |
+|     3     | {requested_amount[2]:,}  | {amount_common_pool[2]:,} | {effective_supply[2]:,} | {min_tokens_pass[2]}        |
+|     4     | {requested_amount[3]:,}  | {amount_common_pool[3]:,} | {effective_supply[3]:,} | {min_tokens_pass[3]}        |
+|     5     | {requested_amount[4]:,}  | {amount_common_pool[4]:,} | {effective_supply[4]:,} | {min_tokens_pass[4]}        |
+|     6     | {requested_amount[5]:,}  | {amount_common_pool[5]:,} | {effective_supply[5]:,} | {min_tokens_pass[5]}        |
 
 - **Conviction Growth**: **{conviction_growth_days} day(s)**, meaning that voting power will increase by 50% every {conviction_growth_days} days that they are staked behind a proposal, so after {double_conviction_growth_days} days, a voters voting power will have reached 75% of it's maximum capacity.
 - **Minimum Conviction**: **{minimum_conviction}%**, this means that to pass any funding request it will take at least {minimum_conviction}% of the actively voting TEC tokens.
@@ -164,15 +172,6 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 
 ###  Strategy: 
 {conviction_voting_strategy}
-
-| Variables                        | Scenario 1                | Scenario 2                | Scenario 3                | Scenario 4                | Scenario 5                | Scenario 6                |
-| -------------------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- |
-| **Effective Supply**             | {effective_supply[0]}     | {effective_supply[1]}     | {effective_supply[2]}     | {effective_supply[3]}     | {effective_supply[4]}     | {effective_supply[5]}     |
-| **Requested Amount (wxDAI)**     | **{requested_amount[0]}** | **{requested_amount[1]}** | **{requested_amount[2]}** | **{requested_amount[3]}** | **{requested_amount[4]}** | **{requested_amount[5]}** |
-| Amount in Common Pool (wxDAI)    | {amount_common_pool[0]}   | {amount_common_pool[1]}   | {amount_common_pool[2]}   | {amount_common_pool[3]}   | {amount_common_pool[4]}   | {amount_common_pool[5]}   |
-| Minimum Tokens Needed to Pass    | {min_tokens_pass[0]}      | {min_tokens_pass[1]}      | {min_tokens_pass[2]}      | {min_tokens_pass[3]}      | {min_tokens_pass[4]}      | {min_tokens_pass[5]}      |
-| Tokens Needed To Pass in 2 weeks | {tokens_pass_2_weeks[0]}  | {tokens_pass_2_weeks[1]}  | {tokens_pass_2_weeks[2]}  | {tokens_pass_2_weeks[3]}  | {tokens_pass_2_weeks[4]}  | {tokens_pass_2_weeks[5]}  |
-
 
 ### [FORK THIS PROPOSAL](http://config.tecommons.org/config/import/{issue_number}) (link)
 
