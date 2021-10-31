@@ -10,7 +10,7 @@ advanced_settings_data = """
 | Garden Liquidity        | {garden_liquidity} TEC      |
 | Virtual Supply          | {virtual_supply} TEC        |
 | Virtual Balance         | {virtual_balance} wxDAI     |
-| Transferability         | {transferability}           |
+| Transferable            | {transferability}           |
 | Token Name              | {token_name}                |
 | Token Symbol            | {token_symbol}              |
 | Proposal Deposit        | {proposal_deposit} wxDAI    |
