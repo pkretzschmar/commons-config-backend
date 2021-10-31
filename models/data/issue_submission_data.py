@@ -125,7 +125,7 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 ## ABC Configuration Table
 
 | Reserve (wxDai)     | Supply (TEC)       | Price (wxDai/TEC) |
-| ------------------- | ------------------ | ----------------- |
+|:-------------------:|:------------------:|:-----------------:|
 | {abc_reserve[0]:,}  | {abc_supply[0]:,.0f}  | {abc_price[0]:,.2f}  |
 | {abc_reserve[1]:,}  | {abc_supply[1]:,.0f}  | {abc_price[1]:,.2f}  |
 | {abc_reserve[2]:,}  | {abc_supply[2]:,.0f}  | {abc_price[2]:,.2f}  |
@@ -145,6 +145,14 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 | {abc_reserve[16]:,} | {abc_supply[16]:,.0f} | {abc_price[16]:,.2f} |
 | {abc_reserve[17]:,} | {abc_supply[17]:,.0f} | {abc_price[17]:,.2f} |
 | {abc_reserve[18]:,} | {abc_supply[18]:,.0f} | {abc_price[18]:,.2f} |
+| {abc_reserve[19]:,} | {abc_supply[19]:,.0f} | {abc_price[19]:,.2f} |
+| {abc_reserve[20]:,} | {abc_supply[20]:,.0f} | {abc_price[20]:,.2f} |
+| {abc_reserve[21]:,} | {abc_supply[21]:,.0f} | {abc_price[21]:,.2f} |
+| {abc_reserve[22]:,} | {abc_supply[22]:,.0f} | {abc_price[22]:,.2f} |
+| {abc_reserve[23]:,} | {abc_supply[23]:,.0f} | {abc_price[23]:,.2f} |
+| {abc_reserve[24]:,} | {abc_supply[24]:,.0f} | {abc_price[24]:,.2f} |
+| {abc_reserve[25]:,} | {abc_supply[25]:,.0f} | {abc_price[25]:,.2f} |
+| {abc_reserve[26]:,} | {abc_supply[26]:,.0f} | {abc_price[26]:,.2f} |
 
 - **Commons Tribute**: **{commons_tribute}%**, which means that {commons_tribute}% of the Hatch funds ({common_pool_before} wxDAI)  will go to the Common Pool and {commons_tribute_remainder}% ({reserve_balance_before} wxDAI) will go to the ABC's Reserve.
 - **Entry Tribute**: **{entry_tribute}%** meaning that from every **BUY** order on the ABC, {entry_tribute}% of the order value in wxDAI is subtracted and sent to the Common Pool.
@@ -182,7 +190,7 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 ![](https://i.imgur.com/9RK5Hom.png)
 
 | Proposal  | Requested Amount (wxDAI) | Common Pool (wxDAI)       | Effective supply (TEC)  | Tokens Needed To Pass (TEC) |
-| --------- | ------------------------ | ------------------------- | ----------------------- | --------------------------- |
+|:---------:|:------------------------:|:-------------------------:|:-----------------------:|:---------------------------:|
 |     1     | {requested_amount[0]:,}  | {amount_common_pool[0]:,} | {effective_supply[0]:,} | {min_tokens_pass[0]}        |
 |     2     | {requested_amount[1]:,}  | {amount_common_pool[1]:,} | {effective_supply[1]:,} | {min_tokens_pass[1]}        |
 |     3     | {requested_amount[2]:,}  | {amount_common_pool[2]:,} | {effective_supply[2]:,} | {min_tokens_pass[2]}        |
