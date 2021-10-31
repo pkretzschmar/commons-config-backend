@@ -425,7 +425,10 @@ class BondingCurveHandler():
         return [min_range, max_range]
 
     def get_milestone_table(self, bCurve):
-        balance_list  = [250, 500, 1000, 2000, 3000, 5000, 10000]
+        balance_list  = [100_000, 200_000, 300_000, 400_000, 500_000, 750_000,
+                         1_000_000, 1_250_000, 1_500_000, 2_000_000, 2_500_000,
+                         3_000_000, 4_000_000, 5_000_000, 7_500_000, 10_000_000,
+                         15_000_000, 20_000_000, 50_000_000]
         price_list = []
         supply_list = []
 

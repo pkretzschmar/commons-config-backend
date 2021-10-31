@@ -166,6 +166,9 @@ class IssueGeneratorModel:
             common_pool_after="{0:.2f}".format(augmented_bonding_curve_output["fundAllocations"]["commonPoolAfter"]),
             reserve_balance_after="{0:.2f}".format(augmented_bonding_curve_output["fundAllocations"]["reserveBalanceAfter"]),
             abc_steps=formated_abc_steps,
+            abc_reserve=augmented_bonding_curve_output["milestoneTable"].get("balance", ""),
+            abc_supply=augmented_bonding_curve_output["milestoneTable"].get("supply", ""),
+            abc_price=augmented_bonding_curve_output["milestoneTable"].get("price", ""),
 
             tao_voting_strategy=self.tao_voting.get("strategy", ""),
             support_required=self.tao_voting.get("supportRequired", ""),

@@ -122,6 +122,30 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 | Common Pool (After Initial Buy)  | {common_pool_after}      |
 | Reserve (After Initial Buy)      | {reserve_balance_after}  |
 
+## ABC Configuration Table
+
+| Reserve (wxDai)     | Supply (TEC)       | Price (wxDai/TEC) |
+| ------------------- | ------------------ | ----------------- |
+| {abc_reserve[0]:,}  | {abc_supply[0]:,.0f}  | {abc_price[0]:,.2f}  |
+| {abc_reserve[1]:,}  | {abc_supply[1]:,.0f}  | {abc_price[1]:,.2f}  |
+| {abc_reserve[2]:,}  | {abc_supply[2]:,.0f}  | {abc_price[2]:,.2f}  |
+| {abc_reserve[3]:,}  | {abc_supply[3]:,.0f}  | {abc_price[3]:,.2f}  |
+| {abc_reserve[4]:,}  | {abc_supply[4]:,.0f}  | {abc_price[4]:,.2f}  |
+| {abc_reserve[5]:,}  | {abc_supply[5]:,.0f}  | {abc_price[5]:,.2f}  |
+| {abc_reserve[6]:,}  | {abc_supply[6]:,.0f}  | {abc_price[6]:,.2f}  |
+| {abc_reserve[7]:,}  | {abc_supply[7]:,.0f}  | {abc_price[7]:,.2f}  |
+| {abc_reserve[8]:,}  | {abc_supply[8]:,.0f}  | {abc_price[8]:,.2f}  |
+| {abc_reserve[9]:,}  | {abc_supply[9]:,.0f}  | {abc_price[9]:,.2f}  |
+| {abc_reserve[10]:,} | {abc_supply[10]:,.0f} | {abc_price[10]:,.2f} |
+| {abc_reserve[11]:,} | {abc_supply[11]:,.0f} | {abc_price[11]:,.2f} |
+| {abc_reserve[12]:,} | {abc_supply[12]:,.0f} | {abc_price[12]:,.2f} |
+| {abc_reserve[13]:,} | {abc_supply[13]:,.0f} | {abc_price[13]:,.2f} |
+| {abc_reserve[14]:,} | {abc_supply[14]:,.0f} | {abc_price[14]:,.2f} |
+| {abc_reserve[15]:,} | {abc_supply[15]:,.0f} | {abc_price[15]:,.2f} |
+| {abc_reserve[16]:,} | {abc_supply[16]:,.0f} | {abc_price[16]:,.2f} |
+| {abc_reserve[17]:,} | {abc_supply[17]:,.0f} | {abc_price[17]:,.2f} |
+| {abc_reserve[18]:,} | {abc_supply[18]:,.0f} | {abc_price[18]:,.2f} |
+
 - **Commons Tribute**: **{commons_tribute}%**, which means that {commons_tribute}% of the Hatch funds ({common_pool_before} wxDAI)  will go to the Common Pool and {commons_tribute_remainder}% ({reserve_balance_before} wxDAI) will go to the ABC's Reserve.
 - **Entry Tribute**: **{entry_tribute}%** meaning that from every **BUY** order on the ABC, {entry_tribute}% of the order value in wxDAI is subtracted and sent to the Common Pool.
 - **Exit Tribute**: **{exit_tribute}%** meaning that from every **SELL** order on the ABC, {exit_tribute}% of the order value in wxDAI is subtracted and sent to the Common Pool. 
