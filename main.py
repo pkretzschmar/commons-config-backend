@@ -2,15 +2,14 @@ from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
 import json
-import os
 from dotenv import load_dotenv
-from pymongo import MongoClient
 
 from models.disputable_voting import DisputableVotingModel
 from models.token_lockup import TokenLockupModel
 from models.augmented_bonding_curve import BondingCurveHandler
 from models.issue_generator import IssueGeneratorModel
 from models.conviction_voting import ConvictionVotingModel
+import models.import_params as import_params
 
 app = Flask(__name__)
 api = Api(app)
@@ -184,18 +183,12 @@ class ConvictionVoting(Resource):
 
 class ImportParams(Resource):
     def get(self):
-        MONGODB_CLIENT = os.getenv('MONGODB_CLIENT')
-        client = MongoClient(MONGODB_CLIENT)
-        db = client.get_database('test_tec_params_db')
-        test_params_db = db.test_params
         parser = reqparse.RequestParser()
         parser.add_argument('issueNumber', type=int)
         parameters = parser.parse_args()
         issue_number = parameters.get('issueNumber', '')
-        issue_data = test_params_db.find_one({'issue_number':issue_number})
-        issue_data.pop('_id', None)
 
-        return jsonify(issue_data)
+        return jsonify(import_params.get_data(issue_number))
 
 
 api.add_resource(status, '/')
