@@ -98,18 +98,21 @@ class AugmentedBondingCurve(Resource):
         virtual_balance = float(parameters['virtualBalance']) if parameters['virtualBalance'] is not None else -1 
         zoom_graph = int(parameters['zoomGraph']) if parameters['zoomGraph'] is not None else 0
 
-        augmented_bonding_curve_model = BondingCurveHandler(
-                commons_percentage=commons_percentage,
-                ragequit_amount=ragequit_amount,
-                opening_price=opening_price,
-                entry_tribute=entry_tribute,
-                exit_tribute=exit_tribute,
-                initial_buy=initial_buy,
-                scenario_reserve_balance=scenario_reserve_balance,
-                virtual_supply= virtual_supply,
-                virtual_balance= virtual_balance,
-                steplist=steplist,
-                zoom_graph= zoom_graph )
+        try:
+            augmented_bonding_curve_model = BondingCurveHandler(
+                    commons_percentage=commons_percentage,
+                    ragequit_amount=ragequit_amount,
+                    opening_price=opening_price,
+                    entry_tribute=entry_tribute,
+                    exit_tribute=exit_tribute,
+                    initial_buy=initial_buy,
+                    scenario_reserve_balance=scenario_reserve_balance,
+                    virtual_supply= virtual_supply,
+                    virtual_balance= virtual_balance,
+                    steplist=steplist,
+                    zoom_graph= zoom_graph )
+        except ValueError as ve:
+            return jsonify(str(ve))
 
         
         return jsonify(augmented_bonding_curve_model.get_data())
