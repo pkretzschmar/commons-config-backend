@@ -280,10 +280,10 @@ class BondingCurveHandler():
                 #tribute_collected_parsed = str(format(tribute_collected, '.2f')) + "k wxDAI"
                 tribute_collected_parsed = round(tribute_collected*1000, 2)
 
-                # old buy-amount slippage calculation
-                #slippage = (amount_in - tribute_collected)/bondingCurve.get_price(current_supply) - amount_out
-                #slippage_pct = slippage / ((amount_in - tribute_collected)/bondingCurve.get_price(current_supply))
-                #slippage_pct = str(format((slippage_pct*100), '.2f')) + "%"
+                # buy-amount slippage calculation
+                slippage = (amount_in - tribute_collected)/bondingCurve.get_price(current_supply) - amount_out
+                slippage_pct = slippage / ((amount_in - tribute_collected)/bondingCurve.get_price(current_supply))
+                slippage_pct = str(format((slippage_pct*100), '.2f')) + "%"
 
                 new_supply = max(
                     0, current_supply + amount_out
@@ -302,10 +302,10 @@ class BondingCurveHandler():
                 amount_out_parsed = str(format((amount_out*-1000), '.2f')) + " wxDAI" 
                 #amount_out_parsed = str(round((amount_out*-1), 2)) + "k wxDAI"
 
-                # old buy-amount slippage calculation
-                #slippage = ((amount_in*(1-bondingCurve.exit_tribute))*bondingCurve.get_price(current_supply) - amount_out) *-1
-                #slippage_pct = slippage / ((amount_in*(1-bondingCurve.exit_tribute))*bondingCurve.get_price(current_supply)) *-1
-                #slippage_pct = str(format((slippage_pct*100), '.2f')) + "%"
+                # buy-amount slippage calculation
+                slippage = ((amount_in*(1-bondingCurve.exit_tribute))*bondingCurve.get_price(current_supply) - amount_out) *-1
+                slippage_pct = slippage / ((amount_in*(1-bondingCurve.exit_tribute))*bondingCurve.get_price(current_supply)) *-1
+                slippage_pct = str(format((slippage_pct*100), '.2f')) + "%"
                 
                 new_supply = max(
                     0, (current_supply + amount_in),
@@ -323,10 +323,10 @@ class BondingCurveHandler():
             #new_balance_parsed = str(format(new_balance, '.2f')) + " wxDAI"
             new_balance_parsed = round(new_balance*1000, 2)
 
-            #new (price) slippage calculation
-            slippage = abs(current_price - new_price)
-            slippage_pct = slippage/current_price
-            slippage_pct = str(format((slippage_pct*100), '.2f')) + "%"
+            #alternative (price) slippage calculation
+            #slippage = abs(current_price - new_price)
+            #slippage_pct = slippage/current_price
+            #slippage_pct = str(format((slippage_pct*100), '.2f')) + "%"
 
             # add to Dataframe
             outputTable.loc[len(outputTable.index)] = [
