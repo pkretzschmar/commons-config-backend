@@ -132,7 +132,7 @@ class IssueGeneratorModel:
             proposal_deposit=self.advanced_settings.get("proposalDeposit", ""),
             challenge_deposit=self.advanced_settings.get("challengeDeposit", ""),
             settlement_period=self.advanced_settings.get("settlementPeriod", ""),
-            minimum_effective_supply=self.advanced_settings.get("minimumEffectiveSupply", ""),
+            minimum_effective_supply=100 * self.advanced_settings.get("minimumEffectiveSupply", ""),
             hatchers_rage_quit=self.advanced_settings.get("ragequitAmount", ""),
             initial_buy=self.advanced_settings.get("initialBuy", ""),
         )

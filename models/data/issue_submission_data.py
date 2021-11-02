@@ -4,7 +4,7 @@ advanced_settings_data = """
 >This will be empty or non-existent if the user did not change any advanced settings from their default. Any settings changed from default will show up here
 
 | Parameter               | Value                       |
-| ----------------------- | --------------------------- |
+|:-----------------------:|:---------------------------:|
 | Common Pool Amount      | {commons_pool_amount} wxDAI |
 | HNY Liquidity           | {hny_liquidity} wxDAI       |
 | Garden Liquidity        | {garden_liquidity} TEC      |
@@ -16,7 +16,7 @@ advanced_settings_data = """
 | Proposal Deposit        | {proposal_deposit} wxDAI    |
 | Challenge Deposit       | {challenge_deposit} wxDAI   |
 | Settlement Period       | {settlement_period} days    |
-| Minmum Effective Supply | {minimum_effective_supply}% |
+| Minimum Effective Supply | {minimum_effective_supply}% |
 | Hatchers Rage Quit      | {hatchers_rage_quit} wxDAI  |
 | Initial Buy             | {initial_buy} wxDAI         |
 
