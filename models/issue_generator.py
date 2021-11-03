@@ -2,6 +2,8 @@ import pandas as pd
 import requests
 import json
 import os
+import base64
+from base64 import b64encode
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
@@ -21,7 +23,8 @@ class IssueGeneratorModel:
                  tao_voting=None,
                  conviction_voting=None,
                  advanced_settings=None,
-                 overall_strategy=None):
+                 overall_strategy=None,
+                 image_files=None):
         self.raw_body = raw_body
         self.issue_number = 0
         self.title = title if title is not None else "TEC Config Dashboard Proposal test"
@@ -63,6 +66,7 @@ class IssueGeneratorModel:
             "strategy": ""
         }
         self.advanced_settings = advanced_settings
+        self.image_files = image_files
 
     def format_output_issue(self):
         token_lockup_model = TokenLockupModel(
@@ -199,7 +203,11 @@ class IssueGeneratorModel:
             tokens_pass_2_weeks=conviction_voting_table["tokensToPassIn2Weeks"],
 
             has_advanced_settings="Yes" if self.advanced_settings else "No",
-            advanced_settings_section=formated_advanced_settings_data if self.advanced_settings else ""
+            advanced_settings_section=formated_advanced_settings_data if self.advanced_settings else "",
+            token_lockup_image=self.save_images_database(self.image_files['tokenLockup']),
+            abc_image=self.save_images_database(self.image_files['abc']),
+            tao_voting_image=self.save_images_database(self.image_files['taoVoting']),
+            conviction_voting_image=self.save_images_database(self.image_files['convictionVoting'])
         )
         return formated_output
 
@@ -212,6 +220,24 @@ class IssueGeneratorModel:
         issue_data = self.raw_body
 
         test_params_db.insert_one(issue_data)
+
+    def save_images_database(self, image=None, default=None):
+        CLIENT_ID = os.getenv("CLIENT_ID")
+        API_KEY = os.getenv("API_KEY")
+        url = "https://api.imgur.com/3/upload.json"
+        headers = {"Authorization": CLIENT_ID}
+        r = requests.post(
+            url, 
+            headers = headers,
+            data = {
+                'key': API_KEY, 
+                'image': b64encode(image.read()),
+                'type': 'base64',
+                'name': image,
+                'title': 'Picture'
+            }
+        )
+        return r.json()['data'].get('link', '')
 
     def generate_output(self):
         PARAMS_BOT_AUTH_TOKEN = os.getenv("PARAMS_BOT_AUTH_TOKEN")
