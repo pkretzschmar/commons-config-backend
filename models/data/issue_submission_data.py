@@ -80,6 +80,7 @@ issue_data = """
 
 ### Data:
 ![]({token_lockup_image})
+This is the theoretical Price Floor for TEC. It would only be reached if all tokens that were liquid were burned and noliquid tokens existed, which is very unlikely to occur.
 
 | Duration                  | % of Tokens Released  | Price Floor of Token   |
 | ------------------------- | --------------------- | ---------------------- |
@@ -105,6 +106,7 @@ issue_data = """
 ### Data:
 
 ![]({abc_image})
+This shows how the TEC Price changes with the ABC's Reserve Balance, highlighting the Initial Buy that will happen at launch.
 
 | Step #             | Current Price      | Amount In      | Tribute Collected      | Amount Out      | New Price      | Price Slippage      |
 | ------------------ | ------------------ | -------------- | ---------------------- | --------------- | -------------- | ------------------- |
@@ -166,6 +168,7 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 ### Data: 
 
 ![]({tao_voting_image})
+This shows how the timeline stacks up for decision votes that can change the configuration after launch.
 
 |# of Quiet Ending Extensions                 | No Extensions                         | With 1 Extension                                  | With 2 Extensions                                  |
 | ------------------------------------------- | ------------------------------------- | ------------------------------------------------- | -------------------------------------------------- |
@@ -188,6 +191,7 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 
 ### Data: 
 ![]({conviction_voting_image})
+This shows how the minimum percent of tokens needed to pass proposals after 2 weeks varies with the percent of the Common Pool funds being requested.
 
 | Proposal  | Requested Amount (wxDAI) | Common Pool (wxDAI)       | Effective supply (TEC)  | Tokens Needed To Pass (TEC) |
 |:---------:|:------------------------:|:-------------------------:|:-----------------------:|:---------------------------:|
