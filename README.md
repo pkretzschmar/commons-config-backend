@@ -19,9 +19,9 @@ The model output is a linechart data of the price floor over time and a table wi
 To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/token-lockup/` with the following body:
 ```json
 {
-  "OpeningPrice": 5,
-  "TokenFreeze": 20,
-  "TokenThaw": 15
+  "openingPrice": 5,
+  "tokenFreeze": 20,
+  "tokenThaw": 15
 }
 ```
 
@@ -97,15 +97,15 @@ To do an API call with the model input and receive the model outputs, it uses a 
 ```
 
 ### 5. Output Generator
-This final endpoint takas as input all the previous model inputs and generate a github issue with all the selected parameters and outputs. 
+This endpoint takes as input all the previous model inputs and generate a github issue with all the selected parameters and outputs. 
 
 To do an API call with the model input and receive the model outputs, it uses a POST request through the route `/issue-generator/` with the following body:
 ```json
 {
   "title": "TEC Dashboard Parameters Proposal",
-	"overallStrategy": "",
+  "overallStrategy": "",
   "tokenLockup": {
-		"strategy": "",
+    "strategy": "",
     "openingPrice": 5,
     "tokenFreeze": 20,
     "tokenThaw": 15
@@ -123,7 +123,7 @@ To do an API call with the model input and receive the model outputs, it uses a 
     "zoomGraph": 0
   },
   "taoVoting": {
-		"strategy": "",
+    "strategy": "",
     "supportRequired": 40,
     "minimumQuorum": 10,
     "voteDuration": 7,
@@ -133,7 +133,7 @@ To do an API call with the model input and receive the model outputs, it uses a 
     "executionDelay": 1
   },
   "convictionVoting": {
-		"strategy": "",
+    "strategy": "",
     "convictionGrowth": 2,
     "minimumConviction": 0.01,
     "votingPeriodDays": 7,
@@ -144,6 +144,15 @@ To do an API call with the model input and receive the model outputs, it uses a 
     "hatchersRageQuit": 3,
     "virtualBalance": 3000000
   }
+}
+```
+
+### 6. Import Parameters
+This endpoint takes as input the output issue number and return all of its parameters into a JSON format.
+To do an API call with the model input and receive the model outputs, it uses a GET request through the route `/import-parameters/` with the following body:
+```json
+{
+	"issueNumber": 177
 }
 ```
 

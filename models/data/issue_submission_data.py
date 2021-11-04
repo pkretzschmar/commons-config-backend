@@ -1,92 +1,39 @@
-test_issue_data = """
-#### Advanced Settings Modified? (Yes or No)
+advanced_settings_data = """
+### *Advanced Settings 
 
-## What is your overall Commons Configuration strategy? 
+>This will be empty or non-existent if the user did not change any advanced settings from their default. Any settings changed from default will show up here
+
+| Parameter               | Value                       |
+|:-----------------------:|:---------------------------:|
+| Common Pool Amount      | {commons_pool_amount} wxDAI |
+| HNY Liquidity           | {hny_liquidity} wxDAI       |
+| Garden Liquidity        | {garden_liquidity} TEC      |
+| Virtual Supply          | {virtual_supply} TEC        |
+| Virtual Balance         | {virtual_balance} wxDAI     |
+| Transferable            | {transferability}           |
+| Token Name              | {token_name}                |
+| Token Symbol            | {token_symbol}              |
+| Proposal Deposit        | {proposal_deposit} wxDAI    |
+| Challenge Deposit       | {challenge_deposit} wxDAI   |
+| Settlement Period       | {settlement_period} days    |
+| Minimum Effective Supply | {minimum_effective_supply}% |
+| Hatchers Rage Quit      | {hatchers_rage_quit} wxDAI  |
+| Initial Buy             | {initial_buy} wxDAI         |
+
+[*Learn more about Advanced Settings on the TEC forum](https://forum.tecommons.org/c/defi-legos-and-how-they-work-together/adv-ccd-params/27)
+
+### [FORK THIS PROPOSAL](http://config.tecommons.org/config/import/{issue_number}) (link)
+"""
+
+issue_data = """
+![image](https://i.imgflip.com/5rop7m.jpg)
+
+## What is the overall Commons Configuration strategy? 
 {overall_strategy}
 
-### [FORK MY PROPOSAL]() (link)
+#### Advanced Settings Modified? {has_advanced_settings}
 
-# Module 1: Token Freeze and Token Thaw 
-- **Token Freeze** is set to **{token_freeze_period} weeks**, meaning that 100% of TEC tokens minted for Hatchers will remain locked from being sold or transferred for {token_freeze_period} weeks. 
-- **Token Thaw** is set to **{token_thaw_period} weeks**, meaning that from the end of Token Freeze, over the course of {token_thaw_period} weeks tokens minted for Hatchers gradually become liquid. At the end of {token_thaw_period} weeks 100% of the Hatchers' TEC tokens have become liquid.
-- The **Opening Price** is set to **{opening_price} wxDAI**, meaning at the outset of the Commons Upgrade the price to buy TEC on the Augmented Bonding Curve will be {opening_price} wxDAI. 
-
-### Strategy:
-{token_lockup_strategy}
-
-### Data:
-![](https://i.imgur.com/Wk3jgGo.jpg)
-
-| # of Weeks                   | % of Tokens Released  | Price Floor of Token   |
-| ---------------------------- | --------------------- | ---------------------- |
-| {token_lockup_week[0]} weeks | {tokens_released[0]}% | {price_floor[0]} wxDAI |
-| {token_lockup_week[1]} weeks | {tokens_released[1]}% | {price_floor[1]} wxDAI |
-| {token_lockup_week[2]} weeks | {tokens_released[2]}% | {price_floor[2]} wxDAI |
-| {token_lockup_week[3]} weeks | {tokens_released[3]}% | {price_floor[3]} wxDAI |
-| {token_lockup_week[4]} weeks | {tokens_released[4]}% | {price_floor[4]} wxDAI |
-| {token_lockup_week[5]} weeks | {tokens_released[5]}% | {price_floor[5]} wxDAI |
-
-# Module 2: Augmented Bonding Curve (ABC)
-- **Commons Tribute** is set to **{commons_tribute}%**, which means that {commons_tribute}% of the Hatch funds will go to the Common Pool and {commons_tribute_remainder}% will go to the Reserve Balance.
-- **Entry Tribute** is set to **{entry_tribute}%** meaning that from every **BUY** order on the ABC, {entry_tribute}% of the order value in wxDAI is subtracted and sent to the Common Pool.
-- **Exit Tribute** is set to **{exit_tribute}%** meaning that from every **SELL** order on the ABC, {exit_tribute}% of the order value in wxDAI is subtracted and sent to the Common Pool. 
-
-### Strategy:
-{abc_strategy}
-
-### Data:
-
->We're very bullish on TEC so we only provide the BUY scenario as the standard 3 steps that are used to compare different proposals
-
-![](https://i.imgur.com/44MoI7N.png)
-
-| Step #             | Current Price      | Amount In      | Tribute Collected      | Amount Out      | New Price      | Price Slippage      |
-| ------------------ | ------------------ | -------------- | ---------------------- | --------------- | -------------- | ------------------- |
-| **Step {step[0]}** | {current_price[0]} | {amount_in[0]} | {tribute_collected[0]} | {amount_out[0]} | {new_price[0]} | {price_slippage[0]} |
-| **Step {step[1]}** | {current_price[1]} | {amount_in[1]} | {tribute_collected[1]} | {amount_out[1]} | {new_price[1]} | {price_slippage[1]} |
-| **Step {step[2]}** | {current_price[2]} | {amount_in[2]} | {tribute_collected[2]} | {amount_out[2]} | {new_price[1]} | {price_slippage[2]} |
-
-
-# Module 3: Tao Voting 
-- **Support Required** is set to **{support_required}%**, which means {support_required}% of all votes must be in favour of a proposal for it to pass.
-- **Minimum Quorum** is set to **{minimum_quorum}%**, meaning that {minimum_quorum}% of all tokens need to have voted on a proposal in order for it to become valid.
-- **Vote Duration** is **{vote_duration_days} day(s)**, meaning that eligible voters will have {vote_duration_days} day(s) to vote on a proposal. 
-- **Delegated Voting Period** is set for **{delegated_voting_days} day(s)**, meaning that Delegates will have {delegated_voting_days} day(s) to use their delegated voting power to vote on a proposal. 
-- **Quiet Ending Period** is set to **{quiet_ending_days} day(s)**, this means that {quiet_ending_days} day(s) before the end of the Vote Duration, if the vote outcome changes, the Quiet Ending Extension will be triggered. 
-- **Quiet Ending Extension** is set to **{quiet_ending_extension_days} day(s)**, meaning that if the vote outcome changes during the Quiet Ending Period, an additional {quiet_ending_extension_days} day(s) will be added for voting.
-- **Execution Delay** is set to **{execution_delay_days} days(s)**, meaning that there is an {execution_delay_days} day delay after the vote is passed before the proposed action is executed.  
-
-### Strategy:
-{tao_voting_strategy}
-
-### Data: 
-![](https://i.imgur.com/UE0J1sR.png)
-
-|# of Quiet Ending Extensions                 | No Extensions             | With 1 Extension                      | With 2 Extensions                      |
-| ------------------------------------------- | ------------------------- | ------------------------------------- | -------------------------------------- |
-| **Total Amount of Time to Complete a Vote** | {vote_duration_days} days | {vote_duration_days_1_extension} days | {vote_duration_days_2_extensions} days |
-
-# Module 4: Conviction Voting Strategy
-- **Conviction Growth** is set to **{conviction_growth_days} day(s)**, meaning that Conviction will increase by 50% every {conviction_growth_days} day(s).
-- **Minimum Conviction** is set to **{minimum_conviction}%**, this means that to pass a funding request for an infinitely small amount will still take a minimum of {minimum_conviction}% of the total TEC currently active in the Conviction Voting application.
-- The **Spending Limit** is set to **{relative_spending_limit}%**, which means that no more than {relative_spending_limit}% of the total funds in the Common Pool can be requested by a single proposal. 
-
-###  Strategy: 
-{conviction_voting_strategy}
-
-### Data: 
-![](https://i.imgur.com/9RK5Hom.png)
-
-| Variables                        | Scenario 1                | Scenario 2                | Scenario 3                | Scenario 4                | Scenario 5                | Scenario 6                |
-| -------------------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- |
-| **Effective Supply**             | {effective_supply[0]}     | {effective_supply[1]}     | {effective_supply[2]}     | {effective_supply[3]}     | {effective_supply[4]}     | {effective_supply[5]}     |
-| **Requested Amount (wxDAI)**     | **{requested_amount[0]}** | **{requested_amount[1]}** | **{requested_amount[2]}** | **{requested_amount[3]}** | **{requested_amount[4]}** | **{requested_amount[5]}** |
-| Amount in Common Pool (wxDAI)    | {amount_common_pool[0]}   | {amount_common_pool[1]}   | {amount_common_pool[2]}   | {amount_common_pool[3]}   | {amount_common_pool[4]}   | {amount_common_pool[5]}   |
-| Minimum Tokens Needed to Pass    | {min_tokens_pass[0]}      | {min_tokens_pass[1]}      | {min_tokens_pass[2]}      | {min_tokens_pass[3]}      | {min_tokens_pass[4]}      | {min_tokens_pass[5]}      |
-| Tokens Needed To Pass in 2 weeks | {tokens_pass_2_weeks[0]}  | {tokens_pass_2_weeks[1]}  | {tokens_pass_2_weeks[2]}  | {tokens_pass_2_weeks[3]}  | {tokens_pass_2_weeks[4]}  | {tokens_pass_2_weeks[5]}  |
-------
-
-### [FORK MY PROPOSAL]() (link)
+### [FORK THIS PROPOSAL](http://config.tecommons.org/config/import/{issue_number}) (link)
 
 # Summary 
 ### Module 1: Token Freeze & Token Thaw
@@ -103,12 +50,12 @@ test_issue_data = """
 | ---------------- | ------------------ |
 | Commons Tribute  | {commons_tribute}% |
 | Entry Tribute    | {entry_tribute}%   |
-| Exit Tribute     | {commons_tribute}% |
+| Exit Tribute     | {exit_tribute}% |
 | *_Reserve Ratio_ | {reserve_ratio}%   |
 
-*Reserve Ratio is an output derived from the Opening Price and Commons Tribute. [Learn more about the Reserve Ratio here](https://forum.tecommons.org/t/augmented-bonding-curve-opening-price-reserve-ratio/516).
+*This is an output. [Learn more about the Reserve Ratio here](https://forum.tecommons.org/t/augmented-bonding-curve-opening-price-reserve-ratio/516).
 
-### Module 3: Disputable Voting
+### Module 3: Tao Voting
 
 | Parameters              | Value                                |
 | ----------------------- | ------------------------------------ |
@@ -118,7 +65,7 @@ test_issue_data = """
 | Delegated Voting Period | {delegated_voting_days} day(s)       |
 | Quiet Ending Period     | {quiet_ending_days} day(s)           |
 | Quiet Ending Extension  | {quiet_ending_extension_days} day(s) |
-| Execution Delay         | {execution_delay_days} hour(s)       |
+| Execution Delay         | {execution_delay_days} day(s)       |
 
 
 ### Module 4: Conviction Voting
@@ -129,17 +76,136 @@ test_issue_data = """
 | Minimum Conviction | {minimum_conviction}%           |
 | Spending Limit     | {relative_spending_limit}%      |
 
-### *Advanced Settings 
+# Module 1: Token Freeze and Token Thaw
 
->This will be empty or non-existant if the user did not change any advanced settings from their default. Any settings changed from default will show up here
+### Data:
+![]({token_lockup_image})
 
-| Parameter               | Value                       |
-| ----------------------- | --------------------------- |
-| Minmum Effective Supply | {minimum_effective_supply}% |
-| Hatchers Rage Quit      | {hatchers_rage_quit}%       |
-| Virtual Balance         | {virtual_balance} wxDAI     |
+| Duration                  | % of Tokens Released  | Price Floor of Token   |
+| ------------------------- | --------------------- | ---------------------- |
+| 3 months                  | {tokens_released[0]}% | {price_floor[0]} wxDAI |
+| 6 months                  | {tokens_released[1]}% | {price_floor[1]} wxDAI |
+| 9 months                  | {tokens_released[2]}% | {price_floor[2]} wxDAI |
+| 1 year                    | {tokens_released[3]}% | {price_floor[3]} wxDAI |
+| 1.5 years                 | {tokens_released[4]}% | {price_floor[4]} wxDAI |
+| 2 years                   | {tokens_released[5]}% | {price_floor[5]} wxDAI |
+| 3 years                   | {tokens_released[6]}% | {price_floor[6]} wxDAI |
+| 4 years                   | {tokens_released[7]}% | {price_floor[7]} wxDAI |
+| 5 years                   | {tokens_released[8]}% | {price_floor[8]} wxDAI |
 
-[*Learn more about Advanced Settings on the TEC forum](https://forum.tecommons.org/c/defi-legos-and-how-they-work-together/adv-ccd-params/27)
+- **Token Freeze**: **{token_freeze_period} weeks**, meaning that 100% of TEC tokens minted for Hatchers will remain locked from being sold or transferred for {token_freeze_period} weeks. They can still be used to vote while frozen.
+- **Token Thaw**: **{token_thaw_period} weeks**, meaning the Hatchers frozen tokens will start to become transferable at a steady rate starting at the end of Token Freeze and ending {token_thaw_period} weeks later.
+- **Opening Price**: **{opening_price} wxDAI**, meaning for the initial buy, the first TEC minted by the Augmented Bonding Curve will be priced at {opening_price} wxDAI making it the price floor during the Token Freeze. 
 
-### [FORK MY PROPOSAL]() (link)
+### Strategy:
+{token_lockup_strategy}
+
+# Module 2: Augmented Bonding Curve (ABC)
+
+### Data:
+
+![]({abc_image})
+
+| Step #             | Current Price      | Amount In      | Tribute Collected      | Amount Out      | New Price      | Price Slippage      |
+| ------------------ | ------------------ | -------------- | ---------------------- | --------------- | -------------- | ------------------- |
+{abc_steps}
+
+#### NOTE: 
+We're very bullish on TEC so we provide the BUY scenario at launch to compare proposals... to explore this proposal's ABC further Click the link  below to see their parameters in your dashboard, be warned this will clear any data you have in your dashboard: 
+
+### [FORK THIS PROPOSAL](http://config.tecommons.org/config/import/{issue_number}) (link)
+
+| Allocation of Funds              | wxDAI                    |
+|----------------------------------|--------------------------|
+| Common Pool (Before Initial Buy) | {common_pool_before}     |
+| Reserve (Before Initial Buy)     | {reserve_balance_before} |
+| Common Pool (After Initial Buy)  | {common_pool_after}      |
+| Reserve (After Initial Buy)      | {reserve_balance_after}  |
+
+## ABC Configuration Table
+
+| Reserve (wxDai)     | Supply (TEC)       | Price (wxDai/TEC) |
+|:-------------------:|:------------------:|:-----------------:|
+| {abc_reserve[0]:,}  | {abc_supply[0]:,.0f}  | {abc_price[0]:,.2f}  |
+| {abc_reserve[1]:,}  | {abc_supply[1]:,.0f}  | {abc_price[1]:,.2f}  |
+| {abc_reserve[2]:,}  | {abc_supply[2]:,.0f}  | {abc_price[2]:,.2f}  |
+| {abc_reserve[3]:,}  | {abc_supply[3]:,.0f}  | {abc_price[3]:,.2f}  |
+| {abc_reserve[4]:,}  | {abc_supply[4]:,.0f}  | {abc_price[4]:,.2f}  |
+| {abc_reserve[5]:,}  | {abc_supply[5]:,.0f}  | {abc_price[5]:,.2f}  |
+| {abc_reserve[6]:,}  | {abc_supply[6]:,.0f}  | {abc_price[6]:,.2f}  |
+| {abc_reserve[7]:,}  | {abc_supply[7]:,.0f}  | {abc_price[7]:,.2f}  |
+| {abc_reserve[8]:,}  | {abc_supply[8]:,.0f}  | {abc_price[8]:,.2f}  |
+| {abc_reserve[9]:,}  | {abc_supply[9]:,.0f}  | {abc_price[9]:,.2f}  |
+| {abc_reserve[10]:,} | {abc_supply[10]:,.0f} | {abc_price[10]:,.2f} |
+| {abc_reserve[11]:,} | {abc_supply[11]:,.0f} | {abc_price[11]:,.2f} |
+| {abc_reserve[12]:,} | {abc_supply[12]:,.0f} | {abc_price[12]:,.2f} |
+| {abc_reserve[13]:,} | {abc_supply[13]:,.0f} | {abc_price[13]:,.2f} |
+| {abc_reserve[14]:,} | {abc_supply[14]:,.0f} | {abc_price[14]:,.2f} |
+| {abc_reserve[15]:,} | {abc_supply[15]:,.0f} | {abc_price[15]:,.2f} |
+| {abc_reserve[16]:,} | {abc_supply[16]:,.0f} | {abc_price[16]:,.2f} |
+| {abc_reserve[17]:,} | {abc_supply[17]:,.0f} | {abc_price[17]:,.2f} |
+| {abc_reserve[18]:,} | {abc_supply[18]:,.0f} | {abc_price[18]:,.2f} |
+| {abc_reserve[19]:,} | {abc_supply[19]:,.0f} | {abc_price[19]:,.2f} |
+| {abc_reserve[20]:,} | {abc_supply[20]:,.0f} | {abc_price[20]:,.2f} |
+| {abc_reserve[21]:,} | {abc_supply[21]:,.0f} | {abc_price[21]:,.2f} |
+| {abc_reserve[22]:,} | {abc_supply[22]:,.0f} | {abc_price[22]:,.2f} |
+| {abc_reserve[23]:,} | {abc_supply[23]:,.0f} | {abc_price[23]:,.2f} |
+| {abc_reserve[24]:,} | {abc_supply[24]:,.0f} | {abc_price[24]:,.2f} |
+| {abc_reserve[25]:,} | {abc_supply[25]:,.0f} | {abc_price[25]:,.2f} |
+| {abc_reserve[26]:,} | {abc_supply[26]:,.0f} | {abc_price[26]:,.2f} |
+
+- **Commons Tribute**: **{commons_tribute}%**, which means that {commons_tribute}% of the Hatch funds ({common_pool_before} wxDAI)  will go to the Common Pool and {commons_tribute_remainder}% ({reserve_balance_before} wxDAI) will go to the ABC's Reserve.
+- **Entry Tribute**: **{entry_tribute}%** meaning that from every **BUY** order on the ABC, {entry_tribute}% of the order value in wxDAI is subtracted and sent to the Common Pool.
+- **Exit Tribute**: **{exit_tribute}%** meaning that from every **SELL** order on the ABC, {exit_tribute}% of the order value in wxDAI is subtracted and sent to the Common Pool. 
+
+### Strategy:
+{abc_strategy}
+
+# Module 3: Tao Voting
+
+### Data: 
+
+![]({tao_voting_image})
+
+|# of Quiet Ending Extensions                 | No Extensions                         | With 1 Extension                                  | With 2 Extensions                                  |
+| ------------------------------------------- | ------------------------------------- | ------------------------------------------------- | -------------------------------------------------- |
+| **Time to Vote on Proposals**               | {vote_duration_days} days             | {vote_duration_days_1_extension} days             | {vote_duration_days_2_extensions} days             |
+| **Time to Review a Delegates Vote**         | {review_duration_days} days           | {review_duration_days_1_extension} days           | {review_duration_days_2_extensions} days           |
+| **Time to Execute a Passing Proposal**      | {execute_proposal_duration_days} days | {execute_proposal_duration_days_1_extension} days | {execute_proposal_duration_days_2_extensions} days |
+
+- **Support Required**: **{support_required}%**, which means {support_required}% of all votes must be in favor of a proposal for it to pass.
+- **Minimum Quorum**: **{minimum_quorum}%**, meaning that {minimum_quorum}% of all tokens need to have voted on a proposal in order for it to become valid.
+- **Vote Duration**: **{vote_duration_days} day(s)**, meaning that eligible voters will have {vote_duration_days} day(s) to vote on a proposal. 
+- **Delegated Voting Period** is set for **{delegated_voting_days} day(s)**, meaning that Delegates will have {delegated_voting_days} day(s) to use their delegated voting power to vote on a proposal. 
+- **Quiet Ending Period**: **{quiet_ending_days} day(s)**, this means that {quiet_ending_days} day(s) before the end of the Vote Duration, if the vote outcome changes, the Quiet Ending Extension will be triggered. 
+- **Quiet Ending Extension**: **{quiet_ending_extension_days} day(s)**, meaning that if the vote outcome changes during the Quiet Ending Period, an additional {quiet_ending_extension_days} day(s) will be added for voting.
+- **Execution Delay**: **{execution_delay_days} days(s)**, meaning that there is an {execution_delay_days} day delay after the vote is passed before the proposed action is executed.  
+
+### Strategy:
+{tao_voting_strategy}
+
+# Module 4: Conviction Voting
+
+### Data: 
+![]({conviction_voting_image})
+
+| Proposal  | Requested Amount (wxDAI) | Common Pool (wxDAI)       | Effective supply (TEC)  | Tokens Needed To Pass (TEC) |
+|:---------:|:------------------------:|:-------------------------:|:-----------------------:|:---------------------------:|
+|     1     | {requested_amount[0]:,}  | {amount_common_pool[0]:,} | {effective_supply[0]:,} | {min_tokens_pass[0]}        |
+|     2     | {requested_amount[1]:,}  | {amount_common_pool[1]:,} | {effective_supply[1]:,} | {min_tokens_pass[1]}        |
+|     3     | {requested_amount[2]:,}  | {amount_common_pool[2]:,} | {effective_supply[2]:,} | {min_tokens_pass[2]}        |
+|     4     | {requested_amount[3]:,}  | {amount_common_pool[3]:,} | {effective_supply[3]:,} | {min_tokens_pass[3]}        |
+|     5     | {requested_amount[4]:,}  | {amount_common_pool[4]:,} | {effective_supply[4]:,} | {min_tokens_pass[4]}        |
+|     6     | {requested_amount[5]:,}  | {amount_common_pool[5]:,} | {effective_supply[5]:,} | {min_tokens_pass[5]}        |
+
+- **Conviction Growth**: **{conviction_growth_days} day(s)**, meaning that voting power will increase by 50% every {conviction_growth_days} days that they are staked behind a proposal, so after {double_conviction_growth_days} days, a voters voting power will have reached 75% of it's maximum capacity.
+- **Minimum Conviction**: **{minimum_conviction}%**, this means that to pass any funding request it will take at least {minimum_conviction}% of the actively voting TEC tokens.
+- The **Spending Limit**: **{relative_spending_limit}%**, which means that no more than {relative_spending_limit}% of the total funds in the Common Pool can be funded by a single proposal.
+
+###  Strategy: 
+{conviction_voting_strategy}
+
+### [FORK THIS PROPOSAL](http://config.tecommons.org/config/import/{issue_number}) (link)
+
+{advanced_settings_section}
 """

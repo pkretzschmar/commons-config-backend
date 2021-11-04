@@ -2,16 +2,19 @@ from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
 import json
+from dotenv import load_dotenv
 
 from models.disputable_voting import DisputableVotingModel
 from models.token_lockup import TokenLockupModel
 from models.augmented_bonding_curve import BondingCurveHandler
 from models.issue_generator import IssueGeneratorModel
 from models.conviction_voting import ConvictionVotingModel
+import models.import_params as import_params
 
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
+load_dotenv() 
 
 
 class status(Resource):
@@ -71,34 +74,40 @@ class DisputableVoting(Resource):
 class AugmentedBondingCurve(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('commonsTribute', type=float)
-        parser.add_argument('ragequitAmount', type=float)
-        parser.add_argument('openingPrice', type=float)
-        parser.add_argument('entryTribute', type=float)
-        parser.add_argument('exitTribute', type=float)
-        parser.add_argument('reserveBalance', type=float)
-        parser.add_argument('initialBuy', type=float)
+        parser.add_argument('commonsTribute', type= str)
+        parser.add_argument('openingPrice', type=str)
+        parser.add_argument('entryTribute', type=str)
+        parser.add_argument('exitTribute', type=str)
+        parser.add_argument('ragequitAmount', type=str)
+        parser.add_argument('initialBuy', type=str)
+        parser.add_argument('reserveBalance', type=str)
         parser.add_argument('stepList', action='append')
-        parser.add_argument('zoomGraph', type=int)
+        parser.add_argument('virtualSupply', type=str)
+        parser.add_argument('virtualBalance', type=str)
+        parser.add_argument('zoomGraph', type=str)
         parameters = parser.parse_args()
-        commons_percentage = parameters['commonsTribute'] if parameters['commonsTribute'] is not None else 0.05
-        ragequit_amount = parameters['ragequitAmount'] if parameters['ragequitAmount'] is not None else 100
-        opening_price = parameters['openingPrice'] if parameters['openingPrice'] is not None else 3
-        entry_tribute = parameters['entryTribute'] if parameters['entryTribute']  is not None else 0.05
-        exit_tribute = parameters['exitTribute'] if parameters['exitTribute'] is not None else 0.05
-        scenario_reserve_balance = parameters['reserveBalance'] if parameters['reserveBalance'] is not None else 1571.22357
-        initial_buy = parameters['initialBuy'] if parameters['initialBuy'] is not None else 0        
+        commons_percentage = float(parameters['commonsTribute']) if parameters['commonsTribute'] is not None else 0.05
+        opening_price = float(parameters['openingPrice']) if parameters['openingPrice'] is not None else 1.50
+        entry_tribute = float(parameters['entryTribute']) if parameters['entryTribute']  is not None else 0.05
+        exit_tribute = float(parameters['exitTribute']) if parameters['exitTribute'] is not None else 0.05
+        ragequit_amount = float(parameters['ragequitAmount']) if parameters['ragequitAmount'] is not None else 0
+        initial_buy = float(parameters['initialBuy']) if parameters['initialBuy'] is not None else 0 
+        scenario_reserve_balance = float(parameters['reserveBalance']) if parameters['reserveBalance'] is not None else (1571223.57 - initial_buy - ragequit_amount)*(1-commons_percentage)     
         steplist = parameters['stepList'] if parameters['stepList'] is not None else ""
-        zoom_graph = parameters['zoomGraph'] if parameters['zoomGraph'] is not None else 0
+        virtual_supply = float(parameters['virtualSupply']) if parameters['virtualSupply'] is not None else -1
+        virtual_balance = float(parameters['virtualBalance']) if parameters['virtualBalance'] is not None else -1 
+        zoom_graph = int(parameters['zoomGraph']) if parameters['zoomGraph'] is not None else 0
 
         augmented_bonding_curve_model = BondingCurveHandler(
-                commons_percentage= commons_percentage,
-                ragequit_amount= ragequit_amount,
+                commons_percentage=commons_percentage,
+                ragequit_amount=ragequit_amount,
                 opening_price=opening_price,
                 entry_tribute=entry_tribute,
                 exit_tribute=exit_tribute,
                 initial_buy=initial_buy,
                 scenario_reserve_balance=scenario_reserve_balance,
+                virtual_supply= virtual_supply,
+                virtual_balance= virtual_balance,
                 steplist=steplist,
                 zoom_graph= zoom_graph )
 
@@ -116,7 +125,8 @@ class IssueGenerator(Resource):
         parser.add_argument('convictionVoting', type=dict)
         parser.add_argument('advancedSettings', type=dict)
 
-        parameters = parser.parse_args()
+        parameters = json.loads(request.form.get('body'))
+        image_files = request.files
         title = parameters['title']
         overall_strategy = parameters['overallStrategy']
         token_lockup = parameters['tokenLockup']
@@ -125,14 +135,28 @@ class IssueGenerator(Resource):
         conviction_voting = parameters['convictionVoting']
         advanced_settings = parameters['advancedSettings']
 
+        abc['commonsTribute'] = float(abc['commonsTribute']) if abc['commonsTribute'] is not None else 0.05
+        abc['openingPrice'] = float(abc['openingPrice']) if abc['openingPrice'] is not None else 1.50
+        abc['entryTribute'] = float(abc['entryTribute']) if abc['entryTribute']  is not None else 0.05
+        abc['exitTribute'] = float(abc['exitTribute']) if abc['exitTribute'] is not None else 0.05
+        abc['ragequitAmount'] = float(abc['ragequitAmount']) if abc['ragequitAmount'] is not None else 0
+        abc['initialBuy'] = float(abc['initialBuy']) if abc['initialBuy'] is not None else 0 
+        abc['reserveBalance'] = float(abc['reserveBalance']) if abc['reserveBalance'] is not None else (1571223.57 - abc.initial_buy - abc.ragequit_amount)*(1-abc.commons_percentage)     
+        abc['stepList'] = abc['stepList'] if abc['stepList'] is not abc else ""
+        abc['virtualSupply'] = float(abc['virtualSupply']) if abc['virtualSupply'] is not None else -1
+        abc['virtualBalance'] = float(abc['virtualBalance']) if abc['virtualBalance'] is not None else -1 
+        abc['zoomGraph'] = int(abc['zoomGraph']) if abc['zoomGraph'] is not None else 0
+
         issue_generator = IssueGeneratorModel(
+            raw_body=parameters,
             title=title,
             token_lockup=token_lockup,
             abc=abc,
             tao_voting=tao_voting,
             conviction_voting=conviction_voting,
             advanced_settings=advanced_settings,
-            overall_strategy=overall_strategy
+            overall_strategy=overall_strategy,
+            image_files=image_files
         )
 
         return jsonify(issue_generator.generate_output())
@@ -159,9 +183,18 @@ class ConvictionVoting(Resource):
 
         return jsonify(conviction_voting_model.get_data())
 
+class ImportParams(Resource):
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('issueNumber', type=int)
+        parameters = parser.parse_args()
+        issue_number = parameters.get('issueNumber', '')
+
+        return jsonify(import_params.get_data(issue_number))
 
 
 api.add_resource(status, '/')
+api.add_resource(ImportParams, '/import-parameters/')
 api.add_resource(TokenLockup, '/token-lockup/')
 api.add_resource(DisputableVoting, '/disputable-voting/')
 api.add_resource(AugmentedBondingCurve, '/augmented-bonding-curve/')

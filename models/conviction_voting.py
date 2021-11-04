@@ -27,18 +27,18 @@ class ConvictionVotingModel:
                 ],
                 'requestedAmount': [
                     1_000,
-                    1_000,
-                    5_000,
                     5_000,
                     25_000,
+                    1_000,
+                    5_000,
                     25_000,
                 ],
                 'amountInCommonPool': [
                     100_000,
-                    750_000,
+                    100_000,
                     100_000,
                     750_000,
-                    100_000,
+                    750_000,
                     750_000,
                 ],
         }
@@ -71,6 +71,8 @@ class ConvictionVotingModel:
         return np.where(staked > self.min_active_stake_pct, staked, self.min_active_stake_pct)
 
     def get_threshold(self, requested_pct):
+        if self.spending_limit <= requested_pct:
+            return float('inf')
         return self.get_weight() / (self.spending_limit - requested_pct) ** 2
         #return self.get_weight() / (self.spending_limit - requested_pct) ** 2 if np.any(requested_pct <= self.minimum_conviction) else float('inf')
 
@@ -103,8 +105,10 @@ class ConvictionVotingModel:
         }
 
         # Conviction Threshold Chart Data
-        x = np.linspace(1, 100 * (self.spending_limit - np.sqrt(self.get_weight())), 100)
+        #x = np.linspace(0.0001, 100 * (self.spending_limit - np.sqrt(self.get_weight())), 100)
+        x = np.linspace(0.0001, 100 * self.spending_limit, 100)
         y = [100 * (self.get_threshold(i / 100) / self.current_conviction_pergentage_of_max(time=self.voting_period_days)) for i in x]
+        y = ['inf' if math.isinf(i) else i for i in y]
         df = pd.DataFrame(zip(x,y), columns=['requestedPercentage', 'thresholdPercentage'])
         self.output_dict['output']['convictionThresholdChart'] = df.to_dict(orient='list')
 
@@ -116,7 +120,7 @@ class ConvictionVotingModel:
         for idx in range(len_scenarios):
             percentage_requested = scenarios['requestedAmount'][idx] / scenarios['amountInCommonPool'][idx]
             percentage_requested_threshold = self.get_threshold(percentage_requested)
-            if math.isinf(percentage_requested_threshold):
+            if math.isinf(percentage_requested_threshold) or (self.get_threshold(percentage_requested) > 1):
                 scenarios['minTokensToPass'].append('Not possible')
                 scenarios['tokensToPassIn2Weeks'].append('Not possible')
             else:
@@ -129,7 +133,7 @@ class ConvictionVotingModel:
                 scenarios['tokensToPassIn2Weeks'].append(
                     int(
                         scenarios['minTokensToPass'][idx] / 
-                        self.current_conviction_pergentage_of_max(time=4)
+                        self.current_conviction_pergentage_of_max(time=self.voting_period_days)
                     )
                 )
             self.output_dict['output']['table'] = scenarios
