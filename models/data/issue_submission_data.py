@@ -110,11 +110,11 @@ test_issue_data = """
 
 ### Module 3: Disputable Voting
 
-| Parameters              | Value                                |
+| Parameter               | Value                                |
 | ----------------------- | ------------------------------------ |
 | Support Required        | {support_required}%                  |
 | Minimum Quorum          | {minimum_quorum}%                    |
-| Vote Duration           | {vote_duration_days} days(s)         |
+| Vote Duration           | {vote_duration_days} day(s)          |
 | Delegated Voting Period | {delegated_voting_days} day(s)       |
 | Quiet Ending Period     | {quiet_ending_days} day(s)           |
 | Quiet Ending Extension  | {quiet_ending_extension_days} day(s) |
