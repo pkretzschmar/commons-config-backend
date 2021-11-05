@@ -57,7 +57,7 @@ issue_data = """
 
 ### Module 3: Tao Voting
 
-| Parameters              | Value                                |
+| Parameter               | Value                                |
 | ----------------------- | ------------------------------------ |
 | Support Required        | {support_required}%                  |
 | Minimum Quorum          | {minimum_quorum}%                    |
