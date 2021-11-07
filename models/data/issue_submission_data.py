@@ -5,7 +5,6 @@ advanced_settings_data = """
 
 | Parameter               | Value                       |
 |:-----------------------:|:---------------------------:|
-| Common Pool Amount      | {commons_pool_amount} wxDAI |
 | HNY Liquidity           | {hny_liquidity} wxDAI       |
 | Garden Liquidity        | {garden_liquidity} TEC      |
 | Virtual Supply          | {virtual_supply} TEC        |

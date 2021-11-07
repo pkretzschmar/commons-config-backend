@@ -125,7 +125,6 @@ class IssueGeneratorModel:
 
         formated_advanced_settings_data = advanced_settings_data.format(
             issue_number=self.issue_number,
-            commons_pool_amount=self.advanced_settings.get("commonPoolAmount", ""),
             hny_liquidity=self.advanced_settings.get("HNYLiquidity", ""),
             garden_liquidity=self.advanced_settings.get("gardenLiquidity", ""),
             virtual_supply=self.advanced_settings.get("virtualSupply", ""),
