@@ -112,16 +112,15 @@ class IssueGeneratorModel:
         formated_abc_steps = ""
         abc_step_table = augmented_bonding_curve_output["stepTable"]
         for idx in range(len(abc_step_table['step'])):
-            if idx > 0:
-                formated_abc_steps += "| **Step {step}** | {current_price} | {amount_in} | {tribute_collected} | {amount_out} | {new_price} | {price_slippage} |\n".format(
-                    step=abc_step_table["step"][idx],
-                    current_price=abc_step_table["currentPriceParsed"][idx],
-                    amount_in=abc_step_table["amountInParsed"][idx],
-                    tribute_collected=abc_step_table["tributeCollectedParsed"][idx],
-                    amount_out=abc_step_table["amountOutParsed"][idx],
-                    new_price=abc_step_table["newPriceParsed"][idx],
-                    price_slippage=abc_step_table["slippage"][idx]
-                )
+            formated_abc_steps += "| **Step {step}** | {current_price} | {amount_in} | {tribute_collected} | {amount_out} | {new_price} | {price_slippage} |\n".format(
+                step=abc_step_table["step"][idx],
+                current_price=abc_step_table["currentPriceParsed"][idx],
+                amount_in=abc_step_table["amountInParsed"][idx],
+                tribute_collected=abc_step_table["tributeCollectedParsed"][idx],
+                amount_out=abc_step_table["amountOutParsed"][idx],
+                new_price=abc_step_table["newPriceParsed"][idx],
+                price_slippage=abc_step_table["slippage"][idx]
+            )
 
         formated_advanced_settings_data = advanced_settings_data.format(
             issue_number=self.issue_number,

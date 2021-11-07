@@ -1,8 +1,6 @@
 advanced_settings_data = """
 ### *Advanced Settings 
 
->This will be empty or non-existent if the user did not change any advanced settings from their default. Any settings changed from default will show up here
-
 | Parameter               | Value                       |
 |:-----------------------:|:---------------------------:|
 | HNY Liquidity           | {hny_liquidity} wxDAI       |
@@ -56,11 +54,11 @@ issue_data = """
 
 ### Module 3: Tao Voting
 
-| Parameters              | Value                                |
+| Parameter               | Value                                |
 | ----------------------- | ------------------------------------ |
 | Support Required        | {support_required}%                  |
 | Minimum Quorum          | {minimum_quorum}%                    |
-| Vote Duration           | {vote_duration_days} days(s)         |
+| Vote Duration           | {vote_duration_days} day(s)         |
 | Delegated Voting Period | {delegated_voting_days} day(s)       |
 | Quiet Ending Period     | {quiet_ending_days} day(s)           |
 | Quiet Ending Extension  | {quiet_ending_extension_days} day(s) |
@@ -181,7 +179,7 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 - **Delegated Voting Period** is set for **{delegated_voting_days} day(s)**, meaning that Delegates will have {delegated_voting_days} day(s) to use their delegated voting power to vote on a proposal. 
 - **Quiet Ending Period**: **{quiet_ending_days} day(s)**, this means that {quiet_ending_days} day(s) before the end of the Vote Duration, if the vote outcome changes, the Quiet Ending Extension will be triggered. 
 - **Quiet Ending Extension**: **{quiet_ending_extension_days} day(s)**, meaning that if the vote outcome changes during the Quiet Ending Period, an additional {quiet_ending_extension_days} day(s) will be added for voting.
-- **Execution Delay**: **{execution_delay_days} days(s)**, meaning that there is an {execution_delay_days} day delay after the vote is passed before the proposed action is executed.  
+- **Execution Delay**: **{execution_delay_days} day(s)**, meaning that there is an {execution_delay_days} day delay after the vote is passed before the proposed action is executed.  
 
 ### Strategy:
 {tao_voting_strategy}
