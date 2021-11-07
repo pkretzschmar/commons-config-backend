@@ -240,11 +240,11 @@ class IssueGeneratorModel:
     def generate_output(self):
         PARAMS_BOT_AUTH_TOKEN = os.getenv("PARAMS_BOT_AUTH_TOKEN")
         headers = {'Content-Type': 'application/json', 'Authorization': PARAMS_BOT_AUTH_TOKEN}
-        r_issue_data = requests.get('https://api.github.com/search/issues?q=repo:CommonsBuild/test-issues-config-dashboard')
+        r_issue_data = requests.get('https://api.github.com/search/issues?q=repo:CommonsBuild/commons-config-proposals')
         self.issue_number = 1 + r_issue_data.json().get("total_count", "")
         data = {"title": self.title, "body": self.format_output_issue()}
         
-        r = requests.post('https://api.github.com/repos/CommonsBuild/test-issues-config-dashboard/issues', data=json.dumps(data), headers=headers)
+        r = requests.post('https://api.github.com/repos/CommonsBuild/commons-config-proposals/issues', data=json.dumps(data), headers=headers)
 
         if r.status_code == 201:
             issue_number = r.json().get("number", "")
