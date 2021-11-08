@@ -128,7 +128,8 @@ class IssueGenerator(Resource):
         parser.add_argument('convictionVoting', type=dict)
         parser.add_argument('advancedSettings', type=dict)
 
-        parameters = parser.parse_args()
+        parameters = json.loads(request.form.get('body'))
+        image_files = request.files
         title = parameters['title']
         overall_strategy = parameters['overallStrategy']
         token_lockup = parameters['tokenLockup']
@@ -157,7 +158,8 @@ class IssueGenerator(Resource):
             tao_voting=tao_voting,
             conviction_voting=conviction_voting,
             advanced_settings=advanced_settings,
-            overall_strategy=overall_strategy
+            overall_strategy=overall_strategy,
+            image_files=image_files
         )
 
         return jsonify(issue_generator.generate_output())

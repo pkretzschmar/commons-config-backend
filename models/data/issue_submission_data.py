@@ -4,7 +4,7 @@ advanced_settings_data = """
 >This will be empty or non-existent if the user did not change any advanced settings from their default. Any settings changed from default will show up here
 
 | Parameter               | Value                       |
-| ----------------------- | --------------------------- |
+|:-----------------------:|:---------------------------:|
 | Common Pool Amount      | {commons_pool_amount} wxDAI |
 | HNY Liquidity           | {hny_liquidity} wxDAI       |
 | Garden Liquidity        | {garden_liquidity} TEC      |
@@ -16,7 +16,7 @@ advanced_settings_data = """
 | Proposal Deposit        | {proposal_deposit} wxDAI    |
 | Challenge Deposit       | {challenge_deposit} wxDAI   |
 | Settlement Period       | {settlement_period} days    |
-| Minmum Effective Supply | {minimum_effective_supply}% |
+| Minimum Effective Supply | {minimum_effective_supply}% |
 | Hatchers Rage Quit      | {hatchers_rage_quit} wxDAI  |
 | Initial Buy             | {initial_buy} wxDAI         |
 
@@ -79,7 +79,7 @@ issue_data = """
 # Module 1: Token Freeze and Token Thaw
 
 ### Data:
-![](https://i.imgur.com/Wk3jgGo.jpg)
+![]({token_lockup_image})
 
 | Duration                  | % of Tokens Released  | Price Floor of Token   |
 | ------------------------- | --------------------- | ---------------------- |
@@ -104,7 +104,7 @@ issue_data = """
 
 ### Data:
 
-![](https://i.imgur.com/44MoI7N.png)
+![]({abc_image})
 
 | Step #             | Current Price      | Amount In      | Tribute Collected      | Amount Out      | New Price      | Price Slippage      |
 | ------------------ | ------------------ | -------------- | ---------------------- | --------------- | -------------- | ------------------- |
@@ -165,7 +165,7 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 
 ### Data: 
 
-![](https://i.imgur.com/9RK5Hom.png)
+![]({tao_voting_image})
 
 |# of Quiet Ending Extensions                 | No Extensions                         | With 1 Extension                                  | With 2 Extensions                                  |
 | ------------------------------------------- | ------------------------------------- | ------------------------------------------------- | -------------------------------------------------- |
@@ -187,7 +187,7 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 # Module 4: Conviction Voting
 
 ### Data: 
-![](https://i.imgur.com/9RK5Hom.png)
+![]({conviction_voting_image})
 
 | Proposal  | Requested Amount (wxDAI) | Common Pool (wxDAI)       | Effective supply (TEC)  | Tokens Needed To Pass (TEC) |
 |:---------:|:------------------------:|:-------------------------:|:-----------------------:|:---------------------------:|
