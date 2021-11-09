@@ -75,10 +75,11 @@ issue_data = """
 
 # Module 1: Token Freeze and Token Thaw
 
-### Data:
+### Hatcher's TEC Release Schedule 
 ![]({token_lockup_image})
->This is the theoretical Price Floor for TEC. It would only be reached if all tokens that were liquid were burned and no liquid tokens existed, which is very unlikely to occur.
+>This is the release schedule for TEC that was given to Hatchers. Their TEC will start out frozen and then slowly become liquid according to the graph above.
 
+### Data
 | Duration                  | % of Tokens Released  | Price Floor of Token   |
 | ------------------------- | --------------------- | ---------------------- |
 | 3 months                  | {tokens_released[0]}% | {price_floor[0]} wxDAI |
@@ -100,11 +101,11 @@ issue_data = """
 
 # Module 2: Augmented Bonding Curve (ABC)
 
-### Data:
-
+### TEC Price vs ABC Reserve Holdings
 ![]({abc_image})
->This shows how the TEC Price changes with the ABC's Reserve Balance, highlighting the Initial Buy that will happen at launch.
+>The ABC mints and burns TEC tokens, the price of the TEC token is dependent on the funds that is held in the Reserve. This graph shows how the ABC's Price for TEC tokens changes with the ABC's Reserve Balance. The Initial Buy that will happen at launch is highlighted.
 
+### Data
 | Step #             | Current Price      | Amount In      | Tribute Collected      | Amount Out      | New Price      | Price Slippage      |
 | ------------------ | ------------------ | -------------- | ---------------------- | --------------- | -------------- | ------------------- |
 {abc_steps}
@@ -162,11 +163,11 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 
 # Module 3: Tao Voting
 
-### Data: 
-
+### Tao Voting Timeline From Proposal To Execution
 ![]({tao_voting_image})
->This shows how the timeline stacks up for decision votes that can change the configuration after launch.
+>This shows how the timeline stacks up for yes/no time based votes that can change the configuration after launch.
 
+### Data
 |# of Quiet Ending Extensions                 | No Extensions                         | With 1 Extension                                  | With 2 Extensions                                  |
 | ------------------------------------------- | ------------------------------------- | ------------------------------------------------- | -------------------------------------------------- |
 | **Time to Vote on Proposals**               | {vote_duration_days} days             | {vote_duration_days_1_extension} days             | {vote_duration_days_2_extensions} days             |
@@ -186,10 +187,11 @@ We're very bullish on TEC so we provide the BUY scenario at launch to compare pr
 
 # Module 4: Conviction Voting
 
-### Data: 
+### Minimum Percent of Voting Tokens Needed to Pass Funding Requests
 ![]({conviction_voting_image})
 >This shows how the minimum percent of tokens needed to pass proposals after 2 weeks varies with the percent of the Common Pool funds being requested.
 
+### Data
 | Proposal  | Requested Amount (wxDAI) | Common Pool (wxDAI)       | Effective supply (TEC)  | Tokens Needed To Pass (TEC) |
 |:---------:|:------------------------:|:-------------------------:|:-----------------------:|:---------------------------:|
 |     1     | {requested_amount[0]:,}  | {amount_common_pool[0]:,} | {effective_supply[0]:,} | {min_tokens_pass[0]}        |
