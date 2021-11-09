@@ -76,9 +76,9 @@ class DisputableVotingModel:
         }
 
         self.output_dict['output']['table'] = {
-            'timeVote': time_vote,
-            'timeReview': time_review,
-            'timeExecute': time_execute
+            'timeVote': [time_vote['noExtension'], time_vote['firstExtension'], time_vote['secondExtension']],
+            'timeReview': [time_review['noExtension'], time_review['firstExtension'], time_review['secondExtension']],
+            'timeExecute': [time_execute['noExtension'], time_execute['firstExtension'], time_execute['secondExtension']]
         }
 
         return self.output_dict
