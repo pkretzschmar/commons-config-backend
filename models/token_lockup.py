@@ -44,9 +44,12 @@ class TokenLockupModel:
 
         # Table Data
         weeks_table = [13, 26, 39, 52, 78, 104, 156, 208, 260]
+        label_table = ['3 months', '6 months', '9 months', '1 year', '1.5 years',
+                       '2 years', '3 years', '4 years', '5 years']
         df = pd.DataFrame(
             {
-                'week': weeks_table
+                'week': weeks_table,\
+                'label': label_table
             })
         df['price'] = 0
         df.loc[df['week'] <= self.token_freeze_period, 'price'] = self.opening_price
