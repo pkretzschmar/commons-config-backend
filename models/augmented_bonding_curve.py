@@ -125,7 +125,8 @@ class BondingCurveHandler():
                  virtual_supply= -1,
                  virtual_balance= -1,
                  zoom_graph=0,
-                 plot_mode=0):
+                 plot_mode=0,
+                 include_milestones=0):
 
         #scale input numbers down by 1000 for the bonding curve calculations
         ragequit_amount = ragequit_amount / 1000
@@ -182,6 +183,7 @@ class BondingCurveHandler():
         self.steps_table = self.steps_table.append(self.generate_outputs_table(bondingCurve= self.bonding_curve, steplist= steplist_parsed))
         self.zoom_graph = zoom_graph
         self.plot_mode = plot_mode
+        self.include_milestones = include_milestones
     
 
     def get_data(self):
@@ -192,13 +194,17 @@ class BondingCurveHandler():
         clean_figure_data['reserveRatio'] = self.bonding_curve.reserve_ratio()
         
         figure_bonding_curve= {"chartData": {}}
-        figure_milestone_table =self.get_milestone_table(self.bonding_curve) 
-        figure_initial_fund_allocation = self.get_allocation_table(self.steps_table, self.initialization_balance, self.commons_reserve)
+
+        if self.include_milestones == 1:
+            figure_milestone_table =self.get_milestone_table(self.bonding_curve) 
+            figure_bonding_curve['milestoneTable'] = figure_milestone_table
         
+        figure_initial_fund_allocation = self.get_allocation_table(self.steps_table, self.initialization_balance, self.commons_reserve)
+        figure_bonding_curve['fundAllocations'] = figure_initial_fund_allocation
+
+
         if self.steps_table.empty:
             figure_bonding_curve['chartData'] = clean_figure_data
-            figure_bonding_curve['milestoneTable'] = figure_milestone_table
-            figure_bonding_curve['fundAllocations'] = figure_initial_fund_allocation
             return figure_bonding_curve
         else: 
             figure_buy_sell_table =self.steps_table.loc[:,["step", "currentPriceParsed", "currentSupplyParsed","amountInParsed", "tributeCollectedParsed", "amountOutParsed", "newPriceParsed", "slippage"]].to_dict(orient='list')
@@ -213,8 +219,6 @@ class BondingCurveHandler():
 
             figure_bonding_curve['chartData'] = extended_figure_data
             figure_bonding_curve['stepTable'] = figure_buy_sell_table
-            figure_bonding_curve['milestoneTable'] = figure_milestone_table
-            figure_bonding_curve['fundAllocations'] = figure_initial_fund_allocation
 
             return figure_bonding_curve
 

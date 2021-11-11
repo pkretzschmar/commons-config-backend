@@ -85,6 +85,7 @@ class AugmentedBondingCurve(Resource):
         parser.add_argument('virtualSupply', type=str)
         parser.add_argument('virtualBalance', type=str)
         parser.add_argument('zoomGraph', type=str)
+        parser.add_argument('includeMilestones', type=str)
         parameters = parser.parse_args()
         commons_percentage = float(parameters['commonsTribute']) if parameters['commonsTribute'] is not None else 0.05
         opening_price = float(parameters['openingPrice']) if parameters['openingPrice'] is not None else 1.50
@@ -97,22 +98,21 @@ class AugmentedBondingCurve(Resource):
         virtual_supply = float(parameters['virtualSupply']) if parameters['virtualSupply'] is not None else -1
         virtual_balance = float(parameters['virtualBalance']) if parameters['virtualBalance'] is not None else -1 
         zoom_graph = int(parameters['zoomGraph']) if parameters['zoomGraph'] is not None else 0
+        include_milestones = int(parameters['includeMilestones']) if parameters['includeMilestones'] is not None else 0
 
-        try:
-            augmented_bonding_curve_model = BondingCurveHandler(
-                    commons_percentage=commons_percentage,
-                    ragequit_amount=ragequit_amount,
-                    opening_price=opening_price,
-                    entry_tribute=entry_tribute,
-                    exit_tribute=exit_tribute,
-                    initial_buy=initial_buy,
-                    scenario_reserve_balance=scenario_reserve_balance,
-                    virtual_supply= virtual_supply,
-                    virtual_balance= virtual_balance,
-                    steplist=steplist,
-                    zoom_graph= zoom_graph )
-        except ValueError as ve:
-            return jsonify(str(ve))
+        augmented_bonding_curve_model = BondingCurveHandler(
+                commons_percentage=commons_percentage,
+                ragequit_amount=ragequit_amount,
+                opening_price=opening_price,
+                entry_tribute=entry_tribute,
+                exit_tribute=exit_tribute,
+                initial_buy=initial_buy,
+                scenario_reserve_balance=scenario_reserve_balance,
+                virtual_supply= virtual_supply,
+                virtual_balance= virtual_balance,
+                steplist=steplist,
+                zoom_graph= zoom_graph,
+                include_milestones=include_milestones )
 
         
         return jsonify(augmented_bonding_curve_model.get_data())
