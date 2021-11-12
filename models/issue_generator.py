@@ -75,7 +75,7 @@ class IssueGeneratorModel:
             token_thaw_period=self.token_lockup.get("tokenThaw", ""),
         )
         token_lockup_output = token_lockup_model.get_data().get("output", "")
-        token_lockup_table = token_lockup_output.get("table", "")
+        token_lockup_table = token_lockup_output.get("tableIssue", "")
 
         commons_percentage = self.abc.get("commonsTribute", 0.05)
         opening_price = self.abc.get("openingPrice", 3)
