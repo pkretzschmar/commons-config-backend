@@ -8,7 +8,8 @@ class ConvictionVotingModel:
                  spending_limit=None,
                  minimum_conviction=None,
                  conviction_growth=None,
-                 voting_period_days=None):
+                 voting_period_days=None,
+                 table_scenarios=None):
         self.spending_limit = spending_limit if spending_limit is not None else 0.2
         self.minimum_conviction = minimum_conviction if minimum_conviction is not None else 0.005
         self.conviction_growth = conviction_growth if conviction_growth is not None else 2
@@ -17,30 +18,9 @@ class ConvictionVotingModel:
         self.staked_on_other_proposals = 0
         self.min_active_stake_pct = 0.05
         self.table_scenarios = {
-                'totalEffectiveSupply': [
-                    1_500_000,
-                    1_500_000,
-                    1_500_000,
-                    1_500_000,
-                    1_500_000,
-                    1_500_000,
-                ],
-                'requestedAmount': [
-                    1_000,
-                    5_000,
-                    25_000,
-                    1_000,
-                    5_000,
-                    25_000,
-                ],
-                'amountInCommonPool': [
-                    100_000,
-                    100_000,
-                    100_000,
-                    750_000,
-                    750_000,
-                    750_000,
-                ],
+                'totalEffectiveSupply': table_scenarios[2],
+                'requestedAmount': table_scenarios[0],
+                'amountInCommonPool': table_scenarios[1],
         }
         self.output_dict = {}
         self.output_dict['input'] = {

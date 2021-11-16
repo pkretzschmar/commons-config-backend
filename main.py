@@ -171,17 +171,20 @@ class ConvictionVoting(Resource):
         parser.add_argument('minimumConviction', type=float)
         parser.add_argument('convictionGrowth', type=int)
         parser.add_argument('convictionVotingPeriodDays', type=int)
+        parser.add_argument('tableScenarios', type=list, action='append')
         parameters = parser.parse_args()
         spending_limit = parameters['spendingLimit']
         minimum_conviction = parameters['minimumConviction']
         conviction_growth = parameters['convictionGrowth']
         voting_period_days = parameters['convictionVotingPeriodDays']
+        table_scenarios = parameters['tableScenarios']
 
         conviction_voting_model = ConvictionVotingModel(
             spending_limit=spending_limit,
             minimum_conviction=minimum_conviction,
             conviction_growth=conviction_growth,
-            voting_period_days=voting_period_days
+            voting_period_days=voting_period_days,
+            table_scenarios=table_scenarios
         )
 
         return jsonify(conviction_voting_model.get_data())
