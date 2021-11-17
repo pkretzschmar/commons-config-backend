@@ -18,9 +18,9 @@ class ConvictionVotingModel:
         self.staked_on_other_proposals = 0
         self.min_active_stake_pct = 0.05
         self.table_scenarios = {
-                'totalEffectiveSupply': table_scenarios[2],
-                'requestedAmount': table_scenarios[0],
-                'amountInCommonPool': table_scenarios[1],
+                'totalEffectiveSupply': [proposal[2] for proposal in table_scenarios],
+                'requestedAmount': [proposal[0] for proposal in table_scenarios],
+                'amountInCommonPool': [proposal[1] for proposal in table_scenarios],
         }
         self.output_dict = {}
         self.output_dict['input'] = {
