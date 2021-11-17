@@ -17,11 +17,43 @@ class ConvictionVotingModel:
         self.staked_on_proposal = 1
         self.staked_on_other_proposals = 0
         self.min_active_stake_pct = 0.05
-        self.table_scenarios = {
-                'totalEffectiveSupply': [proposal[2] for proposal in table_scenarios],
-                'requestedAmount': [proposal[0] for proposal in table_scenarios],
-                'amountInCommonPool': [proposal[1] for proposal in table_scenarios],
+        self.default_table_scenarios = {
+                'totalEffectiveSupply': [
+                    1_500_000,
+                    1_500_000,
+                    1_500_000,
+                    1_500_000,
+                    1_500_000,
+                    1_500_000,
+                ],
+                'requestedAmount': [
+                    1_000,
+                    5_000,
+                    25_000,
+                    1_000,
+                    5_000,
+                    25_000,
+                ],
+                'amountInCommonPool': [
+                    100_000,
+                    100_000,
+                    100_000,
+                    750_000,
+                    750_000,
+                    750_000,
+                ]
         }
+        self.table_scenarios = {
+                'totalEffectiveSupply': self.default_table_scenarios["totalEffectiveSupply"],
+                'requestedAmount': self.default_table_scenarios["requestedAmount"],
+                'amountInCommonPool': self.default_table_scenarios["amountInCommonPool"],
+        }
+
+        if table_scenarios is not None:
+            self.table_scenarios['totalEffectiveSupply'] += [proposal[2] for proposal in table_scenarios]
+            self.table_scenarios['requestedAmount'] += [proposal[0] for proposal in table_scenarios]
+            self.table_scenarios['amountInCommonPool'] += [proposal[1] for proposal in table_scenarios]
+
         self.output_dict = {}
         self.output_dict['input'] = {
             'spendingLimit': self.spending_limit,
