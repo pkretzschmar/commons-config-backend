@@ -207,7 +207,7 @@ class BondingCurveHandler():
             figure_bonding_curve['chartData'] = clean_figure_data
             return figure_bonding_curve
         else: 
-            figure_buy_sell_table =self.steps_table.loc[:,["step", "currentPriceParsed", "currentSupplyParsed","amountInParsed", "tributeCollectedParsed", "amountOutParsed", "newPriceParsed", "slippage"]].to_dict(orient='list')
+            figure_buy_sell_table =self.steps_table.loc[:,["step", "currentPriceParsed", "currentSupplyParsed","currentBalanceParsed","amountInParsed", "tributeCollectedParsed", "amountOutParsed", "newPriceParsed", "slippage"]].to_dict(orient='list')
             extended_figure_data = clean_figure_data
             #get single points with full coordinates
             extended_figure_data['singlePoints'] = self.get_single_point_coordinates(self.steps_table)
@@ -429,8 +429,9 @@ class BondingCurveHandler():
             min_range = 0
             max_range = 500
         else:
-            min_range = 0 if  zoom_graph == 0 else ( min(steps_table['currentSupply'].min(), steps_table['newSupply'].min()) - 50)
-            max_range = steps_table['newSupply'].max() + (200 if zoom_graph == 0 else 50)
+            minimum = min(steps_table['currentSupply'].min(), steps_table['newSupply'].min())
+            min_range = 0 if (minimum < 10 or zoom_graph == 0 ) else  minimum - 10 
+            max_range = steps_table['newSupply'].max() + (50 if zoom_graph == 0 else 10)
 
 
         return [min_range, max_range]
