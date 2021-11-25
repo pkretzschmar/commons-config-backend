@@ -46,6 +46,7 @@ class IssueGeneratorModel:
             "hatchScenarioFunding": 1571.22357,
             "stepList": [[5000, "wxDai"], [100000, "wxDai"], [3000, "TEC"]],
             "zoomGraph": 0,
+            "includeMilestones": 1,
             "strategy": ""
         }
         self.tao_voting = tao_voting if tao_voting is not None else {
@@ -86,6 +87,7 @@ class IssueGeneratorModel:
         zoom_graph = self.abc.get("zoomGraph", 0)
         initial_buy = self.abc.get("initialBuy", 0)
         ragequit_amount = self.abc.get("ragequitAmount", 100)
+        include_milestones = self.abc.get("includeMilestones", 1)
     
 
         augmented_bonding_curve_model = BondingCurveHandler(
@@ -97,7 +99,8 @@ class IssueGeneratorModel:
                         scenario_reserve_balance=scenario_reserve_balance,
                         initial_buy=initial_buy,
                         steplist=steplist,
-                        zoom_graph=zoom_graph)
+                        zoom_graph=zoom_graph,
+                        include_milestones=include_milestones)
         augmented_bonding_curve_output = augmented_bonding_curve_model.get_data()
 
         conviction_voting_model = ConvictionVotingModel(
